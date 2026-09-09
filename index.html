@@ -6,6 +6,19 @@
 <title>DanDanTable</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap">
 <style>
+/* ========== 全局兼容性优化 ========== */
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+/* 减少动画：尊重用户系统设置 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+/* 滚动性能优化 */
+.main-content, .week-grid-wrapper, .transaction-list, .routine-timeline { -webkit-overflow-scrolling: touch; overflow-scrolling: touch; }
+/* 防止文本选择干扰交互 */
+button, .nav-item, .bottom-nav-item, .schedule-event, .routine-item, .day-cell { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+
 /* ========== 设计令牌 ========== */
 :root {
   --bg-0: #07070f;
@@ -320,7 +333,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ========== 弹窗 ========== */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; pointer-events: none;
@@ -408,6 +421,79 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .bottom-nav-item svg { width: 22px; height: 22px; fill: currentColor; }
 .bottom-nav-item.active { color: var(--primary); background: rgba(139,92,246,0.1); }
 .bottom-nav-item.active svg { filter: drop-shadow(0 0 6px var(--primary-glow)); }
+
+/* ========== 生活作息管理 ========== */
+.schedule-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.schedule-toolbar .btn { flex-shrink: 0; }
+.schedule-filters { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+.schedule-filter { padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid var(--card-border); background: var(--bg-2); color: var(--text-2); transition: all 0.2s; }
+.schedule-filter:hover { border-color: var(--primary); }
+.schedule-filter.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.week-grid-wrapper { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--card-border); background: var(--bg-2); }
+.week-grid { display: grid; grid-template-columns: 60px repeat(7, 1fr); min-width: 800px; position: relative; }
+.week-grid-header { display: contents; }
+.week-grid-header > div { padding: 12px 8px; text-align: center; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--card-border); background: var(--bg-3); position: sticky; top: 0; z-index: 2; }
+.week-grid-header .time-col { background: var(--bg-3); }
+.week-grid-header .today-col { color: var(--primary); background: rgba(139,92,246,0.08); }
+.week-grid-body { display: contents; }
+.time-label-col { position: relative; }
+.time-label { height: 48px; padding: 0 8px; font-size: 11px; color: var(--text-3); text-align: right; border-bottom: 1px solid var(--card-border); display: flex; align-items: flex-start; justify-content: flex-end; padding-top: 2px; }
+.day-col { position: relative; border-left: 1px solid var(--card-border); min-height: 480px; }
+.day-col.today-col { background: rgba(139,92,246,0.03); }
+.day-cell { height: 48px; border-bottom: 1px solid var(--card-border); cursor: pointer; transition: background 0.15s; }
+.day-cell:hover { background: rgba(139,92,246,0.06); }
+.schedule-event { position: absolute; left: 2px; right: 2px; border-radius: 6px; padding: 4px 6px; font-size: 11px; cursor: pointer; overflow: hidden; transition: transform 0.15s, box-shadow 0.15s; z-index: 1; }
+.schedule-event:hover { transform: scale(1.02); z-index: 3; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.schedule-event .ev-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.schedule-event .ev-time { font-size: 10px; opacity: 0.8; }
+.schedule-event .ev-loc { font-size: 10px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.schedule-event.done { opacity: 0.5; }
+.schedule-event.done .ev-title { text-decoration: line-through; }
+
+/* 今日作息 */
+.routine-timeline { position: relative; padding-left: 80px; }
+.routine-timeline::before { content: ''; position: absolute; left: 60px; top: 0; bottom: 0; width: 2px; background: var(--card-border); }
+.routine-item { position: relative; padding: 12px 16px; margin-bottom: 12px; background: var(--bg-2); border-radius: var(--radius-md); border: 1px solid var(--card-border); transition: all 0.2s; }
+.routine-item:hover { border-color: var(--primary); transform: translateX(4px); }
+.routine-item::before { content: ''; position: absolute; left: -26px; top: 18px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--bg-0); }
+.routine-time { position: absolute; left: -80px; top: 14px; font-size: 12px; color: var(--text-3); font-weight: 500; width: 60px; text-align: right; }
+.routine-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.routine-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 12px; flex-wrap: wrap; }
+.routine-done-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--card-border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.routine-done-btn:hover { border-color: var(--success); }
+.routine-item.done .routine-done-btn { background: var(--success); border-color: var(--success); }
+.routine-item.done .routine-title { text-decoration: line-through; opacity: 0.6; }
+.routine-item.done { opacity: 0.7; }
+
+/* 作息统计 */
+.schedule-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.schedule-stat-card { padding: 20px; background: var(--bg-2); border-radius: var(--radius-lg); border: 1px solid var(--card-border); }
+.schedule-stat-value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.schedule-stat-label { font-size: 12px; color: var(--text-3); }
+.category-bars { display: flex; flex-direction: column; gap: 10px; }
+.category-bar-row { display: flex; align-items: center; gap: 12px; }
+.category-bar-name { width: 80px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+.category-bar-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.category-bar-track { flex: 1; height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+.category-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+.category-bar-count { width: 50px; text-align: right; font-size: 12px; color: var(--text-3); }
+
+/* 事件模态框 */
+.event-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.event-form-grid .form-group.full { grid-column: 1 / -1; }
+.category-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.category-option { padding: 6px 12px; border-radius: 16px; font-size: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+.category-option:hover { transform: scale(1.05); }
+.category-option.selected { border-color: #fff; box-shadow: 0 0 0 2px var(--bg-0); }
+
+/* 颜色分区主题 */
+.view-gpa { --view-accent: #3b82f6; --view-glow: rgba(59,130,246,0.3); }
+.view-countdown { --view-accent: #f97316; --view-glow: rgba(249,115,22,0.3); }
+.view-finance { --view-accent: #10b981; --view-glow: rgba(16,185,129,0.3); }
+.view-schedule { --view-accent: #06b6d4; --view-glow: rgba(6,182,212,0.3); }
+.view-routine { --view-accent: #ec4899; --view-glow: rgba(236,72,153,0.3); }
+.view-header-accent { height: 3px; background: linear-gradient(90deg, var(--view-accent, var(--primary)), transparent); border-radius: 2px; margin-bottom: 16px; }
 
 /* ========== 响应式 ========== */
 @media (max-width: 900px) {
@@ -739,6 +825,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
       记账本
     </button>
+    <button class="nav-item" data-view="schedule" onclick="switchView('schedule')">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+      作息总表
+    </button>
+    <button class="nav-item" data-view="routine" onclick="switchView('routine')">
+      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+      今日作息
+    </button>
 
     <div class="nav-section">其他</div>
     <button class="nav-item" onclick="showDataManager()">
@@ -838,13 +932,20 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
             <p class="page-subtitle">多学期管理 · 多种算法 · 趋势分析</p>
           </div>
           <div class="topbar-actions">
-            <select class="form-select" id="gpa-algorithm" style="width:auto;min-width:160px;" onchange="changeGpaAlgorithm()">
+            <select class="form-select" id="gpa-algorithm" style="width:auto;min-width:180px;" onchange="changeGpaAlgorithm()">
               <option value="standard4">标准4.0制</option>
               <option value="improved4">改进4.0制</option>
-              <option value="pku">北大4.0制</option>
-              <option value="zju">浙大5.0制</option>
-              <option value="sjtu">交大4.3制</option>
+              <option value="tsinghua">清华大学4.0</option>
+              <option value="pku">北京大学4.0</option>
+              <option value="fudan">复旦大学4.0</option>
+              <option value="sjtu">上海交大4.3</option>
+              <option value="zju">浙江大学5.0</option>
+              <option value="nju">南京大学4.0</option>
+              <option value="ustc">中科大4.3</option>
+              <option value="whu">武汉大学4.0</option>
+              <option value="custom">自定义算法</option>
             </select>
+            <button class="btn btn-ghost btn-sm" id="edit-custom-gpa-btn" style="display:none;" onclick="showCustomGPASettings()">编辑自定义</button>
             <button class="btn btn-primary" id="add-course-btn" onclick="showAddCourse()">
               <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               添加课程
@@ -952,6 +1053,86 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       </div>
 
     </div>
+
+    <!-- ===== 视图：作息总表 ===== -->
+    <div class="view" id="view-schedule">
+      <div class="view-header-accent"></div>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">作息总表</h1>
+          <p class="page-subtitle">课程、自习、运动、三餐、睡眠，一张表安排你的一周</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="quickAddScheduleEvent()"><span>+</span> 快速添加</button>
+          <button class="btn btn-ghost" onclick="showScheduleSettings()"><span>⚙</span> 设置</button>
+        </div>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="schedule-stats" id="schedule-stats"></div>
+
+      <!-- 工具栏 -->
+      <div class="schedule-toolbar">
+        <div class="schedule-filters" id="schedule-filters"></div>
+        <button class="btn btn-ghost btn-sm" onclick="toggleHideDoneSchedule()" id="btn-hide-done">显示已完成</button>
+      </div>
+
+      <!-- 周视图网格 -->
+      <div class="week-grid-wrapper">
+        <div class="week-grid" id="week-grid">
+          <div class="week-grid-header" id="week-grid-header"></div>
+          <div class="week-grid-body" id="week-grid-body"></div>
+        </div>
+      </div>
+
+      <!-- 本周时间分配 -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--cyan);"></span>本周时间分配</div>
+        </div>
+        <div class="card-body">
+          <div class="category-bars" id="category-bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 视图：今日作息 ===== -->
+    <div class="view" id="view-routine">
+      <div class="view-header-accent" style="background: linear-gradient(90deg, #ec4899, transparent);"></div>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">今日作息</h1>
+          <p class="page-subtitle" id="routine-date">按时间线浏览今天的安排，随手标记完成</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="quickAddScheduleEvent()"><span>+</span> 添加安排</button>
+        </div>
+      </div>
+
+      <!-- 今日进度 -->
+      <div class="schedule-stats">
+        <div class="schedule-stat-card">
+          <div class="schedule-stat-value" id="routine-total">0</div>
+          <div class="schedule-stat-label">今日安排</div>
+        </div>
+        <div class="schedule-stat-card">
+          <div class="schedule-stat-value" id="routine-done">0</div>
+          <div class="schedule-stat-label">已完成</div>
+        </div>
+        <div class="schedule-stat-card">
+          <div class="schedule-stat-value" id="routine-percent">0%</div>
+          <div class="schedule-stat-label">完成率</div>
+        </div>
+        <div class="schedule-stat-card">
+          <div class="schedule-stat-value" id="routine-study">0h</div>
+          <div class="schedule-stat-label">今日学习</div>
+        </div>
+      </div>
+
+      <!-- 时间线 -->
+      <div class="routine-timeline" id="routine-timeline"></div>
+    </div>
+
   </main>
 
   <!-- 底部导航（移动端） -->
@@ -971,6 +1152,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <button class="bottom-nav-item" data-view="finance" onclick="switchView('finance')">
       <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
       记账
+    </button>
+    <button class="bottom-nav-item" data-view="schedule" onclick="switchView('schedule')">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+      作息
     </button>
   </nav>
 </div>
@@ -1011,6 +1196,85 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('modal-profile-manager')">关闭</button>
       <button class="btn btn-primary" onclick="closeModal('modal-profile-manager');showCreateProfile()">新建档案</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 弹窗：编辑作息事件 ===== -->
+<div class="modal-overlay" id="modal-schedule-event">
+  <div class="modal">
+    <h2 class="modal-title" id="schedule-event-title">添加安排</h2>
+    <p class="modal-desc">设置事件的时间、地点和类别</p>
+    <div class="event-form-grid">
+      <div class="form-group full">
+        <label class="form-label">事件名称</label>
+        <input type="text" class="form-input" id="se-title" placeholder="如：高等数学">
+      </div>
+      <div class="form-group">
+        <label class="form-label">星期</label>
+        <select class="form-input" id="se-day">
+          <option value="0">周一</option>
+          <option value="1">周二</option>
+          <option value="2">周三</option>
+          <option value="3">周四</option>
+          <option value="4">周五</option>
+          <option value="5">周六</option>
+          <option value="6">周日</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">地点</label>
+        <input type="text" class="form-input" id="se-location" placeholder="如：教1-201">
+      </div>
+      <div class="form-group">
+        <label class="form-label">开始时间</label>
+        <input type="time" class="form-input" id="se-start" value="08:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">结束时间</label>
+        <input type="time" class="form-input" id="se-end" value="09:40">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">类别</label>
+        <div class="category-picker" id="se-category-picker"></div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">备注</label>
+        <textarea class="form-input" id="se-notes" rows="2" placeholder="可选备注信息"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="se-delete-btn" style="display:none;" onclick="deleteScheduleEvent()">删除</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-schedule-event')">取消</button>
+      <button class="btn btn-primary" onclick="saveScheduleEvent()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 弹窗：作息设置 ===== -->
+<div class="modal-overlay" id="modal-schedule-settings">
+  <div class="modal">
+    <h2 class="modal-title">作息设置</h2>
+    <p class="modal-desc">调整时间范围和显示选项</p>
+    <div class="form-group">
+      <label class="form-label">开始时间</label>
+      <input type="time" class="form-input" id="ss-time-start" value="06:30">
+    </div>
+    <div class="form-group">
+      <label class="form-label">结束时间</label>
+      <input type="time" class="form-input" id="ss-time-end" value="23:30">
+    </div>
+    <div class="form-group">
+      <label class="form-label">时间步长（分钟）</label>
+      <select class="form-input" id="ss-step">
+        <option value="15">15分钟</option>
+        <option value="30">30分钟</option>
+        <option value="60">60分钟</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-schedule-settings')">取消</button>
+      <button class="btn btn-primary" onclick="saveScheduleSettings()">保存</button>
     </div>
   </div>
 </div>
@@ -1214,10 +1478,42 @@ const AVATAR_COLORS = [
 const GPA_ALGORITHMS = {
   standard4: { name: "标准4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 80 ? 3.0 : s >= 70 ? 2.0 : s >= 60 ? 1.0 : 0 },
   improved4: { name: "改进4.0制", max: 4.0, calc: s => s >= 85 ? 4.0 : s >= 75 ? 3.0 : s >= 65 ? 2.0 : s >= 60 ? 1.0 : 0 },
-  pku: { name: "北大4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
-  zju: { name: "浙大5.0制", max: 5.0, calc: s => s >= 95 ? 5.0 : s >= 90 ? 4.8 : s >= 85 ? 4.5 : s >= 80 ? 4.0 : s >= 75 ? 3.5 : s >= 70 ? 3.0 : s >= 65 ? 2.5 : s >= 60 ? 2.0 : 0 },
-  sjtu: { name: "交大4.3制", max: 4.3, calc: s => s >= 95 ? 4.3 : s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 }
+  tsinghua: { name: "清华大学4.0", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
+  pku: { name: "北京大学4.0", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
+  fudan: { name: "复旦大学4.0", max: 4.0, calc: s => s >= 95 ? 4.0 : s >= 90 ? 3.7 : s >= 85 ? 3.3 : s >= 80 ? 3.0 : s >= 75 ? 2.7 : s >= 70 ? 2.3 : s >= 65 ? 2.0 : s >= 60 ? 1.0 : 0 },
+  sjtu: { name: "上海交大4.3", max: 4.3, calc: s => s >= 95 ? 4.3 : s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  zju: { name: "浙江大学5.0", max: 5.0, calc: s => s >= 95 ? 5.0 : s >= 90 ? 4.8 : s >= 85 ? 4.5 : s >= 80 ? 4.0 : s >= 75 ? 3.5 : s >= 70 ? 3.0 : s >= 65 ? 2.5 : s >= 60 ? 2.0 : 0 },
+  nju: { name: "南京大学4.0", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  ustc: { name: "中科大4.3", max: 4.3, calc: s => s >= 95 ? 4.3 : s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  whu: { name: "武汉大学4.0", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
+  custom: { name: "自定义算法", max: 4.0, calc: s => calcCustomGPA(s) }
 };
+
+// 自定义GPA算法
+const DEFAULT_CUSTOM_GPA = {
+  max: 4.0,
+  ranges: [
+    { min: 90, max: 100, gpa: 4.0 },
+    { min: 85, max: 89, gpa: 3.7 },
+    { min: 82, max: 84, gpa: 3.3 },
+    { min: 78, max: 81, gpa: 3.0 },
+    { min: 75, max: 77, gpa: 2.7 },
+    { min: 72, max: 74, gpa: 2.3 },
+    { min: 68, max: 71, gpa: 2.0 },
+    { min: 64, max: 67, gpa: 1.5 },
+    { min: 60, max: 63, gpa: 1.0 },
+    { min: 0, max: 59, gpa: 0 }
+  ]
+};
+
+function calcCustomGPA(score) {
+  const data = getCurrentData();
+  const settings = data.customGPASettings || DEFAULT_CUSTOM_GPA;
+  for (const range of settings.ranges) {
+    if (score >= range.min && score <= range.max) return range.gpa;
+  }
+  return 0;
+}
 
 const COUNTDOWN_CATEGORIES = {
   exam: { name: "考试", color: "danger", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>' },
@@ -1308,7 +1604,21 @@ function getProfileData(profileId) {
     countdowns: [],
     transactions: [],
     budget: 2000,
-    gpaAlgorithm: "standard4"
+    gpaAlgorithm: "standard4",
+    scheduleEvents: [],
+    scheduleCategories: [
+      { id: "course", name: "课程", color: "#38bdf8" },
+      { id: "study", name: "自习", color: "#a78bfa" },
+      { id: "exercise", name: "运动", color: "#fb7185" },
+      { id: "life", name: "生活", color: "#f472b6" },
+      { id: "rest", name: "休息", color: "#34d399" },
+      { id: "social", name: "社交", color: "#fbbf24" },
+      { id: "sleep", name: "睡眠", color: "#818cf8" }
+    ],
+    scheduleSettings: { timeStart: 390, timeEnd: 1410, step: 30 },
+    scheduleHideDone: false,
+    scheduleFilterCat: "all",
+    customGPASettings: JSON.parse(JSON.stringify(DEFAULT_CUSTOM_GPA))
   });
 }
 function saveProfileData(profileId, data) {
@@ -1493,11 +1803,17 @@ function switchView(view) {
   document.querySelectorAll(".bottom-nav-item").forEach(n => {
     n.classList.toggle("active", n.dataset.view === view);
   });
+  // 应用视图主题色
+  const main = document.querySelector(".main");
+  main.classList.remove("view-gpa", "view-countdown", "view-finance", "view-schedule", "view-routine");
+  if (view !== "dashboard") main.classList.add("view-" + view);
   // 渲染对应视图
   if (view === "dashboard") renderDashboard();
   else if (view === "gpa") renderGPA();
   else if (view === "countdown") renderCountdown();
   else if (view === "finance") renderFinance();
+  else if (view === "schedule") renderSchedule();
+  else if (view === "routine") renderRoutine();
   // 滚动到顶部
   document.querySelector(".main").scrollTop = 0;
 }
@@ -1521,11 +1837,337 @@ function switchTheme() {
 }
 
 // ========== 渲染所有 ==========
+// ========== 生活作息管理 ==========
+const SCHEDULE_WEEK_DAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+let scheduleEditingId = null;
+
+function schedHhmmToMin(s) {
+  if (typeof s !== "string") return 0;
+  const [h, m] = s.split(":").map(Number);
+  return (h || 0) * 60 + (m || 0);
+}
+function schedMinToHHMM(min) {
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+}
+function schedTodayIndex() {
+  return (new Date().getDay() + 6) % 7;
+}
+function schedUid() {
+  return "ev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+}
+
+function renderSchedule() {
+  const data = getCurrentData();
+  renderScheduleStats(data);
+  renderScheduleFilters(data);
+  renderWeekGrid(data);
+  renderCategoryBars(data);
+}
+
+function renderScheduleStats(data) {
+  const events = data.scheduleEvents || [];
+  const today = schedTodayIndex();
+  const todays = events.filter(e => e.day === today);
+  const studyMin = events.filter(e => e.category === "course" || e.category === "study")
+    .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
+  const doneCount = events.filter(e => e.done).length;
+  const donePercent = events.length ? Math.round(doneCount / events.length * 100) : 0;
+  const studyH = Math.floor(studyMin / 60);
+  const studyM = Math.round(studyMin % 60);
+
+  $("schedule-stats").innerHTML =
+    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--cyan);">' + events.length + '</div><div class="schedule-stat-label">本周安排</div></div>' +
+    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--purple);">' + (studyH + "h" + (studyM ? studyM + "m" : "")) + '</div><div class="schedule-stat-label">本周学习</div></div>' +
+    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--success);">' + todays.length + '</div><div class="schedule-stat-label">今日安排</div></div>' +
+    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--warning);">' + donePercent + '%</div><div class="schedule-stat-label">完成率</div></div>';
+}
+
+function renderScheduleFilters(data) {
+  const cats = data.scheduleCategories || [];
+  const current = data.scheduleFilterCat || "all";
+  let html = '<div class="schedule-filter ' + (current === "all" ? "active" : "") + '" onclick="filterScheduleCategory(\'all\')">全部</div>';
+  cats.forEach(c => {
+    html += '<div class="schedule-filter ' + (current === c.id ? "active" : "") + '" style="' + (current === c.id ? "background:" + c.color + ";border-color:" + c.color + ";" : "") + '" onclick="filterScheduleCategory(\'' + c.id + '\')">' + c.name + '</div>';
+  });
+  $("schedule-filters").innerHTML = html;
+}
+
+function filterScheduleCategory(catId) {
+  const data = getCurrentData();
+  data.scheduleFilterCat = catId;
+  saveCurrentData(data);
+  renderSchedule();
+}
+
+function toggleHideDoneSchedule() {
+  const data = getCurrentData();
+  data.scheduleHideDone = !data.scheduleHideDone;
+  saveCurrentData(data);
+  $("btn-hide-done").textContent = data.scheduleHideDone ? "显示已完成" : "隐藏已完成";
+  renderSchedule();
+}
+
+function renderWeekGrid(data) {
+  const settings = data.scheduleSettings || { timeStart: 390, timeEnd: 1410, step: 30 };
+  const events = data.scheduleEvents || [];
+  const filterCat = data.scheduleFilterCat || "all";
+  const hideDone = data.scheduleHideDone || false;
+  const today = schedTodayIndex();
+
+  let visibleEvents = events.filter(e => (filterCat === "all" || e.category === filterCat) && (!hideDone || !e.done));
+
+  // 表头
+  let headerHtml = '<div class="time-col">时间</div>';
+  for (let d = 0; d < 7; d++) {
+    headerHtml += '<div class="' + (d === today ? "today-col" : "") + '">' + SCHEDULE_WEEK_DAYS[d] + (d === today ? ' <span style="font-size:10px;">(今天)</span>' : '') + '</div>';
+  }
+  $("week-grid-header").innerHTML = headerHtml;
+
+  // 时间列
+  const totalMin = settings.timeEnd - settings.timeStart;
+  const rows = Math.ceil(totalMin / settings.step);
+  const rowHeight = 48;
+
+  let bodyHtml = '<div class="time-label-col">';
+  for (let r = 0; r <= rows; r++) {
+    const min = settings.timeStart + r * settings.step;
+    if (min <= settings.timeEnd) {
+      bodyHtml += '<div class="time-label" style="height:' + rowHeight + 'px;">' + schedMinToHHMM(min) + '</div>';
+    }
+  }
+  bodyHtml += '</div>';
+
+  // 每天的列
+  for (let d = 0; d < 7; d++) {
+    const dayEvents = visibleEvents.filter(e => e.day === d);
+    bodyHtml += '<div class="day-col ' + (d === today ? "today-col" : '') + '" style="height:' + (rows * rowHeight) + 'px;">';
+    // 空白格子（用于点击添加）
+    for (let r = 0; r < rows; r++) {
+      const min = settings.timeStart + r * settings.step;
+      bodyHtml += '<div class="day-cell" style="height:' + rowHeight + 'px;" onclick="openScheduleEventCreate(' + d + ',' + min + ')"></div>';
+    }
+    // 事件卡片
+    dayEvents.forEach(e => {
+      const cat = (data.scheduleCategories || []).find(c => c.id === e.category) || { color: "#888" };
+      const top = ((e.start - settings.timeStart) / settings.step) * rowHeight;
+      const height = ((e.end - e.start) / settings.step) * rowHeight - 2;
+      if (height > 0) {
+        bodyHtml += '<div class="schedule-event ' + (e.done ? "done" : "") + '" style="top:' + top + 'px;height:' + height + 'px;background:' + cat.color + ';" onclick="openScheduleEventEdit(\'' + e.id + '\')">' +
+          '<div class="ev-title">' + escapeHtml(e.title) + '</div>' +
+          (height > 30 ? '<div class="ev-time">' + schedMinToHHMM(e.start) + '-' + schedMinToHHMM(e.end) + '</div>' : '') +
+          (height > 50 && e.location ? '<div class="ev-loc">' + escapeHtml(e.location) + '</div>' : '') +
+          '</div>';
+      }
+    });
+    bodyHtml += '</div>';
+  }
+  $("week-grid-body").innerHTML = bodyHtml;
+}
+
+function renderCategoryBars(data) {
+  const cats = data.scheduleCategories || [];
+  const events = data.scheduleEvents || [];
+  const counts = {};
+  events.forEach(e => { counts[e.category] = (counts[e.category] || 0) + 1; });
+  const maxCount = Math.max(1, ...Object.values(counts));
+
+  let html = "";
+  cats.forEach(c => {
+    const count = counts[c.id] || 0;
+    const width = (count / maxCount) * 100;
+    html += '<div class="category-bar-row">' +
+      '<div class="category-bar-name"><span class="category-bar-dot" style="background:' + c.color + ';"></span>' + c.name + '</div>' +
+      '<div class="category-bar-track"><div class="category-bar-fill" style="width:' + width + '%;background:' + c.color + ';"></div></div>' +
+      '<div class="category-bar-count">' + count + ' 项</div>' +
+      '</div>';
+  });
+  $("category-bars").innerHTML = html;
+}
+
+function openScheduleEventCreate(day, start) {
+  const data = getCurrentData();
+  const settings = data.scheduleSettings || { step: 30, timeEnd: 1410 };
+  scheduleEditingId = null;
+  $("schedule-event-title").textContent = "添加安排";
+  $("se-title").value = "";
+  $("se-day").value = day;
+  $("se-start").value = schedMinToHHMM(start);
+  $("se-end").value = schedMinToHHMM(Math.min(start + settings.step, settings.timeEnd));
+  $("se-location").value = "";
+  $("se-notes").value = "";
+  $("se-delete-btn").style.display = "none";
+  renderCategoryPicker(data, "course");
+  showModal("modal-schedule-event");
+}
+
+function openScheduleEventEdit(eventId) {
+  const data = getCurrentData();
+  const event = (data.scheduleEvents || []).find(e => e.id === eventId);
+  if (!event) return;
+  scheduleEditingId = eventId;
+  $("schedule-event-title").textContent = "编辑安排";
+  $("se-title").value = event.title;
+  $("se-day").value = event.day;
+  $("se-start").value = schedMinToHHMM(event.start);
+  $("se-end").value = schedMinToHHMM(event.end);
+  $("se-location").value = event.location || "";
+  $("se-notes").value = event.notes || "";
+  $("se-delete-btn").style.display = "block";
+  renderCategoryPicker(data, event.category);
+  showModal("modal-schedule-event");
+}
+
+function renderCategoryPicker(data, selectedId) {
+  const cats = data.scheduleCategories || [];
+  let html = "";
+  cats.forEach(c => {
+    html += '<div class="category-option ' + (c.id === selectedId ? "selected" : "") + '" style="background:' + c.color + ';color:#fff;" onclick="selectScheduleCategory(\'' + c.id + '\', this)" data-cat-id="' + c.id + '">' + c.name + '</div>';
+  });
+  $("se-category-picker").innerHTML = html;
+  $("se-category-picker").dataset.selected = selectedId;
+}
+
+function selectScheduleCategory(catId, el) {
+  document.querySelectorAll("#se-category-picker .category-option").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
+  $("se-category-picker").dataset.selected = catId;
+}
+
+function saveScheduleEvent() {
+  const data = getCurrentData();
+  const title = $("se-title").value.trim();
+  if (!title) { toast("请输入事件名称", "error"); return; }
+  const day = parseInt($("se-day").value);
+  const start = schedHhmmToMin($("se-start").value);
+  const end = schedHhmmToMin($("se-end").value);
+  if (end <= start) { toast("结束时间必须晚于开始时间", "error"); return; }
+  const location = $("se-location").value.trim();
+  const notes = $("se-notes").value.trim();
+  const category = $("se-category-picker").dataset.selected || "course";
+
+  if (scheduleEditingId) {
+    const idx = (data.scheduleEvents || []).findIndex(e => e.id === scheduleEditingId);
+    if (idx >= 0) {
+      data.scheduleEvents[idx] = { ...data.scheduleEvents[idx], title, day, start, end, location, notes, category };
+    }
+  } else {
+    if (!data.scheduleEvents) data.scheduleEvents = [];
+    data.scheduleEvents.push({ id: schedUid(), title, day, start, end, location, notes, category, done: false });
+  }
+  saveCurrentData(data);
+  closeModal("modal-schedule-event");
+  renderSchedule();
+  renderRoutine();
+  toast("保存成功", "success");
+}
+
+function deleteScheduleEvent() {
+  if (!scheduleEditingId) return;
+  if (!confirm("确定要删除这个安排吗？")) return;
+  const data = getCurrentData();
+  data.scheduleEvents = (data.scheduleEvents || []).filter(e => e.id !== scheduleEditingId);
+  saveCurrentData(data);
+  closeModal("modal-schedule-event");
+  renderSchedule();
+  renderRoutine();
+  toast("已删除", "success");
+}
+
+function quickAddScheduleEvent() {
+  const now = new Date();
+  const min = now.getHours() * 60 + now.getMinutes();
+  const day = schedTodayIndex();
+  openScheduleEventCreate(day, Math.ceil(min / 30) * 30);
+}
+
+function showScheduleSettings() {
+  const data = getCurrentData();
+  const s = data.scheduleSettings || { timeStart: 390, timeEnd: 1410, step: 30 };
+  $("ss-time-start").value = schedMinToHHMM(s.timeStart);
+  $("ss-time-end").value = schedMinToHHMM(s.timeEnd);
+  $("ss-step").value = s.step;
+  showModal("modal-schedule-settings");
+}
+
+function saveScheduleSettings() {
+  const data = getCurrentData();
+  data.scheduleSettings = {
+    timeStart: schedHhmmToMin($("ss-time-start").value),
+    timeEnd: schedHhmmToMin($("ss-time-end").value),
+    step: parseInt($("ss-step").value)
+  };
+  if (data.scheduleSettings.timeEnd <= data.scheduleSettings.timeStart) {
+    toast("结束时间必须晚于开始时间", "error");
+    return;
+  }
+  saveCurrentData(data);
+  closeModal("modal-schedule-settings");
+  renderSchedule();
+  toast("设置已保存", "success");
+}
+
+// ========== 今日作息 ==========
+function renderRoutine() {
+  const data = getCurrentData();
+  const today = schedTodayIndex();
+  const events = (data.scheduleEvents || []).filter(e => e.day === today).sort((a, b) => a.start - b.start);
+
+  const now = new Date();
+  $("routine-date").textContent = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日 " + SCHEDULE_WEEK_DAYS[today] + " · 按时间线浏览今天的安排";
+
+  $("routine-total").textContent = events.length;
+  const doneCount = events.filter(e => e.done).length;
+  $("routine-done").textContent = doneCount;
+  $("routine-percent").textContent = events.length ? Math.round(doneCount / events.length * 100) + "%" : "0%";
+  const studyMin = events.filter(e => e.category === "course" || e.category === "study")
+    .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
+  $("routine-study").textContent = Math.floor(studyMin / 60) + "h" + (studyMin % 60 ? Math.round(studyMin % 60) + "m" : "");
+
+  if (events.length === 0) {
+    $("routine-timeline").innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;"><div class="empty-desc">今天还没有安排，点击右上角添加吧</div></div>';
+    return;
+  }
+
+  const cats = data.scheduleCategories || [];
+  let html = "";
+  events.forEach(e => {
+    const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
+    html += '<div class="routine-item ' + (e.done ? "done" : "") + '" style="border-left:3px solid ' + cat.color + ';">' +
+      '<div class="routine-time">' + schedMinToHHMM(e.start) + '<br><span style="font-size:10px;opacity:0.6;">' + schedMinToHHMM(e.end) + '</span></div>' +
+      '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
+      '<div class="routine-meta">' +
+      '<span style="color:' + cat.color + ';">' + cat.name + '</span>' +
+      (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
+      (e.notes ? '<span>📝 ' + escapeHtml(e.notes) + '</span>' : '') +
+      '</div>' +
+      '<button class="routine-done-btn" onclick="toggleRoutineDone(\'' + e.id + '\')" title="' + (e.done ? "恢复未完成" : "标记完成") + '">' +
+      (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
+      '</button>' +
+      '</div>';
+  });
+  $("routine-timeline").innerHTML = html;
+}
+
+function toggleRoutineDone(eventId) {
+  const data = getCurrentData();
+  const idx = (data.scheduleEvents || []).findIndex(e => e.id === eventId);
+  if (idx >= 0) {
+    data.scheduleEvents[idx].done = !data.scheduleEvents[idx].done;
+    saveCurrentData(data);
+    renderRoutine();
+    renderSchedule();
+  }
+}
+
 function renderAll() {
   renderDashboard();
   renderGPA();
   renderCountdown();
   renderFinance();
+  renderSchedule();
+  renderRoutine();
 }
 
 // ========== GPA 模块 ==========
@@ -1549,6 +2191,7 @@ function getGradeColor(score) {
 }
 
 function renderGPA() {
+  updateCustomGPABtn();
   const data = getCurrentData();
   const algo = GPA_ALGORITHMS[state.gpaAlgorithm];
 
@@ -1651,7 +2294,83 @@ function changeGpaAlgorithm() {
   const data = getCurrentData();
   data.gpaAlgorithm = state.gpaAlgorithm;
   saveCurrentData(data);
+  updateCustomGPABtn();
   renderGPA();
+}
+
+function updateCustomGPABtn() {
+  const btn = $("edit-custom-gpa-btn");
+  if (btn) {
+    btn.style.display = state.gpaAlgorithm === "custom" ? "inline-flex" : "none";
+  }
+}
+
+function showCustomGPASettings() {
+  const data = getCurrentData();
+  const settings = data.customGPASettings || DEFAULT_CUSTOM_GPA;
+  let html = '<div style="margin-bottom:16px;"><label class="form-label">GPA满分</label><input type="number" class="form-input" id="cgpa-max" value="' + settings.max + '" step="0.1" min="1" max="5"></div>';
+  html += '<div style="margin-bottom:16px;"><label class="form-label">分数段设置（从高到低）</label><div id="cgpa-ranges" style="display:flex;flex-direction:column;gap:8px;"></div></div>';
+  html += '<button class="btn btn-ghost btn-sm" style="margin-bottom:16px;" onclick="addCustomGPARange()">+ 添加分数段</button>';
+
+  // 用模态框显示
+  const modal = document.createElement("div");
+  modal.className = "modal-overlay show";
+  modal.id = "modal-custom-gpa";
+  modal.innerHTML = '<div class="modal" style="max-width:500px;max-height:80vh;overflow-y:auto;"><h2 class="modal-title">自定义GPA算法</h2><p class="modal-desc">设置每个分数段对应的GPA值</p>' + html + '<div class="modal-actions"><button class="btn btn-ghost" onclick="closeCustomGPAModal()">取消</button><button class="btn btn-primary" onclick="saveCustomGPASettings()">保存</button></div></div>';
+  document.body.appendChild(modal);
+  renderCustomGPARanges(settings.ranges);
+}
+
+function renderCustomGPARanges(ranges) {
+  const container = $("cgpa-ranges");
+  if (!container) return;
+  container.innerHTML = ranges.map((r, i) =>
+    '<div style="display:flex;gap:8px;align-items:center;">' +
+    '<input type="number" class="form-input" style="width:70px;" value="' + r.min + '" data-idx="' + i + '" data-field="min" placeholder="最低分">' +
+    '<span style="color:var(--text-3);">-</span>' +
+    '<input type="number" class="form-input" style="width:70px;" value="' + r.max + '" data-idx="' + i + '" data-field="max" placeholder="最高分">' +
+    '<span style="color:var(--text-3);">→</span>' +
+    '<input type="number" class="form-input" style="width:70px;" value="' + r.gpa + '" data-idx="' + i + '" data-field="gpa" step="0.1" placeholder="GPA">' +
+    '<button class="btn btn-danger btn-sm" onclick="removeCustomGPARange(' + i + ')">×</button>' +
+    '</div>'
+  ).join("");
+}
+
+function addCustomGPARange() {
+  const data = getCurrentData();
+  data.customGPASettings.ranges.push({ min: 0, max: 59, gpa: 0 });
+  saveCurrentData(data);
+  renderCustomGPARanges(data.customGPASettings.ranges);
+}
+
+function removeCustomGPARange(idx) {
+  const data = getCurrentData();
+  data.customGPASettings.ranges.splice(idx, 1);
+  saveCurrentData(data);
+  renderCustomGPARanges(data.customGPASettings.ranges);
+}
+
+function saveCustomGPASettings() {
+  const data = getCurrentData();
+  data.customGPASettings.max = parseFloat($("cgpa-max").value) || 4.0;
+  const inputs = document.querySelectorAll("#cgpa-ranges input");
+  const ranges = [];
+  inputs.forEach(input => {
+    const idx = parseInt(input.dataset.idx);
+    const field = input.dataset.field;
+    if (!ranges[idx]) ranges[idx] = { min: 0, max: 100, gpa: 0 };
+    ranges[idx][field] = parseFloat(input.value) || 0;
+  });
+  data.customGPASettings.ranges = ranges.filter(r => r !== undefined);
+  saveCurrentData(data);
+  closeCustomGPAModal();
+  renderGPA();
+  toast("自定义GPA算法已保存", "success");
+}
+
+function closeCustomGPAModal() {
+  const modal = $("modal-custom-gpa");
+  if (modal) modal.remove();
 }
 
 function showAddCourse() {
