@@ -1343,27 +1343,25 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <!-- ===== 视图：作息总表 ===== -->
     <div class="view" id="view-schedule">
-      <div class="view-header-accent"></div>
-      <div class="page-header">
+      <div class="topbar">
         <div>
           <h1 class="page-title">作息总表</h1>
           <p class="page-subtitle">课程、自习、运动、三餐、睡眠，安排你的每一天</p>
         </div>
-        <div class="header-actions">
-          <button class="btn btn-primary" onclick="showAddScheduleEvent()"><span>+</span> 添加安排</button>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="add-schedule-btn" onclick="showAddScheduleEvent()">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            添加安排
+          </button>
         </div>
       </div>
 
-      <!-- 统计卡片 -->
-      <div class="schedule-stats" id="schedule-stats"></div>
+      <div class="stats-grid" id="schedule-stats"></div>
 
-      <!-- 星期切换标签 -->
       <div class="countdown-tabs" id="schedule-day-tabs" style="margin-bottom:16px;"></div>
 
-      <!-- 当天安排列表 -->
-      <div class="schedule-event-list" id="schedule-event-list"></div>
+      <div class="countdown-grid" id="schedule-event-list"></div>
 
-      <!-- 本周时间分配 -->
       <div class="card" style="margin-top:20px;">
         <div class="card-header">
           <div class="card-title"><span class="dot" style="background:var(--cyan);"></span>本周时间分配</div>
@@ -1376,38 +1374,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <!-- ===== 视图：今日作息 ===== -->
     <div class="view" id="view-routine">
-      <div class="view-header-accent" style="background: linear-gradient(90deg, #ec4899, transparent);"></div>
-      <div class="page-header">
+      <div class="topbar">
         <div>
           <h1 class="page-title">今日作息</h1>
           <p class="page-subtitle" id="routine-date">今日安排、习惯打卡、健康记录</p>
         </div>
-        <div class="header-actions">
-          <button class="btn btn-primary" onclick="showAddScheduleEvent()"><span>+</span> 添加安排</button>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" onclick="showAddScheduleEvent()">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            添加安排
+          </button>
         </div>
       </div>
 
-      <!-- 今日进度 -->
-      <div class="schedule-stats">
-        <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-total" style="color:var(--cyan);">0</div>
-          <div class="schedule-stat-label">今日安排</div>
-        </div>
-        <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-done" style="color:var(--success);">0</div>
-          <div class="schedule-stat-label">已完成</div>
-        </div>
-        <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-percent" style="color:var(--warning);">0%</div>
-          <div class="schedule-stat-label">完成率</div>
-        </div>
-        <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-streak" style="color:var(--pink);">0天</div>
-          <div class="schedule-stat-label">连续打卡</div>
-        </div>
-      </div>
+      <div class="stats-grid" id="routine-stats"></div>
 
-      <!-- 今日安排时间线 -->
       <div class="card" style="margin-bottom:20px;">
         <div class="card-header">
           <div class="card-title"><span class="dot" style="background:var(--primary);"></span>今日安排</div>
@@ -1417,7 +1398,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </div>
       </div>
 
-      <!-- 习惯打卡 -->
       <div class="card" style="margin-bottom:20px;">
         <div class="card-header">
           <div class="card-title"><span class="dot" style="background:var(--success);"></span>习惯打卡</div>
@@ -1428,45 +1408,44 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </div>
       </div>
 
-      <!-- 健康记录 -->
       <div class="card">
         <div class="card-header">
           <div class="card-title"><span class="dot" style="background:var(--pink);"></span>健康记录</div>
         </div>
         <div class="card-body">
           <div class="health-grid">
-            <div class="health-item" onclick="logWater()">
+            <button class="health-item" type="button" onclick="logWater()">
               <div class="health-icon" style="background:rgba(34,211,238,0.15);color:var(--cyan);">💧</div>
               <div class="health-info">
                 <div class="health-value" id="water-count">0</div>
                 <div class="health-label">今日喝水(杯)</div>
               </div>
               <div class="health-action">+1</div>
-            </div>
-            <div class="health-item" onclick="logSleep()">
+            </button>
+            <button class="health-item" type="button" onclick="logSleep()">
               <div class="health-icon" style="background:rgba(167,139,250,0.15);color:var(--purple);">😴</div>
               <div class="health-info">
                 <div class="health-value" id="sleep-hours">--</div>
                 <div class="health-label">昨晚睡眠(小时)</div>
               </div>
               <div class="health-action">记录</div>
-            </div>
-            <div class="health-item" onclick="logMood()">
+            </button>
+            <button class="health-item" type="button" onclick="logMood()">
               <div class="health-icon" style="background:rgba(251,191,36,0.15);color:var(--warning);">😊</div>
               <div class="health-info">
                 <div class="health-value" id="mood-text">--</div>
                 <div class="health-label">今日心情</div>
               </div>
               <div class="health-action">记录</div>
-            </div>
-            <div class="health-item" onclick="logExercise()">
+            </button>
+            <button class="health-item" type="button" onclick="logExercise()">
               <div class="health-icon" style="background:rgba(248,113,113,0.15);color:var(--danger);">🏃</div>
               <div class="health-info">
                 <div class="health-value" id="exercise-min">0</div>
                 <div class="health-label">今日运动(分钟)</div>
               </div>
               <div class="health-action">+30</div>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -2191,6 +2170,7 @@ let scheduleEditingId = null;
 function schedTodayIndex() { return (new Date().getDay() + 6) % 7; }
 function schedUid() { return "ev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); }
 
+// 作息总表渲染
 function renderSchedule() {
   const data = getCurrentData();
   if (data.scheduleSelectedDay === null || data.scheduleSelectedDay === undefined) {
@@ -2211,13 +2191,12 @@ function renderScheduleStats(data) {
   const studyMin = events.filter(e => e.category === "course" || e.category === "study")
     .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
   const studyH = Math.floor(studyMin / 60);
-  const studyM = Math.round(studyMin % 60);
 
   $("schedule-stats").innerHTML =
-    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--cyan);">' + events.length + '</div><div class="schedule-stat-label">本周安排</div></div>' +
-    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--purple);">' + studyH + 'h' + (studyM ? studyM + 'm' : '') + '</div><div class="schedule-stat-label">本周学习</div></div>' +
-    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--success);">' + todays.length + '</div><div class="schedule-stat-label">今日安排</div></div>' +
-    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--warning);">' + donePercent + '%</div><div class="schedule-stat-label">完成率</div></div>';
+    '<div class="stat-card primary"><div class="stat-label">本周安排</div><div class="stat-value">' + events.length + '</div></div>' +
+    '<div class="stat-card danger"><div class="stat-label">本周学习</div><div class="stat-value">' + studyH + '<small>h</small></div></div>' +
+    '<div class="stat-card warning"><div class="stat-label">今日安排</div><div class="stat-value">' + todays.length + '</div></div>' +
+    '<div class="stat-card success"><div class="stat-label">完成率</div><div class="stat-value">' + donePercent + '<small>%</small></div></div>';
 }
 
 function renderScheduleDayTabs(data) {
@@ -2248,7 +2227,7 @@ function renderScheduleEventList(data) {
 
   if (events.length === 0) {
     $("schedule-event-list").innerHTML =
-      '<div class="empty-state" style="padding:40px;text-align:center;"><div class="empty-desc">这一天还没有安排，点击上方"添加安排"按钮创建吧</div></div>';
+      '<div class="empty-state" style="padding:40px;text-align:center;grid-column:1/-1;"><div class="empty-desc">这一天还没有安排，点击右上角"添加安排"按钮创建吧</div></div>';
     return;
   }
 
@@ -2260,18 +2239,20 @@ function renderScheduleEventList(data) {
     const timeStr = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0') +
       ' - ' + String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
 
-    html += '<div class="schedule-event-card ' + (e.done ? 'done' : '') + '" style="border-left-color:' + cat.color + ';">' +
-      '<div class="schedule-event-time">' + timeStr.split(' - ')[0] + '<span>' + timeStr.split(' - ')[1] + '</span></div>' +
-      '<div class="schedule-event-info" onclick="editScheduleEvent(\'' + e.id + '\')">' +
-      '<div class="schedule-event-title">' + escapeHtml(e.title) + '</div>' +
-      '<div class="schedule-event-meta">' +
-      '<span class="schedule-event-cat" style="background:' + cat.color + ';">' + cat.name + '</span>' +
-      (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
+    html += '<div class="countdown-card ' + (e.done ? 'done' : '') + '" style="border-top:3px solid ' + cat.color + ';">' +
+      '<div class="countdown-card-header">' +
+      '<div class="countdown-card-title">' + escapeHtml(e.title) + '</div>' +
+      '<div class="countdown-card-actions">' +
+      '<button class="icon-btn btn-sm" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复' : '完成') + '" style="color:' + (e.done ? 'var(--success)' : 'var(--text-3)') + ';">' +
+      (e.done ? '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>') +
+      '</button>' +
+      '<button class="icon-btn btn-sm" onclick="editScheduleEvent(\'' + e.id + '\')" title="编辑"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>' +
+      '<button class="icon-btn btn-sm" onclick="deleteScheduleEvent(\'' + e.id + '\')" title="删除"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>' +
       '</div></div>' +
-      '<div class="schedule-event-actions">' +
-      '<button class="schedule-event-btn done-btn ' + (e.done ? 'done' : '') + '" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复未完成' : '标记完成') + '">' +
-      (e.done ? '✓' : '') + '</button>' +
-      '<button class="schedule-event-btn del-btn" onclick="deleteScheduleEvent(\'' + e.id + '\')" title="删除">✕</button>' +
+      '<div class="countdown-card-info">' +
+      '<div class="countdown-card-date">🕐 ' + timeStr + '</div>' +
+      '<div class="countdown-card-cat" style="background:' + cat.color + ';">' + cat.name + '</div>' +
+      (e.location ? '<div class="countdown-card-date">📍 ' + escapeHtml(e.location) + '</div>' : '') +
       '</div></div>';
   });
   $("schedule-event-list").innerHTML = html;
@@ -2296,6 +2277,7 @@ function renderCategoryBars(data) {
   $("category-bars").innerHTML = html;
 }
 
+// 事件增删改查
 function showAddScheduleEvent() {
   const data = getCurrentData();
   scheduleEditingId = null;
@@ -2398,6 +2380,7 @@ function toggleScheduleDone(eventId) {
   }
 }
 
+// ========== 今日作息 ==========
 function renderRoutine() {
   const data = getCurrentData();
   const today = schedTodayIndex();
@@ -2411,52 +2394,61 @@ function renderRoutine() {
     data.health = { water: 0, sleep: data.health.sleep, mood: null, exercise: 0, lastDate: todayKey };
   }
 
-  const events = (data.scheduleEvents || []).filter(e => e.day === today).sort((a, b) => a.start - b.start);
-  const doneCount = events.filter(e => e.done).length;
-  const donePercent = events.length ? Math.round(doneCount / events.length * 100) : 0;
-
-  $("routine-total").textContent = events.length;
-  $("routine-done").textContent = doneCount;
-  $("routine-percent").textContent = donePercent + "%";
-
-  let streak = 0;
-  const habits = data.habits || [];
-  const allDone = habits.length > 0 && habits.every(h => h.done);
-  if (allDone) {
-    streak = Math.max(...habits.map(h => h.streak || 0));
-  }
-  $("routine-streak").textContent = streak + "天";
-
-  const cats = data.scheduleCategories || [];
-  if (events.length === 0) {
-    $("routine-timeline").innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;"><div class="empty-desc">今天还没有安排</div></div>';
-  } else {
-    let html = '';
-    events.forEach(e => {
-      const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
-      const startH = Math.floor(e.start / 60), startM = e.start % 60;
-      const endH = Math.floor(e.end / 60), endM = e.end % 60;
-      const timeStr = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
-      const endTimeStr = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
-
-      html += '<div class="routine-item ' + (e.done ? 'done' : '') + '" style="border-left:3px solid ' + cat.color + ';">' +
-        '<div class="routine-time">' + timeStr + '<span>' + endTimeStr + '</span></div>' +
-        '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
-        '<div class="routine-meta">' +
-        '<span style="color:' + cat.color + ';">' + cat.name + '</span>' +
-        (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
-        '</div>' +
-        '<button class="routine-done-btn" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复未完成' : '标记完成') + '">' +
-        (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
-        '</button></div>';
-    });
-    $("routine-timeline").innerHTML = html;
-  }
-
+  renderRoutineStats(data);
+  renderRoutineTimeline(data);
   renderHabits(data);
   renderHealth(data);
 }
 
+function renderRoutineStats(data) {
+  const today = schedTodayIndex();
+  const events = (data.scheduleEvents || []).filter(e => e.day === today);
+  const doneCount = events.filter(e => e.done).length;
+  const donePercent = events.length ? Math.round(doneCount / events.length * 100) : 0;
+  const habits = data.habits || [];
+  const habitDone = habits.filter(h => h.done).length;
+  const streak = habits.length > 0 && habits.every(h => h.done) ? Math.max(...habits.map(h => h.streak || 0)) : 0;
+
+  $("routine-stats").innerHTML =
+    '<div class="stat-card primary"><div class="stat-label">今日安排</div><div class="stat-value">' + events.length + '</div></div>' +
+    '<div class="stat-card success"><div class="stat-label">已完成</div><div class="stat-value">' + doneCount + '</div></div>' +
+    '<div class="stat-card warning"><div class="stat-label">完成率</div><div class="stat-value">' + donePercent + '<small>%</small></div></div>' +
+    '<div class="stat-card danger"><div class="stat-label">习惯打卡</div><div class="stat-value">' + habitDone + '<small>/' + habits.length + '</small></div></div>';
+}
+
+function renderRoutineTimeline(data) {
+  const today = schedTodayIndex();
+  const events = (data.scheduleEvents || []).filter(e => e.day === today).sort((a, b) => a.start - b.start);
+  const cats = data.scheduleCategories || [];
+
+  if (events.length === 0) {
+    $("routine-timeline").innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;"><div class="empty-desc">今天还没有安排</div></div>';
+    return;
+  }
+
+  let html = '';
+  events.forEach(e => {
+    const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
+    const startH = Math.floor(e.start / 60), startM = e.start % 60;
+    const endH = Math.floor(e.end / 60), endM = e.end % 60;
+    const timeStr = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
+    const endTimeStr = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
+
+    html += '<div class="routine-item ' + (e.done ? 'done' : '') + '" style="border-left:3px solid ' + cat.color + ';">' +
+      '<div class="routine-time">' + timeStr + '<span>' + endTimeStr + '</span></div>' +
+      '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
+      '<div class="routine-meta">' +
+      '<span style="color:' + cat.color + ';">' + cat.name + '</span>' +
+      (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
+      '</div>' +
+      '<button class="routine-done-btn" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复未完成' : '标记完成') + '">' +
+      (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
+      '</button></div>';
+  });
+  $("routine-timeline").innerHTML = html;
+}
+
+// ========== 习惯打卡 ==========
 function renderHabits(data) {
   const habits = data.habits || [];
   if (habits.length === 0) {
@@ -2465,12 +2457,12 @@ function renderHabits(data) {
   }
   let html = '';
   habits.forEach(h => {
-    html += '<div class="habit-card ' + (h.done ? 'done' : '') + '" onclick="toggleHabit(\'' + h.id + '\')">' +
+    html += '<button type="button" class="habit-card ' + (h.done ? 'done' : '') + '" onclick="toggleHabit(\'' + h.id + '\')">' +
       (h.done ? '<div class="habit-check">✓</div>' : '') +
       '<div class="habit-icon">' + h.icon + '</div>' +
       '<div class="habit-name">' + escapeHtml(h.name) + '</div>' +
       '<div class="habit-streak">连续 ' + (h.streak || 0) + ' 天</div>' +
-      '</div>';
+      '</button>';
   });
   $("habit-grid").innerHTML = html;
 }
@@ -2504,6 +2496,7 @@ function showAddHabit() {
   toast("习惯添加成功", "success");
 }
 
+// ========== 健康记录 ==========
 function renderHealth(data) {
   const h = data.health || { water: 0, sleep: null, mood: null, exercise: 0 };
   $("water-count").textContent = h.water || 0;
@@ -2557,7 +2550,6 @@ function logExercise() {
   renderHealth(data);
   toast("已记录运动 +30 分钟，当前 " + data.health.exercise + " 分钟", "success");
 }
-
 
 
 function renderAll() {
