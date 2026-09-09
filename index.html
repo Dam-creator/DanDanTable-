@@ -79,11 +79,56 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); top: -150px; left: -100px; }
 .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, #22d3ee 0%, transparent 70%); bottom: -100px; right: -80px; animation-delay: -7s; }
 .orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, #f472b6 0%, transparent 70%); top: 40%; left: 50%; animation-delay: -14s; opacity: 0.2; }
+.orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, #34d399 0%, transparent 70%); top: 20%; right: 20%; animation-delay: -3s; opacity: 0.25; }
+.orb-5 { width: 280px; height: 280px; background: radial-gradient(circle, #fbbf24 0%, transparent 70%); bottom: 20%; left: 15%; animation-delay: -10s; opacity: 0.2; }
 [data-theme="light"] .orb { opacity: 0.15; }
 @keyframes float {
   0%,100% { transform: translate(0,0) scale(1); }
   33% { transform: translate(40px,-30px) scale(1.08); }
   66% { transform: translate(-30px,20px) scale(0.95); }
+}
+
+/* 动态网格背景 */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+[data-theme="light"] .bg-grid {
+  background-image:
+    linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+}
+
+/* 粒子背景 */
+.bg-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.particle {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(139,92,246,0.6);
+  animation: particleFloat 15s linear infinite;
+}
+@keyframes particleFloat {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; transform: translateY(90vh) scale(1); }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(0.5); opacity: 0; }
+}
+
+/* 渐变动画背景 */
+.bg-gradient-anim {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(34,211,238,0.03) 50%, rgba(244,114,182,0.05) 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ========== 布局 ========== */
@@ -389,12 +434,29 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ========== 欢迎页 ========== */
 .welcome-page {
   position: fixed; inset: 0; z-index: 300;
-  background: var(--bg-0);
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
 }
 .welcome-card {
-  text-align: center; max-width: 420px; width: 100%;
+  text-align: center; max-width: 440px; width: 100%;
+  padding: 40px 36px;
+  background: rgba(20, 20, 40, 0.6);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: cardFloat 6s ease-in-out infinite;
+}
+[data-theme="light"] .welcome-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 .welcome-logo {
   width: 72px; height: 72px; margin: 0 auto 24px;
@@ -618,7 +680,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="orb orb-5"></div>
 </div>
+
+<!-- 动态网格背景 -->
+<div class="bg-grid"></div>
+
+<!-- 渐变动画背景 -->
+<div class="bg-gradient-anim"></div>
+
+<!-- 粒子背景 -->
+<div class="bg-particles" id="bg-particles"></div>
 
 <!-- 欢迎页（选择用户） -->
 <div class="welcome-page" id="welcome-page">
@@ -682,6 +755,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="profile-avatar" id="sidebar-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);">学</div>
         <div class="profile-info">
           <div class="profile-name" id="sidebar-name">大学生</div>
+          <div class="profile-username" id="sidebar-username" style="font-size:11px;color:var(--text-3);margin-top:2px;"></div>
           <div class="profile-role">点击切换档案</div>
         </div>
         <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -909,6 +983,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <div class="modal">
     <h2 class="modal-title">创建新档案</h2>
     <p class="modal-desc">每个档案拥有独立的数据，适合多人共用一台设备</p>
+    <div class="form-group">
+      <label class="form-label">用户名</label>
+      <input type="text" class="form-input" id="new-profile-username" maxlength="20" placeholder="输入你的用户名（唯一标识）">
+    </div>
     <div class="form-group">
       <label class="form-label">昵称</label>
       <input type="text" class="form-input" id="new-profile-name" maxlength="12" placeholder="输入你的昵称">
@@ -1259,7 +1337,7 @@ function renderWelcomeProfiles() {
     return '<button class="welcome-profile-item" onclick="enterProfile(\'' + p.id + '\')">' +
       '<div class="profile-avatar" style="background:linear-gradient(135deg,' + p.colorFrom + ',' + p.colorTo + ')">' + p.name.charAt(0) + '</div>' +
       '<div class="welcome-profile-info">' +
-        '<div class="welcome-profile-name">' + escapeHtml(p.name) + '</div>' +
+        '<div class="welcome-profile-name">' + escapeHtml(p.name) + (p.username ? ' <span style="font-size:11px;color:var(--text-3);font-weight:500;">@' + escapeHtml(p.username) + '</span>' : '') + '</div>' +
         '<div class="welcome-profile-meta">' + courseCount + ' 门课程 · ' + txCount + ' 笔账单 · ' + data.countdowns.filter(c=>!c.done).length + ' 个倒计时</div>' +
       '</div>' +
       '<svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>' +
@@ -1280,18 +1358,31 @@ function selectAvatarColor(i) {
 }
 
 function showCreateProfile() {
-  $("new-profile-name").value = "";
-  state.selectedAvatarColor = 0;
-  renderAvatarColors();
   showModal("modal-create-profile");
+  try {
+    $("new-profile-username").value = "";
+    $("new-profile-name").value = "";
+    state.selectedAvatarColor = 0;
+    renderAvatarColors();
+  } catch(e) {
+    console.error("showCreateProfile error:", e);
+  }
 }
 
 function createProfile() {
+  const username = $("new-profile-username").value.trim();
   const name = $("new-profile-name").value.trim();
+  if (!username) { toast("请输入用户名", "error"); return; }
   if (!name) { toast("请输入昵称", "error"); return; }
+  // 检查用户名唯一性
+  if (state.profiles.find(p => p.username === username)) {
+    toast("该用户名已存在，请换一个", "error");
+    return;
+  }
   const color = AVATAR_COLORS[state.selectedAvatarColor];
   const profile = {
     id: uuid(),
+    username: username,
     name: name,
     colorFrom: color.from,
     colorTo: color.to,
@@ -1308,7 +1399,7 @@ function createProfile() {
   saveProfileData(profile.id, data);
   enterProfile(profile.id);
   closeModal("modal-create-profile");
-  toast("档案创建成功", "success");
+  toast("档案创建成功，欢迎 " + name, "success");
 }
 
 function enterProfile(profileId) {
@@ -1318,6 +1409,7 @@ function enterProfile(profileId) {
   if (!profile) return;
   // 更新侧边栏
   $("sidebar-name").textContent = profile.name;
+  $("sidebar-username").textContent = profile.username ? "@" + profile.username : "";
   const avatar = $("sidebar-avatar");
   avatar.style.background = "linear-gradient(135deg," + profile.colorFrom + "," + profile.colorTo + ")";
   avatar.textContent = profile.name.charAt(0);
@@ -1358,7 +1450,7 @@ function showProfileManager() {
     return '<div class="welcome-profile-item" style="' + (isCurrent ? 'border-color:var(--primary);background:rgba(139,92,246,0.1);' : '') + '">' +
       '<div class="profile-avatar" style="background:linear-gradient(135deg,' + p.colorFrom + ',' + p.colorTo + ')">' + p.name.charAt(0) + '</div>' +
       '<div class="welcome-profile-info">' +
-        '<div class="welcome-profile-name">' + escapeHtml(p.name) + (isCurrent ? ' <span class="tag primary" style="margin-left:6px;">当前</span>' : '') + '</div>' +
+        '<div class="welcome-profile-name">' + escapeHtml(p.name) + (isCurrent ? ' <span class="tag primary" style="margin-left:6px;">当前</span>' : '') + (p.username ? ' <span style="font-size:11px;color:var(--text-3);font-weight:500;">@' + escapeHtml(p.username) + '</span>' : '') + '</div>' +
         '<div class="welcome-profile-meta">创建于 ' + formatDate(p.createdAt) + '</div>' +
       '</div>' +
       '<div style="display:flex;gap:6px;">' +
@@ -2119,8 +2211,28 @@ window.addEventListener("resize", () => {
   Object.values(state.charts).forEach(c => { if (c) c.resize(); });
 });
 
+// ========== 粒子背景 ==========
+function initParticles() {
+  const container = $("bg-particles");
+  if (!container) return;
+  const colors = ["#8b5cf6", "#22d3ee", "#f472b6", "#34d399", "#fbbf24"];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.animationDelay = Math.random() * 15 + "s";
+    p.style.animationDuration = (10 + Math.random() * 15) + "s";
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.width = (2 + Math.random() * 4) + "px";
+    p.style.height = p.style.width;
+    p.style.opacity = 0.3 + Math.random() * 0.4;
+    container.appendChild(p);
+  }
+}
+
 // ========== 初始化 ==========
 function init() {
+  initParticles();
   loadProfiles();
   applyTheme();
 
