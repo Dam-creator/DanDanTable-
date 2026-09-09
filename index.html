@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -616,6 +616,102 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .routine-item.done { opacity: 0.7; }
 .routine-item.done::before { background: var(--success); box-shadow: 0 0 0 2px rgba(52,211,153,0.3); }
 
+/* 习惯打卡 */
+.habit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.habit-card {
+  padding: 16px;
+  background: var(--bg-3);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  position: relative;
+}
+.habit-card:hover { transform: translateY(-2px); border-color: var(--primary); }
+.habit-card.done {
+  background: linear-gradient(135deg, rgba(52,211,153,0.15) 0%, rgba(52,211,153,0.05) 100%);
+  border-color: var(--success);
+}
+.habit-icon { font-size: 28px; margin-bottom: 8px; }
+.habit-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.habit-streak { font-size: 11px; color: var(--text-3); }
+.habit-card.done .habit-check {
+  position: absolute; top: 8px; right: 8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--success); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+/* 健康记录 */
+.health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.health-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px;
+  background: var(--bg-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.health-item:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-sm); }
+.health-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.health-info { flex: 1; min-width: 0; }
+.health-value { font-size: 18px; font-weight: 700; line-height: 1.2; }
+.health-label { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.health-action {
+  padding: 4px 10px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* 作息事件卡片列表 */
+.schedule-event-list { display: flex; flex-direction: column; gap: 10px; }
+.schedule-event-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.schedule-event-card:hover { transform: translateX(4px); border-color: var(--primary); box-shadow: var(--shadow-sm); }
+.schedule-event-card.done { opacity: 0.6; }
+.schedule-event-card.done .schedule-event-title { text-decoration: line-through; }
+.schedule-event-time {
+  font-size: 13px; font-weight: 600; color: var(--text-2);
+  min-width: 90px; flex-shrink: 0;
+}
+.schedule-event-time span { display: block; font-size: 11px; color: var(--text-3); font-weight: 400; }
+.schedule-event-info { flex: 1; min-width: 0; }
+.schedule-event-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.schedule-event-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 10px; flex-wrap: wrap; }
+.schedule-event-cat {
+  padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; color: #fff;
+}
+.schedule-event-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.schedule-event-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--card-border-strong);
+  background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; color: var(--text-3);
+}
+.schedule-event-btn:hover { border-color: var(--primary); color: var(--primary); }
+.schedule-event-btn.done-btn.done { background: var(--success); border-color: var(--success); color: #fff; }
+.schedule-event-btn.del-btn:hover { border-color: var(--danger); color: var(--danger); }
+
 /* 作息统计 */
 .schedule-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
 .schedule-stat-card {
@@ -1083,6 +1179,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
                 </div>
                 <div class="quick-action-text">记一笔</div>
               </button>
+              <button class="quick-action" onclick="switchView('schedule');setTimeout(()=>showAddScheduleEvent(),300)">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#f472b6,#a78bfa);">
+                  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                </div>
+                <div class="quick-action-text">添加安排</div>
+              </button>
+              <button class="quick-action" onclick="switchView('routine')">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#fbbf24,#f87171);">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+                </div>
+                <div class="quick-action-text">今日作息</div>
+              </button>
             </div>
           </div>
 
@@ -1239,33 +1347,24 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <div class="page-header">
         <div>
           <h1 class="page-title">作息总表</h1>
-          <p class="page-subtitle">课程、自习、运动、三餐、睡眠，一张表安排你的一周</p>
+          <p class="page-subtitle">课程、自习、运动、三餐、睡眠，安排你的每一天</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" onclick="quickAddScheduleEvent()"><span>+</span> 快速添加</button>
-          <button class="btn btn-ghost" onclick="showScheduleSettings()"><span>⚙</span> 设置</button>
+          <button class="btn btn-primary" onclick="showAddScheduleEvent()"><span>+</span> 添加安排</button>
         </div>
       </div>
 
       <!-- 统计卡片 -->
       <div class="schedule-stats" id="schedule-stats"></div>
 
-      <!-- 工具栏 -->
-      <div class="schedule-toolbar">
-        <div class="schedule-filters" id="schedule-filters"></div>
-        <button class="btn btn-ghost btn-sm" onclick="toggleHideDoneSchedule()" id="btn-hide-done">显示已完成</button>
-      </div>
+      <!-- 星期切换标签 -->
+      <div class="countdown-tabs" id="schedule-day-tabs" style="margin-bottom:16px;"></div>
 
-      <!-- 周视图网格 -->
-      <div class="week-grid-wrapper">
-        <div class="week-grid" id="week-grid">
-          <div class="week-grid-header" id="week-grid-header"></div>
-          <div class="week-grid-body" id="week-grid-body"></div>
-        </div>
-      </div>
+      <!-- 当天安排列表 -->
+      <div class="schedule-event-list" id="schedule-event-list"></div>
 
       <!-- 本周时间分配 -->
-      <div class="card" style="margin-top: 24px;">
+      <div class="card" style="margin-top:20px;">
         <div class="card-header">
           <div class="card-title"><span class="dot" style="background:var(--cyan);"></span>本周时间分配</div>
         </div>
@@ -1281,35 +1380,96 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <div class="page-header">
         <div>
           <h1 class="page-title">今日作息</h1>
-          <p class="page-subtitle" id="routine-date">按时间线浏览今天的安排，随手标记完成</p>
+          <p class="page-subtitle" id="routine-date">今日安排、习惯打卡、健康记录</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" onclick="quickAddScheduleEvent()"><span>+</span> 添加安排</button>
+          <button class="btn btn-primary" onclick="showAddScheduleEvent()"><span>+</span> 添加安排</button>
         </div>
       </div>
 
       <!-- 今日进度 -->
       <div class="schedule-stats">
         <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-total">0</div>
+          <div class="schedule-stat-value" id="routine-total" style="color:var(--cyan);">0</div>
           <div class="schedule-stat-label">今日安排</div>
         </div>
         <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-done">0</div>
+          <div class="schedule-stat-value" id="routine-done" style="color:var(--success);">0</div>
           <div class="schedule-stat-label">已完成</div>
         </div>
         <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-percent">0%</div>
+          <div class="schedule-stat-value" id="routine-percent" style="color:var(--warning);">0%</div>
           <div class="schedule-stat-label">完成率</div>
         </div>
         <div class="schedule-stat-card">
-          <div class="schedule-stat-value" id="routine-study">0h</div>
-          <div class="schedule-stat-label">今日学习</div>
+          <div class="schedule-stat-value" id="routine-streak" style="color:var(--pink);">0天</div>
+          <div class="schedule-stat-label">连续打卡</div>
         </div>
       </div>
 
-      <!-- 时间线 -->
-      <div class="routine-timeline" id="routine-timeline"></div>
+      <!-- 今日安排时间线 -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--primary);"></span>今日安排</div>
+        </div>
+        <div class="card-body">
+          <div class="routine-timeline" id="routine-timeline"></div>
+        </div>
+      </div>
+
+      <!-- 习惯打卡 -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--success);"></span>习惯打卡</div>
+          <button class="btn btn-ghost btn-sm" onclick="showAddHabit()">+ 添加习惯</button>
+        </div>
+        <div class="card-body">
+          <div class="habit-grid" id="habit-grid"></div>
+        </div>
+      </div>
+
+      <!-- 健康记录 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="dot" style="background:var(--pink);"></span>健康记录</div>
+        </div>
+        <div class="card-body">
+          <div class="health-grid">
+            <div class="health-item" onclick="logWater()">
+              <div class="health-icon" style="background:rgba(34,211,238,0.15);color:var(--cyan);">💧</div>
+              <div class="health-info">
+                <div class="health-value" id="water-count">0</div>
+                <div class="health-label">今日喝水(杯)</div>
+              </div>
+              <div class="health-action">+1</div>
+            </div>
+            <div class="health-item" onclick="logSleep()">
+              <div class="health-icon" style="background:rgba(167,139,250,0.15);color:var(--purple);">😴</div>
+              <div class="health-info">
+                <div class="health-value" id="sleep-hours">--</div>
+                <div class="health-label">昨晚睡眠(小时)</div>
+              </div>
+              <div class="health-action">记录</div>
+            </div>
+            <div class="health-item" onclick="logMood()">
+              <div class="health-icon" style="background:rgba(251,191,36,0.15);color:var(--warning);">😊</div>
+              <div class="health-info">
+                <div class="health-value" id="mood-text">--</div>
+                <div class="health-label">今日心情</div>
+              </div>
+              <div class="health-action">记录</div>
+            </div>
+            <div class="health-item" onclick="logExercise()">
+              <div class="health-icon" style="background:rgba(248,113,113,0.15);color:var(--danger);">🏃</div>
+              <div class="health-info">
+                <div class="health-value" id="exercise-min">0</div>
+                <div class="health-label">今日运动(分钟)</div>
+              </div>
+              <div class="health-action">+30</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -1797,6 +1957,14 @@ function getProfileData(profileId) {
     scheduleSettings: { timeStart: 390, timeEnd: 1410, step: 30 },
     scheduleHideDone: false,
     scheduleFilterCat: "all",
+    scheduleSelectedDay: null,
+    habits: [
+      { id: "h1", name: "早起", icon: "🌅", done: false, streak: 0 },
+      { id: "h2", name: "背单词", icon: "📚", done: false, streak: 0 },
+      { id: "h3", name: "运动", icon: "🏃", done: false, streak: 0 },
+      { id: "h4", name: "阅读", icon: "📖", done: false, streak: 0 }
+    ],
+    health: { water: 0, sleep: null, mood: null, exercise: 0, lastDate: null },
     customGPASettings: JSON.parse(JSON.stringify(DEFAULT_CUSTOM_GPA))
   });
 }
@@ -2020,28 +2188,17 @@ function switchTheme() {
 const SCHEDULE_WEEK_DAYS = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 let scheduleEditingId = null;
 
-function schedHhmmToMin(s) {
-  if (typeof s !== "string") return 0;
-  const [h, m] = s.split(":").map(Number);
-  return (h || 0) * 60 + (m || 0);
-}
-function schedMinToHHMM(min) {
-  const h = Math.floor(min / 60);
-  const m = Math.round(min % 60);
-  return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-}
-function schedTodayIndex() {
-  return (new Date().getDay() + 6) % 7;
-}
-function schedUid() {
-  return "ev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
-}
+function schedTodayIndex() { return (new Date().getDay() + 6) % 7; }
+function schedUid() { return "ev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); }
 
 function renderSchedule() {
   const data = getCurrentData();
+  if (data.scheduleSelectedDay === null || data.scheduleSelectedDay === undefined) {
+    data.scheduleSelectedDay = schedTodayIndex();
+  }
   renderScheduleStats(data);
-  renderScheduleFilters(data);
-  renderWeekGrid(data);
+  renderScheduleDayTabs(data);
+  renderScheduleEventList(data);
   renderCategoryBars(data);
 }
 
@@ -2049,112 +2206,75 @@ function renderScheduleStats(data) {
   const events = data.scheduleEvents || [];
   const today = schedTodayIndex();
   const todays = events.filter(e => e.day === today);
-  const studyMin = events.filter(e => e.category === "course" || e.category === "study")
-    .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
   const doneCount = events.filter(e => e.done).length;
   const donePercent = events.length ? Math.round(doneCount / events.length * 100) : 0;
+  const studyMin = events.filter(e => e.category === "course" || e.category === "study")
+    .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
   const studyH = Math.floor(studyMin / 60);
   const studyM = Math.round(studyMin % 60);
 
   $("schedule-stats").innerHTML =
     '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--cyan);">' + events.length + '</div><div class="schedule-stat-label">本周安排</div></div>' +
-    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--purple);">' + (studyH + "h" + (studyM ? studyM + "m" : "")) + '</div><div class="schedule-stat-label">本周学习</div></div>' +
+    '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--purple);">' + studyH + 'h' + (studyM ? studyM + 'm' : '') + '</div><div class="schedule-stat-label">本周学习</div></div>' +
     '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--success);">' + todays.length + '</div><div class="schedule-stat-label">今日安排</div></div>' +
     '<div class="schedule-stat-card"><div class="schedule-stat-value" style="color:var(--warning);">' + donePercent + '%</div><div class="schedule-stat-label">完成率</div></div>';
 }
 
-function renderScheduleFilters(data) {
-  const cats = data.scheduleCategories || [];
-  const current = data.scheduleFilterCat || "all";
-  let html = '<div class="schedule-filter ' + (current === "all" ? "active" : "") + '" onclick="filterScheduleCategory(\'all\')">全部</div>';
-  cats.forEach(c => {
-    html += '<div class="schedule-filter ' + (current === c.id ? "active" : "") + '" style="' + (current === c.id ? "background:" + c.color + ";border-color:" + c.color + ";" : "") + '" onclick="filterScheduleCategory(\'' + c.id + '\')">' + c.name + '</div>';
-  });
-  $("schedule-filters").innerHTML = html;
-}
-
-function filterScheduleCategory(catId) {
-  const data = getCurrentData();
-  data.scheduleFilterCat = catId;
-  saveCurrentData(data);
-  renderSchedule();
-}
-
-function toggleHideDoneSchedule() {
-  const data = getCurrentData();
-  data.scheduleHideDone = !data.scheduleHideDone;
-  saveCurrentData(data);
-  $("btn-hide-done").textContent = data.scheduleHideDone ? "显示已完成" : "隐藏已完成";
-  renderSchedule();
-}
-
-function renderWeekGrid(data) {
-  const settings = data.scheduleSettings || { timeStart: 390, timeEnd: 1410, step: 30 };
-  const events = data.scheduleEvents || [];
-  const filterCat = data.scheduleFilterCat || "all";
-  const hideDone = data.scheduleHideDone || false;
+function renderScheduleDayTabs(data) {
   const today = schedTodayIndex();
-
-  let visibleEvents = events.filter(e => (filterCat === "all" || e.category === filterCat) && (!hideDone || !e.done));
-
-  // 表头
-  let headerHtml = '<div class="time-col">时间</div>';
+  const selected = data.scheduleSelectedDay;
+  let html = '';
   for (let d = 0; d < 7; d++) {
-    headerHtml += '<div class="' + (d === today ? "today-col" : "") + '">' + SCHEDULE_WEEK_DAYS[d] + (d === today ? ' <span style="font-size:10px;">(今天)</span>' : '') + '</div>';
+    const count = (data.scheduleEvents || []).filter(e => e.day === d).length;
+    html += '<button class="countdown-tab ' + (d === selected ? 'active' : '') + '" onclick="switchScheduleDay(' + d + ')">' +
+      SCHEDULE_WEEK_DAYS[d] + (d === today ? ' <span style="font-size:10px;opacity:0.7;">今</span>' : '') +
+      (count > 0 ? ' <span style="font-size:10px;opacity:0.6;">(' + count + ')</span>' : '') +
+      '</button>';
   }
-  $("week-grid-header").innerHTML = headerHtml;
-
-  // 时间列
-  const totalMin = settings.timeEnd - settings.timeStart;
-  const rows = Math.ceil(totalMin / settings.step);
-  const rowHeight = 48;
-  const totalHeight = rows * rowHeight;
-
-  let bodyHtml = '<div class="time-label-col">';
-  for (let r = 0; r <= rows; r++) {
-    const min = settings.timeStart + r * settings.step;
-    if (min <= settings.timeEnd) {
-      bodyHtml += '<div class="time-label" style="height:' + rowHeight + 'px;">' + schedMinToHHMM(min) + '</div>';
-    }
-  }
-  bodyHtml += '</div>';
-
-  // 每天的列 - 使用事件委托，不在每个格子绑定onclick
-  for (let d = 0; d < 7; d++) {
-    const dayEvents = visibleEvents.filter(e => e.day === d);
-    bodyHtml += '<div class="day-col ' + (d === today ? "today-col" : '') + '" style="height:' + totalHeight + 'px;" data-day="' + d + '" onclick="handleDayColClick(event, ' + d + ')">';
-    // 只渲染网格线，不渲染每个格子的div
-    bodyHtml += '<div class="day-grid-bg" style="height:' + totalHeight + 'px;"></div>';
-    // 事件卡片
-    dayEvents.forEach(e => {
-      const cat = (data.scheduleCategories || []).find(c => c.id === e.category) || { color: "#888" };
-      const top = ((e.start - settings.timeStart) / settings.step) * rowHeight;
-      const height = ((e.end - e.start) / settings.step) * rowHeight - 2;
-      if (height > 0) {
-        bodyHtml += '<div class="schedule-event ' + (e.done ? "done" : "") + '" style="top:' + top + 'px;height:' + height + 'px;background:' + cat.color + ';" data-event-id="' + e.id + '" onclick="event.stopPropagation();openScheduleEventEdit(\'' + e.id + '\')">' +
-          '<div class="ev-title">' + escapeHtml(e.title) + '</div>' +
-          (height > 30 ? '<div class="ev-time">' + schedMinToHHMM(e.start) + '-' + schedMinToHHMM(e.end) + '</div>' : '') +
-          (height > 50 && e.location ? '<div class="ev-loc">' + escapeHtml(e.location) + '</div>' : '') +
-          '</div>';
-      }
-    });
-    bodyHtml += '</div>';
-  }
-  $("week-grid-body").innerHTML = bodyHtml;
+  $("schedule-day-tabs").innerHTML = html;
 }
 
-// 事件委托：点击空白处添加事件
-function handleDayColClick(event, day) {
-  // 如果点击的是事件卡片，不处理
-  if (event.target.closest('.schedule-event')) return;
+function switchScheduleDay(day) {
   const data = getCurrentData();
-  const settings = data.scheduleSettings || { timeStart: 390, timeEnd: 1410, step: 30 };
-  const rowHeight = 48;
-  const rect = event.currentTarget.getBoundingClientRect();
-  const y = event.clientY - rect.top;
-  const min = settings.timeStart + Math.floor(y / rowHeight) * settings.step;
-  const clampedMin = Math.max(settings.timeStart, Math.min(settings.timeEnd - settings.step, min));
-  openScheduleEventCreate(day, clampedMin);
+  data.scheduleSelectedDay = day;
+  saveCurrentData(data);
+  renderSchedule();
+}
+
+function renderScheduleEventList(data) {
+  const day = data.scheduleSelectedDay;
+  const events = (data.scheduleEvents || []).filter(e => e.day === day).sort((a, b) => a.start - b.start);
+  const cats = data.scheduleCategories || [];
+
+  if (events.length === 0) {
+    $("schedule-event-list").innerHTML =
+      '<div class="empty-state" style="padding:40px;text-align:center;"><div class="empty-desc">这一天还没有安排，点击上方"添加安排"按钮创建吧</div></div>';
+    return;
+  }
+
+  let html = '';
+  events.forEach(e => {
+    const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
+    const startH = Math.floor(e.start / 60), startM = e.start % 60;
+    const endH = Math.floor(e.end / 60), endM = e.end % 60;
+    const timeStr = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0') +
+      ' - ' + String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
+
+    html += '<div class="schedule-event-card ' + (e.done ? 'done' : '') + '" style="border-left-color:' + cat.color + ';">' +
+      '<div class="schedule-event-time">' + timeStr.split(' - ')[0] + '<span>' + timeStr.split(' - ')[1] + '</span></div>' +
+      '<div class="schedule-event-info" onclick="editScheduleEvent(\'' + e.id + '\')">' +
+      '<div class="schedule-event-title">' + escapeHtml(e.title) + '</div>' +
+      '<div class="schedule-event-meta">' +
+      '<span class="schedule-event-cat" style="background:' + cat.color + ';">' + cat.name + '</span>' +
+      (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
+      '</div></div>' +
+      '<div class="schedule-event-actions">' +
+      '<button class="schedule-event-btn done-btn ' + (e.done ? 'done' : '') + '" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复未完成' : '标记完成') + '">' +
+      (e.done ? '✓' : '') + '</button>' +
+      '<button class="schedule-event-btn del-btn" onclick="deleteScheduleEvent(\'' + e.id + '\')" title="删除">✕</button>' +
+      '</div></div>';
+  });
+  $("schedule-event-list").innerHTML = html;
 }
 
 function renderCategoryBars(data) {
@@ -2171,21 +2291,19 @@ function renderCategoryBars(data) {
     html += '<div class="category-bar-row">' +
       '<div class="category-bar-name"><span class="category-bar-dot" style="background:' + c.color + ';"></span>' + c.name + '</div>' +
       '<div class="category-bar-track"><div class="category-bar-fill" style="width:' + width + '%;background:' + c.color + ';"></div></div>' +
-      '<div class="category-bar-count">' + count + ' 项</div>' +
-      '</div>';
+      '<div class="category-bar-count">' + count + ' 项</div></div>';
   });
   $("category-bars").innerHTML = html;
 }
 
-function openScheduleEventCreate(day, start) {
+function showAddScheduleEvent() {
   const data = getCurrentData();
-  const settings = data.scheduleSettings || { step: 30, timeEnd: 1410 };
   scheduleEditingId = null;
   $("schedule-event-title").textContent = "添加安排";
   $("se-title").value = "";
-  $("se-day").value = day;
-  $("se-start").value = schedMinToHHMM(start);
-  $("se-end").value = schedMinToHHMM(Math.min(start + settings.step, settings.timeEnd));
+  $("se-day").value = data.scheduleSelectedDay !== null ? data.scheduleSelectedDay : schedTodayIndex();
+  $("se-start").value = "08:00";
+  $("se-end").value = "09:40";
   $("se-location").value = "";
   $("se-notes").value = "";
   $("se-delete-btn").style.display = "none";
@@ -2193,7 +2311,7 @@ function openScheduleEventCreate(day, start) {
   showModal("modal-schedule-event");
 }
 
-function openScheduleEventEdit(eventId) {
+function editScheduleEvent(eventId) {
   const data = getCurrentData();
   const event = (data.scheduleEvents || []).find(e => e.id === eventId);
   if (!event) return;
@@ -2201,8 +2319,8 @@ function openScheduleEventEdit(eventId) {
   $("schedule-event-title").textContent = "编辑安排";
   $("se-title").value = event.title;
   $("se-day").value = event.day;
-  $("se-start").value = schedMinToHHMM(event.start);
-  $("se-end").value = schedMinToHHMM(event.end);
+  $("se-start").value = String(Math.floor(event.start / 60)).padStart(2, '0') + ':' + String(event.start % 60).padStart(2, '0');
+  $("se-end").value = String(Math.floor(event.end / 60)).padStart(2, '0') + ':' + String(event.end % 60).padStart(2, '0');
   $("se-location").value = event.location || "";
   $("se-notes").value = event.notes || "";
   $("se-delete-btn").style.display = "block";
@@ -2214,7 +2332,7 @@ function renderCategoryPicker(data, selectedId) {
   const cats = data.scheduleCategories || [];
   let html = "";
   cats.forEach(c => {
-    html += '<div class="category-option ' + (c.id === selectedId ? "selected" : "") + '" style="background:' + c.color + ';color:#fff;" onclick="selectScheduleCategory(\'' + c.id + '\', this)" data-cat-id="' + c.id + '">' + c.name + '</div>';
+    html += '<div class="category-option ' + (c.id === selectedId ? "selected" : "") + '" style="background:' + c.color + ';color:#fff;" onclick="selectScheduleCategory(\'' + c.id + '\', this)">' + c.name + '</div>';
   });
   $("se-category-picker").innerHTML = html;
   $("se-category-picker").dataset.selected = selectedId;
@@ -2229,23 +2347,25 @@ function selectScheduleCategory(catId, el) {
 function saveScheduleEvent() {
   const data = getCurrentData();
   const title = $("se-title").value.trim();
-  if (!title) { toast("请输入事件名称", "error"); return; }
+  if (!title) { toast("请输入安排名称", "error"); return; }
   const day = parseInt($("se-day").value);
-  const start = schedHhmmToMin($("se-start").value);
-  const end = schedHhmmToMin($("se-end").value);
+  const startStr = $("se-start").value;
+  const endStr = $("se-end").value;
+  const start = parseInt(startStr.split(':')[0]) * 60 + parseInt(startStr.split(':')[1]);
+  const end = parseInt(endStr.split(':')[0]) * 60 + parseInt(endStr.split(':')[1]);
   if (end <= start) { toast("结束时间必须晚于开始时间", "error"); return; }
   const location = $("se-location").value.trim();
   const notes = $("se-notes").value.trim();
   const category = $("se-category-picker").dataset.selected || "course";
 
+  if (!data.scheduleEvents) data.scheduleEvents = [];
   if (scheduleEditingId) {
-    const idx = (data.scheduleEvents || []).findIndex(e => e.id === scheduleEditingId);
+    const idx = data.scheduleEvents.findIndex(e => e.id === scheduleEditingId);
     if (idx >= 0) {
       data.scheduleEvents[idx] = { ...data.scheduleEvents[idx], title, day, start, end, location, notes, category };
     }
   } else {
-    if (!data.scheduleEvents) data.scheduleEvents = [];
-    data.scheduleEvents.push({ id: schedUid(), title, day, start, end, location, notes, category, done: false });
+    data.scheduleEvents.push({ id: schedUid(), title, day, start, end, location, notes, category, done: false, createdAt: Date.now() });
   }
   saveCurrentData(data);
   closeModal("modal-schedule-event");
@@ -2254,11 +2374,10 @@ function saveScheduleEvent() {
   toast("保存成功", "success");
 }
 
-function deleteScheduleEvent() {
-  if (!scheduleEditingId) return;
+function deleteScheduleEvent(eventId) {
   if (!confirm("确定要删除这个安排吗？")) return;
   const data = getCurrentData();
-  data.scheduleEvents = (data.scheduleEvents || []).filter(e => e.id !== scheduleEditingId);
+  data.scheduleEvents = (data.scheduleEvents || []).filter(e => e.id !== eventId);
   saveCurrentData(data);
   closeModal("modal-schedule-event");
   renderSchedule();
@@ -2266,91 +2385,178 @@ function deleteScheduleEvent() {
   toast("已删除", "success");
 }
 
-function quickAddScheduleEvent() {
-  const now = new Date();
-  const min = now.getHours() * 60 + now.getMinutes();
-  const day = schedTodayIndex();
-  openScheduleEventCreate(day, Math.ceil(min / 30) * 30);
-}
-
-function showScheduleSettings() {
-  const data = getCurrentData();
-  const s = data.scheduleSettings || { timeStart: 390, timeEnd: 1410, step: 30 };
-  $("ss-time-start").value = schedMinToHHMM(s.timeStart);
-  $("ss-time-end").value = schedMinToHHMM(s.timeEnd);
-  $("ss-step").value = s.step;
-  showModal("modal-schedule-settings");
-}
-
-function saveScheduleSettings() {
-  const data = getCurrentData();
-  data.scheduleSettings = {
-    timeStart: schedHhmmToMin($("ss-time-start").value),
-    timeEnd: schedHhmmToMin($("ss-time-end").value),
-    step: parseInt($("ss-step").value)
-  };
-  if (data.scheduleSettings.timeEnd <= data.scheduleSettings.timeStart) {
-    toast("结束时间必须晚于开始时间", "error");
-    return;
-  }
-  saveCurrentData(data);
-  closeModal("modal-schedule-settings");
-  renderSchedule();
-  toast("设置已保存", "success");
-}
-
-// ========== 今日作息 ==========
-function renderRoutine() {
-  const data = getCurrentData();
-  const today = schedTodayIndex();
-  const events = (data.scheduleEvents || []).filter(e => e.day === today).sort((a, b) => a.start - b.start);
-
-  const now = new Date();
-  $("routine-date").textContent = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日 " + SCHEDULE_WEEK_DAYS[today] + " · 按时间线浏览今天的安排";
-
-  $("routine-total").textContent = events.length;
-  const doneCount = events.filter(e => e.done).length;
-  $("routine-done").textContent = doneCount;
-  $("routine-percent").textContent = events.length ? Math.round(doneCount / events.length * 100) + "%" : "0%";
-  const studyMin = events.filter(e => e.category === "course" || e.category === "study")
-    .reduce((sum, e) => sum + Math.max(0, e.end - e.start), 0);
-  $("routine-study").textContent = Math.floor(studyMin / 60) + "h" + (studyMin % 60 ? Math.round(studyMin % 60) + "m" : "");
-
-  if (events.length === 0) {
-    $("routine-timeline").innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;"><div class="empty-desc">今天还没有安排，点击右上角添加吧</div></div>';
-    return;
-  }
-
-  const cats = data.scheduleCategories || [];
-  let html = "";
-  events.forEach(e => {
-    const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
-    html += '<div class="routine-item ' + (e.done ? "done" : "") + '" style="border-left:3px solid ' + cat.color + ';">' +
-      '<div class="routine-time">' + schedMinToHHMM(e.start) + '<br><span style="font-size:10px;opacity:0.6;">' + schedMinToHHMM(e.end) + '</span></div>' +
-      '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
-      '<div class="routine-meta">' +
-      '<span style="color:' + cat.color + ';">' + cat.name + '</span>' +
-      (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
-      (e.notes ? '<span>📝 ' + escapeHtml(e.notes) + '</span>' : '') +
-      '</div>' +
-      '<button class="routine-done-btn" onclick="toggleRoutineDone(\'' + e.id + '\')" title="' + (e.done ? "恢复未完成" : "标记完成") + '">' +
-      (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
-      '</button>' +
-      '</div>';
-  });
-  $("routine-timeline").innerHTML = html;
-}
-
-function toggleRoutineDone(eventId) {
+function toggleScheduleDone(eventId) {
   const data = getCurrentData();
   const idx = (data.scheduleEvents || []).findIndex(e => e.id === eventId);
   if (idx >= 0) {
     data.scheduleEvents[idx].done = !data.scheduleEvents[idx].done;
     saveCurrentData(data);
-    renderRoutine();
     renderSchedule();
+    renderRoutine();
   }
 }
+
+function renderRoutine() {
+  const data = getCurrentData();
+  const today = schedTodayIndex();
+  const now = new Date();
+  const dateStr = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日 " + SCHEDULE_WEEK_DAYS[today];
+  $("routine-date").textContent = dateStr + " · 今日安排、习惯打卡、健康记录";
+
+  const todayKey = now.toDateString();
+  if (!data.health) data.health = { water: 0, sleep: null, mood: null, exercise: 0, lastDate: null };
+  if (data.health.lastDate !== todayKey) {
+    data.health = { water: 0, sleep: data.health.sleep, mood: null, exercise: 0, lastDate: todayKey };
+  }
+
+  const events = (data.scheduleEvents || []).filter(e => e.day === today).sort((a, b) => a.start - b.start);
+  const doneCount = events.filter(e => e.done).length;
+  const donePercent = events.length ? Math.round(doneCount / events.length * 100) : 0;
+
+  $("routine-total").textContent = events.length;
+  $("routine-done").textContent = doneCount;
+  $("routine-percent").textContent = donePercent + "%";
+
+  let streak = 0;
+  const habits = data.habits || [];
+  const allDone = habits.length > 0 && habits.every(h => h.done);
+  if (allDone) {
+    streak = Math.max(...habits.map(h => h.streak || 0));
+  }
+  $("routine-streak").textContent = streak + "天";
+
+  const cats = data.scheduleCategories || [];
+  if (events.length === 0) {
+    $("routine-timeline").innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;"><div class="empty-desc">今天还没有安排</div></div>';
+  } else {
+    let html = '';
+    events.forEach(e => {
+      const cat = cats.find(c => c.id === e.category) || { color: "#888", name: "其他" };
+      const startH = Math.floor(e.start / 60), startM = e.start % 60;
+      const endH = Math.floor(e.end / 60), endM = e.end % 60;
+      const timeStr = String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0');
+      const endTimeStr = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
+
+      html += '<div class="routine-item ' + (e.done ? 'done' : '') + '" style="border-left:3px solid ' + cat.color + ';">' +
+        '<div class="routine-time">' + timeStr + '<span>' + endTimeStr + '</span></div>' +
+        '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
+        '<div class="routine-meta">' +
+        '<span style="color:' + cat.color + ';">' + cat.name + '</span>' +
+        (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') +
+        '</div>' +
+        '<button class="routine-done-btn" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复未完成' : '标记完成') + '">' +
+        (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
+        '</button></div>';
+    });
+    $("routine-timeline").innerHTML = html;
+  }
+
+  renderHabits(data);
+  renderHealth(data);
+}
+
+function renderHabits(data) {
+  const habits = data.habits || [];
+  if (habits.length === 0) {
+    $("habit-grid").innerHTML = '<div class="empty-state" style="padding:20px;text-align:center;grid-column:1/-1;"><div class="empty-desc">还没有习惯，点击右上角添加</div></div>';
+    return;
+  }
+  let html = '';
+  habits.forEach(h => {
+    html += '<div class="habit-card ' + (h.done ? 'done' : '') + '" onclick="toggleHabit(\'' + h.id + '\')">' +
+      (h.done ? '<div class="habit-check">✓</div>' : '') +
+      '<div class="habit-icon">' + h.icon + '</div>' +
+      '<div class="habit-name">' + escapeHtml(h.name) + '</div>' +
+      '<div class="habit-streak">连续 ' + (h.streak || 0) + ' 天</div>' +
+      '</div>';
+  });
+  $("habit-grid").innerHTML = html;
+}
+
+function toggleHabit(habitId) {
+  const data = getCurrentData();
+  const idx = (data.habits || []).findIndex(h => h.id === habitId);
+  if (idx >= 0) {
+    data.habits[idx].done = !data.habits[idx].done;
+    if (data.habits[idx].done) {
+      data.habits[idx].streak = (data.habits[idx].streak || 0) + 1;
+    } else {
+      data.habits[idx].streak = Math.max(0, (data.habits[idx].streak || 0) - 1);
+    }
+    saveCurrentData(data);
+    renderRoutine();
+    toast(data.habits[idx].done ? "打卡成功！" : "已取消打卡", "success");
+  }
+}
+
+function showAddHabit() {
+  const name = prompt("请输入习惯名称：");
+  if (!name || !name.trim()) return;
+  const icons = ["🌅", "📚", "🏃", "📖", "💧", "🧘", "✍️", "🎯", "💪", "🌙"];
+  const icon = icons[Math.floor(Math.random() * icons.length)];
+  const data = getCurrentData();
+  if (!data.habits) data.habits = [];
+  data.habits.push({ id: "h" + Date.now(), name: name.trim(), icon, done: false, streak: 0 });
+  saveCurrentData(data);
+  renderRoutine();
+  toast("习惯添加成功", "success");
+}
+
+function renderHealth(data) {
+  const h = data.health || { water: 0, sleep: null, mood: null, exercise: 0 };
+  $("water-count").textContent = h.water || 0;
+  $("sleep-hours").textContent = h.sleep ? h.sleep + "h" : "--";
+  $("mood-text").textContent = h.mood || "--";
+  $("exercise-min").textContent = h.exercise || 0;
+}
+
+function logWater() {
+  const data = getCurrentData();
+  if (!data.health) data.health = { water: 0, sleep: null, mood: null, exercise: 0, lastDate: new Date().toDateString() };
+  data.health.water = (data.health.water || 0) + 1;
+  saveCurrentData(data);
+  renderHealth(data);
+  toast("已记录喝水 +1 杯，当前 " + data.health.water + " 杯", "success");
+}
+
+function logSleep() {
+  const hours = prompt("请输入昨晚睡眠时长（小时）：", "7.5");
+  if (hours === null) return;
+  const h = parseFloat(hours);
+  if (isNaN(h) || h < 0 || h > 24) { toast("请输入有效的小时数", "error"); return; }
+  const data = getCurrentData();
+  if (!data.health) data.health = { water: 0, sleep: null, mood: null, exercise: 0, lastDate: new Date().toDateString() };
+  data.health.sleep = h;
+  saveCurrentData(data);
+  renderHealth(data);
+  toast("睡眠记录成功：" + h + " 小时", "success");
+}
+
+function logMood() {
+  const moods = ["😊 开心", "😐 平静", "😔 低落", "😤 烦躁", "😴 疲惫", "🤔 思考"];
+  const moodStr = moods.map((m, i) => (i + 1) + ". " + m).join("\n");
+  const choice = prompt("请选择今日心情（输入序号）：\n" + moodStr, "1");
+  if (choice === null) return;
+  const idx = parseInt(choice) - 1;
+  if (idx < 0 || idx >= moods.length) { toast("请输入有效的序号", "error"); return; }
+  const data = getCurrentData();
+  if (!data.health) data.health = { water: 0, sleep: null, mood: null, exercise: 0, lastDate: new Date().toDateString() };
+  data.health.mood = moods[idx];
+  saveCurrentData(data);
+  renderHealth(data);
+  toast("心情记录成功", "success");
+}
+
+function logExercise() {
+  const data = getCurrentData();
+  if (!data.health) data.health = { water: 0, sleep: null, mood: null, exercise: 0, lastDate: new Date().toDateString() };
+  data.health.exercise = (data.health.exercise || 0) + 30;
+  saveCurrentData(data);
+  renderHealth(data);
+  toast("已记录运动 +30 分钟，当前 " + data.health.exercise + " 分钟", "success");
+}
+
+
 
 function renderAll() {
   renderDashboard();
@@ -3017,11 +3223,19 @@ function renderDashboard() {
   const budget = data.budget || 0;
   const budgetPercent = budget > 0 ? Math.min(100, (monthExpense / budget) * 100) : 0;
 
+  // 作息统计
+  const today = schedTodayIndex();
+  const todayEvents = (data.scheduleEvents || []).filter(e => e.day === today);
+  const todayDone = todayEvents.filter(e => e.done).length;
+  const todayPercent = todayEvents.length ? Math.round(todayDone / todayEvents.length * 100) : 0;
+  const habitDone = (data.habits || []).filter(h => h.done).length;
+  const habitTotal = (data.habits || []).length;
+
   $("dashboard-stats").innerHTML =
     '<div class="stat-card primary"><div class="stat-label">当前 GPA</div><div class="stat-value">' + totalGPA.toFixed(2) + '</div><div class="stat-trend up">' + data.courses.length + ' 门课程</div></div>' +
     '<div class="stat-card danger"><div class="stat-label">待办倒计时</div><div class="stat-value">' + activeCountdowns.length + '<small>个</small></div>' + (urgent > 0 ? '<div class="stat-trend down">' + urgent + ' 个7天内</div>' : '<div class="stat-trend up">暂无紧急</div>') + '</div>' +
     '<div class="stat-card warning"><div class="stat-label">本月支出</div><div class="stat-value">' + monthExpense.toFixed(0) + '<small>元</small></div><div class="stat-trend ' + (budgetPercent >= 80 ? "down" : "up") + '">预算 ' + budgetPercent.toFixed(0) + '%</div></div>' +
-    '<div class="stat-card success"><div class="stat-label">累计记账</div><div class="stat-value">' + data.transactions.length + '<small>笔</small></div></div>';
+    '<div class="stat-card success"><div class="stat-label">今日安排</div><div class="stat-value">' + todayEvents.length + '<small>项</small></div><div class="stat-trend ' + (todayPercent >= 50 ? "up" : "down") + '">完成 ' + todayPercent + '% · 习惯 ' + habitDone + '/' + habitTotal + '</div></div>';
 
   // 即将到来
   const upcoming = activeCountdowns.filter(c => !getCountdownInfo(c).isPast).sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0, 5);
@@ -3048,13 +3262,16 @@ function renderDashboard() {
     const cat = getCategoryById(t.category);
     recent.push({ type: "finance", text: (t.type === "expense" ? "支出" : "收入") + "：" + (t.note || cat.name) + " ¥" + t.amount, time: t.createdAt });
   });
+  (data.scheduleEvents || []).slice(-3).reverse().forEach(e => {
+    recent.push({ type: "schedule", text: (e.done ? "完成安排" : "添加安排") + "：" + e.title, time: e.createdAt || Date.now() });
+  });
   recent.sort((a,b) => (b.time || 0) - (a.time || 0));
   const recentShow = recent.slice(0, 8);
 
   if (recentShow.length === 0) {
     $("dashboard-recent").innerHTML = '<div class="empty-state" style="padding:20px;"><div class="empty-desc">暂无动态，开始使用各个功能吧</div></div>';
   } else {
-    const typeColors = { gpa: "#8b5cf6", countdown: "#f87171", finance: "#34d399" };
+    const typeColors = { gpa: "#8b5cf6", countdown: "#f87171", finance: "#34d399", schedule: "#f472b6" };
     $("dashboard-recent").innerHTML = recentShow.map(r => {
       const d = new Date(r.time || Date.now());
       const timeStr = (d.getMonth()+1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
