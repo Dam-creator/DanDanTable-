@@ -2375,9 +2375,11 @@ function saveScheduleEvent() {
 }
 
 function deleteScheduleEvent(eventId) {
+  const id = eventId || scheduleEditingId;
+  if (!id) return;
   if (!confirm("确定要删除这个安排吗？")) return;
   const data = getCurrentData();
-  data.scheduleEvents = (data.scheduleEvents || []).filter(e => e.id !== eventId);
+  data.scheduleEvents = (data.scheduleEvents || []).filter(e => e.id !== id);
   saveCurrentData(data);
   closeModal("modal-schedule-event");
   renderSchedule();
@@ -3413,6 +3415,20 @@ window.exportData = exportData;
 window.importData = importData;
 window.clearAllData = clearAllData;
 window.closeModal = closeModal;
+// 作息相关函数
+window.showAddScheduleEvent = showAddScheduleEvent;
+window.editScheduleEvent = editScheduleEvent;
+window.saveScheduleEvent = saveScheduleEvent;
+window.deleteScheduleEvent = deleteScheduleEvent;
+window.toggleScheduleDone = toggleScheduleDone;
+window.switchScheduleDay = switchScheduleDay;
+window.selectScheduleCategory = selectScheduleCategory;
+window.toggleHabit = toggleHabit;
+window.showAddHabit = showAddHabit;
+window.logWater = logWater;
+window.logSleep = logSleep;
+window.logMood = logMood;
+window.logExercise = logExercise;
 
 init();
 
