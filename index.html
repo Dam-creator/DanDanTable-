@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -1952,9 +1952,11 @@ function deleteProfile(profileId) {
 
 // ========== 视图切换 ==========
 function switchView(view) {
+  const viewEl = $("view-" + view);
+  if (!viewEl) { console.warn("View not found:", view); return; }
   state.currentView = view;
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  $("view-" + view).classList.add("active");
+  viewEl.classList.add("active");
   document.querySelectorAll(".nav-item[data-view]").forEach(n => {
     n.classList.toggle("active", n.dataset.view === view);
   });
@@ -3337,6 +3339,11 @@ window.exportData = exportData;
 window.importData = importData;
 window.clearAllData = clearAllData;
 window.closeModal = closeModal;
+window.showCustomGPASettings = showCustomGPASettings;
+window.addCustomGPARange = addCustomGPARange;
+window.closeCustomGPAModal = closeCustomGPAModal;
+window.saveCustomGPASettings = saveCustomGPASettings;
+window.removeCustomGPARange = removeCustomGPARange;
 // 作息相关函数
 window.showAddScheduleEvent = showAddScheduleEvent;
 window.editScheduleEvent = editScheduleEvent;
