@@ -1082,6 +1082,65 @@ body {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== Mobile Performance Optimization ===== */
+@media (max-width: 768px) {
+  /* 减少阴影，提升渲染性能 */
+  .card, .stat-card, .quick-action, .modal, .welcome-card, .toast {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+  }
+  
+  /* 移除毛玻璃效果（非常耗性能） */
+  .modal-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* 减少过渡动画 */
+  * {
+    transition-duration: 0.1s !important;
+    animation-duration: 0.15s !important;
+  }
+  
+  /* 禁用hover效果（移动端不需要） */
+  .nav-item:hover, .quick-action:hover, .stat-card:hover, 
+  .list-item:hover, .btn:hover, .icon-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* 优化滚动性能 */
+  .main, .sidebar-nav, .modal {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+  
+  /* 减少图表容器高度 */
+  .chart-container { height: 220px !important; }
+  .chart-container.small { height: 180px !important; }
+  .chart-container.tiny { height: 100px !important; }
+  
+  /* 禁用文字选中高亮闪烁 */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  /* 优化按钮点击反馈 */
+  .btn:active, .nav-item:active, .quick-action:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+/* 低端设备降级 */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1951,6 +2010,124 @@ body {
 
 <script>
 
+// ===== Performance Optimization =====
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+const perfConfig = {
+  enableChartAnimation: !isMobile,
+  chartRenderDelay: isMobile ? 100 : 0,
+  maxListItems: isMobile ? 30 : 100
+};
+
+// 防抖函数
+function debounce(fn, delay) {
+  let timer = null;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// 节流函数
+function throttle(fn, limit) {
+  let inThrottle = false;
+  return function(...args) {
+    if (!inThrottle) {
+      fn.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// 安全的图表初始化（带错误处理和移动端优化）
+function initChart(containerId, option, chartKey) {
+  try {
+    const el = document.getElementById(containerId);
+    if (!el || typeof echarts === 'undefined') return null;
+    
+    // 销毁旧图表
+    if (state.charts[chartKey]) {
+      try { state.charts[chartKey].dispose(); } catch(e) {}
+      state.charts[chartKey] = null;
+    }
+    
+    const chart = echarts.init(el, null, { renderer: isMobile ? 'canvas' : 'canvas' });
+    
+    // 移动端关闭动画，提升性能
+    if (isMobile) {
+      option.animation = false;
+      option.animationDuration = 0;
+      option.animationDurationUpdate = 0;
+    }
+    
+    chart.setOption(option);
+    state.charts[chartKey] = chart;
+    return chart;
+  } catch(e) {
+    console.warn('Chart init error:', e);
+    return null;
+  }
+}
+
+// 销毁指定视图的所有图表
+function disposeViewCharts(view) {
+  const chartMap = {
+    dashboard: ['dashGpa', 'dashFin'],
+    gpa: ['gpaTrend', 'gpaDist'],
+    countdown: [],
+    finance: ['financeTrend', 'financeCat'],
+    plan: ['planWeekly']
+  };
+  const keys = chartMap[view] || [];
+  keys.forEach(key => {
+    if (state.charts[key]) {
+      try { state.charts[key].dispose(); } catch(e) {}
+      state.charts[key] = null;
+    }
+  });
+}
+
+// 批量DOM更新（使用DocumentFragment减少重排）
+function batchUpdate(container, html) {
+  try {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    container.innerHTML = '';
+    container.appendChild(template.content.cloneNode(true));
+  } catch(e) {
+    container.innerHTML = html;
+  }
+}
+
+// 数据缓存（减少localStorage读写）
+let dataCache = {};
+let cacheDirty = {};
+
+function getProfileDataCached(profileId) {
+  if (!dataCache[profileId] || cacheDirty[profileId]) {
+    dataCache[profileId] = getProfileData(profileId);
+    cacheDirty[profileId] = false;
+  }
+  return dataCache[profileId];
+}
+
+function saveProfileDataCached(profileId, data) {
+  dataCache[profileId] = data;
+  cacheDirty[profileId] = true;
+  // 节流写入localStorage
+  throttleSave(profileId);
+}
+
+const throttleSave = throttle((profileId) => {
+  if (cacheDirty[profileId] && dataCache[profileId]) {
+    saveProfileData(profileId, dataCache[profileId]);
+    cacheDirty[profileId] = false;
+  }
+}, 500);
+
+console.log('Performance optimization loaded. Mobile:', isMobile);
+
+
 // ===== Utilities =====
 const $ = id => document.getElementById(id);
 const uuid = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -2094,6 +2271,12 @@ function toggleSidebar() {
 function switchView(view) {
   const viewEl = $("view-" + view);
   if (!viewEl) { console.warn("View not found:", view); return; }
+  
+  // 销毁上一个视图的图表，释放内存
+  if (state.currentView && state.currentView !== view) {
+    disposeViewCharts(state.currentView);
+  }
+  
   state.currentView = view;
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   viewEl.classList.add("active");
@@ -2361,11 +2544,19 @@ function renderGPA() {
 }
 
 function renderGPACharts(data) {
+  if (isMobile) {
+    setTimeout(() => _renderGPACharts(data), perfConfig.chartRenderDelay);
+    return;
+  }
+  _renderGPACharts(data);
+}
+
+function _renderGPACharts(data) {
   // 趋势图
   const trendEl = $("gpa-trend-chart");
   if (trendEl && typeof echarts !== 'undefined') {
-    if (state.charts.gpaTrend) state.charts.gpaTrend.dispose();
-    const chart = echarts.init(trendEl);
+    const chart = initChart("gpa-trend-chart", {}, "gpaTrend");
+    if (!chart) return;
     const semData = data.semesters.map(s => {
       const courses = data.courses.filter(c => c.semesterId === s.id);
       return { name: s.name.substring(0, 10), gpa: parseFloat(calculateGPA(courses, data.gpaAlgorithm)) || 0 };
@@ -2392,8 +2583,8 @@ function renderGPACharts(data) {
   // 分布图
   const distEl = $("gpa-distribution-chart");
   if (distEl && typeof echarts !== 'undefined') {
-    if (state.charts.gpaDist) state.charts.gpaDist.dispose();
-    const chart = echarts.init(distEl);
+    const chart = initChart("gpa-distribution-chart", {}, "gpaDist");
+    if (!chart) return;
     const ranges = [{name:'90+',min:90},{name:'80-89',min:80},{name:'70-79',min:70},{name:'60-69',min:60},{name:'<60',min:0}];
     const counts = ranges.map(r => data.courses.filter(c => c.score >= r.min && (r.min === 0 ? c.score < 60 : c.score < r.min + 10 || (r.min === 90))).length);
     chart.setOption({
@@ -2732,11 +2923,19 @@ function renderFinance() {
 }
 
 function renderFinanceCharts(data, monthTx) {
+  if (isMobile) {
+    setTimeout(() => _renderFinanceCharts(data, monthTx), perfConfig.chartRenderDelay);
+    return;
+  }
+  _renderFinanceCharts(data, monthTx);
+}
+
+function _renderFinanceCharts(data, monthTx) {
   // 趋势图
   const trendEl = $("finance-trend-chart");
   if (trendEl && typeof echarts !== 'undefined') {
-    if (state.charts.financeTrend) state.charts.financeTrend.dispose();
-    const chart = echarts.init(trendEl);
+    const chart = initChart("finance-trend-chart", {}, "financeTrend");
+    if (!chart) return;
     const months = [];
     const incomeData = [];
     const expenseData = [];
@@ -2770,8 +2969,8 @@ function renderFinanceCharts(data, monthTx) {
   // 分类饼图
   const catEl = $("finance-category-chart");
   if (catEl && typeof echarts !== 'undefined') {
-    if (state.charts.financeCat) state.charts.financeCat.dispose();
-    const chart = echarts.init(catEl);
+    const chart = initChart("finance-category-chart", {}, "financeCat");
+    if (!chart) return;
     const expense = monthTx.filter(t => t.type === 'expense');
     const catData = EXPENSE_CATEGORIES.map(c => ({
       name: c.name,
@@ -3052,10 +3251,18 @@ function saveHealthRecord() {
 }
 
 function renderPlanChart(data) {
+  if (isMobile) {
+    setTimeout(() => _renderPlanChart(data), perfConfig.chartRenderDelay);
+    return;
+  }
+  _renderPlanChart(data);
+}
+
+function _renderPlanChart(data) {
   const chartEl = $("plan-weekly-chart");
   if (chartEl && typeof echarts !== 'undefined') {
-    if (state.charts.planWeekly) state.charts.planWeekly.dispose();
-    const chart = echarts.init(chartEl);
+    const chart = initChart("plan-weekly-chart", {}, "planWeekly");
+    if (!chart) return;
     const dayNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     const counts = dayNames.map((_, i) => {
       return data.scheduleEvents.filter(e => {
@@ -3275,11 +3482,20 @@ function renderDashboard() {
 }
 
 function renderDashboardCharts(data) {
+  // 移动端延迟渲染图表，避免卡顿
+  if (isMobile) {
+    setTimeout(() => _renderDashboardCharts(data), perfConfig.chartRenderDelay);
+    return;
+  }
+  _renderDashboardCharts(data);
+}
+
+function _renderDashboardCharts(data) {
   // GPA趋势
   const gpaEl = $("dashboard-gpa-chart");
   if (gpaEl && typeof echarts !== 'undefined') {
-    if (state.charts.dashGpa) state.charts.dashGpa.dispose();
-    const chart = echarts.init(gpaEl);
+    const chart = initChart("dashboard-gpa-chart", {}, "dashGpa");
+    if (!chart) return;
     const semData = data.semesters.map(s => {
       const courses = data.courses.filter(c => c.semesterId === s.id);
       return { name: s.name.substring(0, 8), gpa: parseFloat(calculateGPA(courses, data.gpaAlgorithm)) || 0 };
@@ -3297,8 +3513,8 @@ function renderDashboardCharts(data) {
   // 财务饼图
   const finEl = $("dashboard-finance-chart");
   if (finEl && typeof echarts !== 'undefined') {
-    if (state.charts.dashFin) state.charts.dashFin.dispose();
-    const chart = echarts.init(finEl);
+    const chart = initChart("dashboard-finance-chart", {}, "dashFin");
+    if (!chart) return;
     const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const monthTx = data.transactions.filter(t => new Date(t.date) >= monthStart && t.type === 'expense');
     const catData = EXPENSE_CATEGORIES.map(c => ({
@@ -3394,19 +3610,31 @@ function init() {
     renderWelcomeProfiles();
   }
   
-  // 每分钟更新倒计时
+  // 每分钟更新倒计时（仅在页面可见时）
   setInterval(() => {
-    if (state.currentProfileId && state.currentView === 'countdown') {
+    if (document.visibilityState === 'visible' && state.currentProfileId && state.currentView === 'countdown') {
       renderCountdown();
     }
   }, 60000);
   
-  // 窗口大小变化时重绘图表
-  window.addEventListener('resize', () => {
-    Object.values(state.charts).forEach(chart => {
-      if (chart && chart.resize) chart.resize();
-    });
+  // 页面可见性变化时重新渲染
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.currentProfileId) {
+      // 延迟渲染，避免与其他操作冲突
+      setTimeout(() => {
+        try { switchView(state.currentView); } catch(e) {}
+      }, 300);
+    }
   });
+  
+  // 窗口大小变化时重绘图表（防抖）
+  window.addEventListener('resize', debounce(() => {
+    Object.values(state.charts).forEach(chart => {
+      if (chart && chart.resize) {
+        try { chart.resize(); } catch(e) {}
+      }
+    });
+  }, 200));
 }
 
 // ===== Expose Functions to Global =====
