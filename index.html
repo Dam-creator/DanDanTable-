@@ -370,6 +370,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
 .modal-actions .btn { flex: 1; }
 
+/* ===== 头像颜色选择 ===== */
+.avatar-colors { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.avatar-color { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+.avatar-color:hover { transform: scale(1.1); }
+.avatar-color.selected { border-color: #fff; box-shadow: 0 0 0 2px var(--primary); transform: scale(1.1); }
+
 /* ========== Toast ========== */
 .toast-container { position: fixed; top: 24px; right: 24px; z-index: 600; display: flex; flex-direction: column; gap: 10px; }
 .toast {
@@ -1349,6 +1355,30 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       </div>
 
     </div>
+
+<!-- ===== 弹窗：创建档案 ===== -->
+<div class="modal-overlay" id="modal-create-profile">
+  <div class="modal">
+    <h2 class="modal-title">创建新档案</h2>
+    <p class="modal-desc">设置你的用户名和昵称，开始使用DanDanTable</p>
+    <div class="form-group">
+      <label class="form-label">用户名（唯一标识）</label>
+      <input type="text" class="form-input" id="new-profile-username" placeholder="输入用户名，如：dandan2024" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">昵称（显示名称）</label>
+      <input type="text" class="form-input" id="new-profile-name" placeholder="输入昵称，如：蛋蛋同学" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">选择头像颜色</label>
+      <div class="avatar-colors" id="avatar-colors"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-profile')">取消</button>
+      <button class="btn btn-primary" onclick="createProfile()">创建档案</button>
+    </div>
+  </div>
+</div>
 
     <!-- ===== 弹窗：编辑作息事件 ===== -->
 <div class="modal-overlay" id="modal-schedule-event">
