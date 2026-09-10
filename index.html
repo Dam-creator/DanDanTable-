@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -19,8 +19,43 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 /* 防止文本选择干扰交互 */
 button, .nav-item, .bottom-nav-item, .schedule-event, .routine-item, .day-cell { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 
-/* ========== 设计令牌 ========== */
+/* ========== 设计令牌 - 温暖浅色主题 ========== */
 :root {
+  --bg-0: #F5F1EB;
+  --bg-1: #EDE9E2;
+  --bg-2: #FFFFFF;
+  --card: #FFFFFF;
+  --card-hover: #FAF8F5;
+  --card-border: #E8E4DD;
+  --card-border-strong: #D8D4CC;
+  --text-1: #2D2D2D;
+  --text-2: #6B6B6B;
+  --text-3: #9B9B9B;
+  --primary: #6C5CE7;
+  --primary-2: #5B4CC4;
+  --primary-glow: rgba(108,92,231,0.2);
+  --accent: #00B894;
+  --accent-glow: rgba(0,184,148,0.2);
+  --success: #00B894;
+  --warning: #FDCB6E;
+  --danger: #E17055;
+  --pink: #FD79A8;
+  --orange: #F0A500;
+  --cyan: #00CEC9;
+  --purple: #A29BFE;
+  --blue: #74B9FF;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+  --sidebar-w: 220px;
+  --nav-h: 64px;
+  --transition: 0.2s cubic-bezier(0.25,0.1,0.25,1);
+}
+[data-theme="dark"] {
   --bg-0: #07070f;
   --bg-1: #0d0d1a;
   --bg-2: #141428;
@@ -31,44 +66,10 @@ button, .nav-item, .bottom-nav-item, .schedule-event, .routine-item, .day-cell {
   --text-1: #f0f0f8;
   --text-2: #a0a0b8;
   --text-3: #606078;
-  --primary: #8b5cf6;
-  --primary-2: #6366f1;
-  --primary-glow: rgba(139,92,246,0.35);
-  --accent: #22d3ee;
-  --accent-glow: rgba(34,211,238,0.25);
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
-  --pink: #f472b6;
-  --orange: #fb923c;
-  --cyan: #22d3ee;
-  --purple: #a78bfa;
-  --blue: #60a5fa;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
-  --radius-xl: 28px;
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
   --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
   --shadow-lg: 0 16px 64px rgba(0,0,0,0.5);
-  --sidebar-w: 240px;
-  --nav-h: 64px;
-  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-[data-theme="light"] {
-  --bg-0: #f0f0f8;
-  --bg-1: #e8e8f2;
-  --bg-2: #ffffff;
-  --card: rgba(255,255,255,0.7);
-  --card-hover: rgba(255,255,255,0.9);
-  --card-border: rgba(0,0,0,0.06);
-  --card-border-strong: rgba(0,0,0,0.12);
-  --text-1: #1a1a2e;
-  --text-2: #505068;
-  --text-3: #9090a8;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md: 0 8px 32px rgba(0,0,0,0.08);
-  --shadow-lg: 0 16px 64px rgba(0,0,0,0.12);
 }
 
 /* ========== 基础重置 ========== */
@@ -86,18 +87,18 @@ input, textarea, select { font-family: inherit; user-select: text; -webkit-user-
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
-[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
+::-webkit-scrollbar-thumb { background: #D0CCC6; border-radius: 3px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); }
 
 /* ========== 背景光晕 ========== */
 .bg-orbs { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s ease-in-out infinite; will-change: transform; contain: layout style; }
-.orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); top: -150px; left: -100px; }
-.orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, #22d3ee 0%, transparent 70%); bottom: -100px; right: -80px; animation-delay: -7s; }
-.orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, #f472b6 0%, transparent 70%); top: 40%; left: 50%; animation-delay: -14s; opacity: 0.2; }
-.orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, #34d399 0%, transparent 70%); top: 20%; right: 20%; animation-delay: -3s; opacity: 0.25; }
-.orb-5 { width: 280px; height: 280px; background: radial-gradient(circle, #fbbf24 0%, transparent 70%); bottom: 20%; left: 15%; animation-delay: -10s; opacity: 0.2; }
-[data-theme="light"] .orb { opacity: 0.15; }
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.06; animation: float 20s ease-in-out infinite; will-change: transform; contain: layout style; }
+.orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #6C5CE7 0%, transparent 70%); top: -150px; left: -100px; }
+.orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, #00B894 0%, transparent 70%); bottom: -100px; right: -80px; animation-delay: -7s; }
+.orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, #FD79A8 0%, transparent 70%); top: 40%; left: 50%; animation-delay: -14s; opacity: 0.2; }
+.orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, #00B894 0%, transparent 70%); top: 20%; right: 20%; animation-delay: -3s; opacity: 0.25; }
+.orb-5 { width: 280px; height: 280px; background: radial-gradient(circle, #FDCB6E 0%, transparent 70%); bottom: 20%; left: 15%; animation-delay: -10s; opacity: 0.2; }
+[data-theme="dark"] .orb { opacity: 0.4; }
 /* 手机端减少光晕和模糊 */
 @media (max-width: 768px) {
   .orb { filter: blur(50px); }
@@ -115,23 +116,23 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .bg-grid {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(139,92,246,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139,92,246,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(108,92,231,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,92,231,0.04) 1px, transparent 1px);
   background-size: 50px 50px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
 [data-theme="light"] .bg-grid {
   background-image:
-    linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(139,92,246,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(108,92,231,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108,92,231,0.05) 1px, transparent 1px);
 }
 
 /* 粒子背景 */
 .bg-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .particle {
   position: absolute; width: 4px; height: 4px; border-radius: 50%;
-  background: rgba(139,92,246,0.6);
+  background: rgba(108,92,231,0.25);
   animation: particleFloat 15s linear infinite;
   will-change: transform, opacity;
   contain: layout style;
@@ -150,7 +151,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* 渐变动画背景 */
 .bg-gradient-anim {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(34,211,238,0.03) 50%, rgba(244,114,182,0.05) 100%);
+  background: linear-gradient(135deg, rgba(108,92,231,0.03) 0%, rgba(0,184,148,0.02) 50%, rgba(253,121,168,0.03) 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
 }
@@ -167,10 +168,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .sidebar {
   width: var(--sidebar-w);
   height: 100%;
-  background: rgba(255,255,255,0.02);
-  border-right: 1px solid var(--card-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: #1E1E2E;
+  border-right: 1px solid rgba(255,255,255,0.06);
   display: flex;
   flex-direction: column;
   padding: 20px 14px;
@@ -202,9 +201,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .nav-item svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
 .nav-item:hover { background: var(--card-hover); color: var(--text-1); }
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(139,92,246,0.18) 0%, rgba(99,102,241,0.12) 100%);
-  color: var(--text-1);
-  box-shadow: inset 0 0 0 1px rgba(139,92,246,0.25);
+  background: rgba(108,92,231,0.2);
+  color: #FFFFFF;
 }
 .nav-item.active::before {
   content: ''; position: absolute; left: -14px; top: 50%; transform: translateY(-50%);
@@ -260,10 +258,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   padding: 22px;
   transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 .card:hover { border-color: var(--card-border-strong); }
 .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
@@ -280,12 +277,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .btn svg { width: 16px; height: 16px; fill: currentColor; }
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+  background: #1E1E2E;
   color: white;
-  box-shadow: 0 4px 16px var(--primary-glow);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--primary-glow); }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary:hover { background: #2D2D3F; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.btn-primary:active { transform: translateY(0); background: #151520; }
 .btn-ghost {
   background: var(--card); border: 1px solid var(--card-border);
   color: var(--text-2);
@@ -310,7 +307,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+  box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
   background: rgba(255,255,255,0.06);
 }
 .form-input::placeholder { color: var(--text-3); }
@@ -349,7 +346,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ========== 弹窗 ========== */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.35); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; pointer-events: none;
@@ -403,12 +400,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   padding: 3px 10px; border-radius: 20px;
   font-size: 11px; font-weight: 600;
 }
-.tag.primary { background: rgba(139,92,246,0.15); color: var(--primary); }
-.tag.accent { background: rgba(34,211,238,0.15); color: var(--accent); }
+.tag.primary { background: rgba(108,92,231,0.15); color: var(--primary); }
+.tag.accent { background: rgba(0,184,148,0.15); color: var(--accent); }
 .tag.success { background: rgba(52,211,153,0.15); color: var(--success); }
 .tag.warning { background: rgba(251,191,36,0.15); color: var(--warning); }
 .tag.danger { background: rgba(248,113,113,0.15); color: var(--danger); }
-.tag.pink { background: rgba(244,114,182,0.15); color: var(--pink); }
+.tag.pink { background: rgba(253,121,168,0.15); color: var(--pink); }
 .tag.gray { background: rgba(255,255,255,0.08); color: var(--text-2); }
 
 /* ========== 视图切换动画 ========== */
@@ -420,14 +417,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .bottom-nav {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-  background: rgba(13,13,26,0.85);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--card-border);
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
   grid-template-columns: repeat(4, 1fr);
   gap: 4px;
 }
-[data-theme="light"] .bottom-nav { background: rgba(255,255,255,0.85); }
+[data-theme="dark"] .bottom-nav { background: rgba(13,13,26,0.85); }
 .bottom-nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   padding: 8px 4px; border-radius: 10px;
@@ -435,7 +432,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: all var(--transition);
 }
 .bottom-nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-.bottom-nav-item.active { color: var(--primary); background: rgba(139,92,246,0.1); }
+.bottom-nav-item.active { color: var(--primary); background: rgba(108,92,231,0.1); }
 .bottom-nav-item.active svg { filter: drop-shadow(0 0 6px var(--primary-glow)); }
 
 /* ========== 生活作息管理 ========== */
@@ -470,7 +467,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .week-grid-header .time-col { background: var(--bg-3); font-size: 11px; color: var(--text-3); }
 .week-grid-header .today-col {
   color: var(--primary);
-  background: linear-gradient(180deg, rgba(139,92,246,0.12) 0%, var(--bg-3) 100%);
+  background: linear-gradient(180deg, rgba(108,92,231,0.12) 0%, var(--bg-3) 100%);
   border-bottom-color: var(--primary);
 }
 .week-grid-body { display: contents; }
@@ -494,9 +491,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   min-height: 480px;
   cursor: pointer;
 }
-.day-col:hover { background: rgba(139,92,246,0.02); }
+.day-col:hover { background: rgba(108,92,231,0.02); }
 .day-col.today-col {
-  background: linear-gradient(180deg, rgba(139,92,246,0.04) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(108,92,231,0.04) 0%, transparent 100%);
 }
 .day-col.today-col::before {
   content: '';
@@ -547,7 +544,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   position: relative;
   padding: 16px 50px 16px 18px;
   margin-bottom: 14px;
-  background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%);
+  background: var(--card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--card-border);
   transition: all 0.2s ease;
@@ -716,7 +713,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .schedule-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
 .schedule-stat-card {
   padding: 18px 16px;
-  background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%);
+  background: var(--card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--card-border);
   position: relative;
@@ -764,10 +761,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* 颜色分区主题 */
 .view-gpa { --view-accent: #3b82f6; --view-glow: rgba(59,130,246,0.3); }
-.view-countdown { --view-accent: #f97316; --view-glow: rgba(249,115,22,0.3); }
 .view-finance { --view-accent: #10b981; --view-glow: rgba(16,185,129,0.3); }
-.view-schedule { --view-accent: #06b6d4; --view-glow: rgba(6,182,212,0.3); }
-.view-routine { --view-accent: #ec4899; --view-glow: rgba(236,72,153,0.3); }
 .view-header-accent { height: 3px; background: linear-gradient(90deg, var(--view-accent, var(--primary)), transparent); border-radius: 2px; margin-bottom: 16px; }
 
 /* ========== 响应式 ========== */
@@ -869,7 +863,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .semester-tab:hover { background: var(--card-hover); color: var(--text-1); }
 .semester-tab.active {
-  background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(99,102,241,0.15) 100%);
+  background: linear-gradient(135deg, rgba(108,92,231,0.2) 0%, rgba(99,102,241,0.15) 100%);
   color: var(--text-1); border-color: var(--primary);
 }
 .semester-tab.add-tab { border-style: dashed; color: var(--primary); }
@@ -950,7 +944,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: all var(--transition); cursor: pointer;
 }
 .category-item:hover { background: var(--card-hover); transform: translateY(-2px); }
-.category-item.selected { border-color: var(--primary); background: rgba(139,92,246,0.12); box-shadow: 0 0 0 2px rgba(139,92,246,0.2); }
+.category-item.selected { border-color: var(--primary); background: rgba(108,92,231,0.12); box-shadow: 0 0 0 2px rgba(108,92,231,0.2); }
 .category-icon {
   width: 38px; height: 38px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
@@ -967,7 +961,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums;
   outline: none; transition: all var(--transition);
 }
-.amount-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139,92,246,0.15); }
+.amount-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,92,231,0.15); }
 
 .transaction-list { display: flex; flex-direction: column; gap: 2px; }
 .transaction-date-group { margin-bottom: 16px; }
@@ -1100,16 +1094,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
       记账本
     </button>
-    <button class="nav-item" data-view="schedule" onclick="switchView('schedule')">
+    <button class="nav-item" data-view="plan" onclick="switchView('plan')">
       <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-      作息总表
+      规划中心
     </button>
-    <button class="nav-item" data-view="routine" onclick="switchView('routine')">
-      <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-      今日作息
-    </button>
-
-    <div class="nav-section">其他</div>
+<div class="nav-section">其他</div>
     <button class="nav-item" onclick="showDataManager()">
       <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
       数据管理
@@ -1121,7 +1110,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <div class="sidebar-footer">
       <button class="profile-btn" onclick="showProfileManager()">
-        <div class="profile-avatar" id="sidebar-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);">学</div>
+        <div class="profile-avatar" id="sidebar-avatar" style="background:linear-gradient(135deg,#6C5CE7,#5B4CC4);">学</div>
         <div class="profile-info">
           <div class="profile-name" id="sidebar-name">大学生</div>
           <div class="profile-username" id="sidebar-username" style="font-size:11px;color:var(--text-3);margin-top:2px;"></div>
@@ -1162,31 +1151,31 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
             </div>
             <div class="quick-actions">
               <button class="quick-action" onclick="switchView('gpa');setTimeout(()=>document.getElementById('add-course-btn').click(),300)">
-                <div class="quick-action-icon" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#6C5CE7,#5B4CC4);">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 </div>
                 <div class="quick-action-text">添加课程</div>
               </button>
               <button class="quick-action" onclick="switchView('countdown');setTimeout(()=>document.getElementById('add-countdown-btn').click(),300)">
-                <div class="quick-action-icon" style="background:linear-gradient(135deg,#f87171,#fb923c);">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#E17055,#F0A500);">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 </div>
                 <div class="quick-action-text">添加倒计时</div>
               </button>
               <button class="quick-action" onclick="switchView('finance');setTimeout(()=>document.getElementById('quick-add-tx-btn').click(),300)">
-                <div class="quick-action-icon" style="background:linear-gradient(135deg,#34d399,#22d3ee);">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#00B894,#00B894);">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 </div>
                 <div class="quick-action-text">记一笔</div>
               </button>
               <button class="quick-action" onclick="switchView('schedule');setTimeout(()=>showAddScheduleEvent(),300)">
-                <div class="quick-action-icon" style="background:linear-gradient(135deg,#f472b6,#a78bfa);">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#FD79A8,#A29BFE);">
                   <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 </div>
                 <div class="quick-action-text">添加安排</div>
               </button>
               <button class="quick-action" onclick="switchView('routine')">
-                <div class="quick-action-icon" style="background:linear-gradient(135deg,#fbbf24,#f87171);">
+                <div class="quick-action-icon" style="background:linear-gradient(135deg,#FDCB6E,#E17055);">
                   <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
                 </div>
                 <div class="quick-action-text">今日作息</div>
@@ -1266,30 +1255,50 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </div>
       </div>
 
-      <!-- ===== 倒计时视图 ===== -->
-      <div class="view" id="view-countdown">
+            <!-- ===== 规划中心视图 ===== -->
+      <div class="view" id="view-plan">
         <div class="topbar">
           <div>
-            <h1 class="page-title">考试倒计时</h1>
-            <p class="page-subtitle">重要日子，一个都不错过</p>
+            <h1 class="page-title">规划中心</h1>
+            <p class="page-subtitle" id="plan-date">作息安排 · 考试倒计时 · 每日规划</p>
           </div>
           <div class="topbar-actions">
-            <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('all')" id="filter-all">全部</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('active')" id="filter-active">进行中</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('done')" id="filter-done">已完成</button>
-            <button class="btn btn-primary" id="add-countdown-btn" onclick="showAddCountdown()">
-              <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-              添加
-            </button>
+            <button class="btn btn-ghost btn-sm" onclick="showAddCountdown()">+ 添加倒计时</button>
+            <button class="btn btn-primary" onclick="showAddScheduleEvent()">+ 添加安排</button>
           </div>
         </div>
-
-        <div class="stats-grid" id="countdown-stats"></div>
-
-        <div class="countdown-grid" id="countdown-list"></div>
+        <div class="stats-grid" id="plan-stats"></div>
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><span class="dot"></span>今日作息</div>
+              <button class="btn btn-ghost btn-sm" onclick="switchScheduleDayTabs()">切换日期</button>
+            </div>
+            <div class="countdown-tabs" id="plan-day-tabs" style="margin-bottom:14px;"></div>
+            <div class="routine-timeline" id="plan-timeline"></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><span class="dot" style="background:var(--danger);"></span>考试倒计时</div>
+              <div style="display:flex;gap:4px;">
+                <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('all')" id="filter-all">全部</button>
+                <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('active')" id="filter-active">进行中</button>
+                <button class="btn btn-ghost btn-sm" onclick="toggleCountdownFilter('done')" id="filter-done">已完成</button>
+              </div>
+            </div>
+            <div class="countdown-grid" id="plan-countdowns" style="max-height:420px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div class="card dashboard-card-full" style="margin-top:18px;">
+          <div class="card-header">
+            <div class="card-title"><span class="dot" style="background:var(--accent);"></span>本周作息总览</div>
+            <button class="btn btn-ghost btn-sm" onclick="showAddScheduleEvent()">+ 添加安排</button>
+          </div>
+          <div class="countdown-grid" id="plan-schedule-list"></div>
+        </div>
       </div>
 
-      <!-- ===== 记账视图 ===== -->
+<!-- ===== 记账视图 ===== -->
       <div class="view" id="view-finance">
         <div class="topbar">
           <div>
@@ -1341,184 +1350,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     </div>
 
-    <!-- ===== 视图：作息总表 ===== -->
-    <div class="view" id="view-schedule">
-      <div class="topbar">
-        <div>
-          <h1 class="page-title">作息总表</h1>
-          <p class="page-subtitle">课程、自习、运动、三餐、睡眠，安排你的每一天</p>
-        </div>
-        <div class="topbar-actions">
-          <button class="btn btn-primary" id="add-schedule-btn" onclick="showAddScheduleEvent()">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            添加安排
-          </button>
-        </div>
-      </div>
-
-      <div class="stats-grid" id="schedule-stats"></div>
-
-      <div class="countdown-tabs" id="schedule-day-tabs" style="margin-bottom:16px;"></div>
-
-      <div class="countdown-grid" id="schedule-event-list"></div>
-
-      <div class="card" style="margin-top:20px;">
-        <div class="card-header">
-          <div class="card-title"><span class="dot" style="background:var(--cyan);"></span>本周时间分配</div>
-        </div>
-        <div class="card-body">
-          <div class="category-bars" id="category-bars"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 视图：今日作息 ===== -->
-    <div class="view" id="view-routine">
-      <div class="topbar">
-        <div>
-          <h1 class="page-title">今日作息</h1>
-          <p class="page-subtitle" id="routine-date">今日安排、习惯打卡、健康记录</p>
-        </div>
-        <div class="topbar-actions">
-          <button class="btn btn-primary" onclick="showAddScheduleEvent()">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-            添加安排
-          </button>
-        </div>
-      </div>
-
-      <div class="stats-grid" id="routine-stats"></div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header">
-          <div class="card-title"><span class="dot" style="background:var(--primary);"></span>今日安排</div>
-        </div>
-        <div class="card-body">
-          <div class="routine-timeline" id="routine-timeline"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="card-header">
-          <div class="card-title"><span class="dot" style="background:var(--success);"></span>习惯打卡</div>
-          <button class="btn btn-ghost btn-sm" onclick="showAddHabit()">+ 添加习惯</button>
-        </div>
-        <div class="card-body">
-          <div class="habit-grid" id="habit-grid"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><span class="dot" style="background:var(--pink);"></span>健康记录</div>
-        </div>
-        <div class="card-body">
-          <div class="health-grid">
-            <button class="health-item" type="button" onclick="logWater()">
-              <div class="health-icon" style="background:rgba(34,211,238,0.15);color:var(--cyan);">💧</div>
-              <div class="health-info">
-                <div class="health-value" id="water-count">0</div>
-                <div class="health-label">今日喝水(杯)</div>
-              </div>
-              <div class="health-action">+1</div>
-            </button>
-            <button class="health-item" type="button" onclick="logSleep()">
-              <div class="health-icon" style="background:rgba(167,139,250,0.15);color:var(--purple);">😴</div>
-              <div class="health-info">
-                <div class="health-value" id="sleep-hours">--</div>
-                <div class="health-label">昨晚睡眠(小时)</div>
-              </div>
-              <div class="health-action">记录</div>
-            </button>
-            <button class="health-item" type="button" onclick="logMood()">
-              <div class="health-icon" style="background:rgba(251,191,36,0.15);color:var(--warning);">😊</div>
-              <div class="health-info">
-                <div class="health-value" id="mood-text">--</div>
-                <div class="health-label">今日心情</div>
-              </div>
-              <div class="health-action">记录</div>
-            </button>
-            <button class="health-item" type="button" onclick="logExercise()">
-              <div class="health-icon" style="background:rgba(248,113,113,0.15);color:var(--danger);">🏃</div>
-              <div class="health-info">
-                <div class="health-value" id="exercise-min">0</div>
-                <div class="health-label">今日运动(分钟)</div>
-              </div>
-              <div class="health-action">+30</div>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- 底部导航（移动端） -->
-  <nav class="bottom-nav">
-    <button class="bottom-nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
-      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-      仪表盘
-    </button>
-    <button class="bottom-nav-item" data-view="gpa" onclick="switchView('gpa')">
-      <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
-      GPA
-    </button>
-    <button class="bottom-nav-item" data-view="countdown" onclick="switchView('countdown')">
-      <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
-      倒计时
-    </button>
-    <button class="bottom-nav-item" data-view="finance" onclick="switchView('finance')">
-      <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-      记账
-    </button>
-    <button class="bottom-nav-item" data-view="schedule" onclick="switchView('schedule')">
-      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-      作息
-    </button>
-  </nav>
-</div>
-
-<!-- Toast 容器 -->
-<div class="toast-container" id="toast-container"></div>
-
-<!-- ===== 弹窗：创建用户档案 ===== -->
-<div class="modal-overlay" id="modal-create-profile">
-  <div class="modal">
-    <h2 class="modal-title">创建新档案</h2>
-    <p class="modal-desc">每个档案拥有独立的数据，适合多人共用一台设备</p>
-    <div class="form-group">
-      <label class="form-label">用户名</label>
-      <input type="text" class="form-input" id="new-profile-username" maxlength="20" placeholder="输入你的用户名（唯一标识）">
-    </div>
-    <div class="form-group">
-      <label class="form-label">昵称</label>
-      <input type="text" class="form-input" id="new-profile-name" maxlength="12" placeholder="输入你的昵称">
-    </div>
-    <div class="form-group">
-      <label class="form-label">选择头像颜色</label>
-      <div class="avatar-colors" id="avatar-colors"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-create-profile')">取消</button>
-      <button class="btn btn-primary" onclick="createProfile()">创建并进入</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== 弹窗：用户档案管理 ===== -->
-<div class="modal-overlay" id="modal-profile-manager">
-  <div class="modal">
-    <h2 class="modal-title">档案管理</h2>
-    <p class="modal-desc">切换、创建或删除用户档案</p>
-    <div id="profile-manager-list" style="display:flex;flex-direction:column;gap:10px;max-height:400px;overflow-y:auto;"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-profile-manager')">关闭</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-profile-manager');showCreateProfile()">新建档案</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== 弹窗：编辑作息事件 ===== -->
+    <!-- ===== 弹窗：编辑作息事件 ===== -->
 <div class="modal-overlay" id="modal-schedule-event">
   <div class="modal">
     <h2 class="modal-title" id="schedule-event-title">添加安排</h2>
@@ -1783,14 +1615,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 // ========== 常量配置 ==========
 const STORAGE_PREFIX = "campus_toolbox_";
 const AVATAR_COLORS = [
-  { from: "#8b5cf6", to: "#6366f1", char: "学" },
-  { from: "#22d3ee", to: "#0891b2", char: "同" },
-  { from: "#f472b6", to: "#db2777", char: "少" },
-  { from: "#34d399", to: "#059669", char: "青" },
-  { from: "#fbbf24", to: "#d97706", char: "阳" },
-  { from: "#fb923c", to: "#ea580c", char: "光" },
-  { from: "#f87171", to: "#dc2626", char: "热" },
-  { from: "#a78bfa", to: "#7c3aed", char: "梦" }
+  { from: "#6C5CE7", to: "#5B4CC4", char: "学" },
+  { from: "#00B894", to: "#0891b2", char: "同" },
+  { from: "#FD79A8", to: "#db2777", char: "少" },
+  { from: "#00B894", to: "#059669", char: "青" },
+  { from: "#FDCB6E", to: "#d97706", char: "阳" },
+  { from: "#F0A500", to: "#ea580c", char: "光" },
+  { from: "#E17055", to: "#dc2626", char: "热" },
+  { from: "#A29BFE", to: "#7c3aed", char: "梦" }
 ];
 
 const GPA_ALGORITHMS = {
@@ -1842,21 +1674,21 @@ const COUNTDOWN_CATEGORIES = {
 };
 
 const EXPENSE_CATEGORIES = [
-  { id: "food", name: "餐饮", color: "#f87171", icon: '<path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>' },
-  { id: "transport", name: "交通", color: "#fb923c", icon: '<path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>' },
-  { id: "shopping", name: "购物", color: "#fbbf24", icon: '<path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>' },
-  { id: "entertainment", name: "娱乐", color: "#a78bfa", icon: '<path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zM9 8l7 4-7 4V8z"/>' },
-  { id: "study", name: "学习", color: "#22d3ee", icon: '<path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>' },
-  { id: "medical", name: "医疗", color: "#34d399", icon: '<path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>' },
-  { id: "digital", name: "数码", color: "#60a5fa", icon: '<path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>' },
+  { id: "food", name: "餐饮", color: "#E17055", icon: '<path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>' },
+  { id: "transport", name: "交通", color: "#F0A500", icon: '<path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>' },
+  { id: "shopping", name: "购物", color: "#FDCB6E", icon: '<path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>' },
+  { id: "entertainment", name: "娱乐", color: "#A29BFE", icon: '<path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zM9 8l7 4-7 4V8z"/>' },
+  { id: "study", name: "学习", color: "#00B894", icon: '<path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>' },
+  { id: "medical", name: "医疗", color: "#00B894", icon: '<path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>' },
+  { id: "digital", name: "数码", color: "#74B9FF", icon: '<path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>' },
   { id: "other_expense", name: "其他", color: "#94a3b8", icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>' }
 ];
 
 const INCOME_CATEGORIES = [
-  { id: "allowance", name: "生活费", color: "#34d399", icon: '<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>' },
-  { id: "parttime", name: "兼职", color: "#22d3ee", icon: '<path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>' },
-  { id: "scholarship", name: "奖学金", color: "#fbbf24", icon: '<path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>' },
-  { id: "redpacket", name: "红包", color: "#f87171", icon: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>' },
+  { id: "allowance", name: "生活费", color: "#00B894", icon: '<path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>' },
+  { id: "parttime", name: "兼职", color: "#00B894", icon: '<path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>' },
+  { id: "scholarship", name: "奖学金", color: "#FDCB6E", icon: '<path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>' },
+  { id: "redpacket", name: "红包", color: "#E17055", icon: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>' },
   { id: "other_income", name: "其他", color: "#94a3b8", icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>' }
 ];
 
@@ -1926,11 +1758,11 @@ function getProfileData(profileId) {
     scheduleEvents: [],
     scheduleCategories: [
       { id: "course", name: "课程", color: "#38bdf8" },
-      { id: "study", name: "自习", color: "#a78bfa" },
+      { id: "study", name: "自习", color: "#A29BFE" },
       { id: "exercise", name: "运动", color: "#fb7185" },
-      { id: "life", name: "生活", color: "#f472b6" },
-      { id: "rest", name: "休息", color: "#34d399" },
-      { id: "social", name: "社交", color: "#fbbf24" },
+      { id: "life", name: "生活", color: "#FD79A8" },
+      { id: "rest", name: "休息", color: "#00B894" },
+      { id: "social", name: "社交", color: "#FDCB6E" },
       { id: "sleep", name: "睡眠", color: "#818cf8" }
     ],
     scheduleSettings: { timeStart: 390, timeEnd: 1410, step: 30 },
@@ -2083,7 +1915,7 @@ function showProfileManager() {
   const container = $("profile-manager-list");
   container.innerHTML = state.profiles.map(p => {
     const isCurrent = p.id === state.currentProfileId;
-    return '<div class="welcome-profile-item" style="' + (isCurrent ? 'border-color:var(--primary);background:rgba(139,92,246,0.1);' : '') + '">' +
+    return '<div class="welcome-profile-item" style="' + (isCurrent ? 'border-color:var(--primary);background:rgba(108,92,231,0.1);' : '') + '">' +
       '<div class="profile-avatar" style="background:linear-gradient(135deg,' + p.colorFrom + ',' + p.colorTo + ')">' + p.name.charAt(0) + '</div>' +
       '<div class="welcome-profile-info">' +
         '<div class="welcome-profile-name">' + escapeHtml(p.name) + (isCurrent ? ' <span class="tag primary" style="margin-left:6px;">当前</span>' : '') + (p.username ? ' <span style="font-size:11px;color:var(--text-3);font-weight:500;">@' + escapeHtml(p.username) + '</span>' : '') + '</div>' +
@@ -2131,15 +1963,13 @@ function switchView(view) {
   });
   // 应用视图主题色
   const main = document.querySelector(".main");
-  main.classList.remove("view-gpa", "view-countdown", "view-finance", "view-schedule", "view-routine");
-  if (view !== "dashboard") main.classList.add("view-" + view);
+  main.classList.remove("view-gpa", "view-plan", "view-finance");
+  if (view !== "dashboard" && view !== "plan") main.classList.add("view-" + view);
   // 渲染对应视图
   if (view === "dashboard") renderDashboard();
   else if (view === "gpa") renderGPA();
-  else if (view === "countdown") renderCountdown();
+  else if (view === "plan") renderPlan();
   else if (view === "finance") renderFinance();
-  else if (view === "schedule") renderSchedule();
-  else if (view === "routine") renderRoutine();
   // 滚动到顶部
   document.querySelector(".main").scrollTop = 0;
 }
@@ -2552,13 +2382,113 @@ function logExercise() {
 }
 
 
+
+// ========== 规划中心 (merged Schedule + Countdown) ==========
+let planSelectedDay = null;
+
+function renderPlan() {
+  const data = getCurrentData();
+  const now = new Date();
+  const dateStr = now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日 " + SCHEDULE_WEEK_DAYS[schedTodayIndex()];
+  $("plan-date").textContent = dateStr + " · 作息安排 · 考试倒计时";
+  if (planSelectedDay === null) planSelectedDay = schedTodayIndex();
+  renderPlanStats(data);
+  renderPlanDayTabs(data);
+  renderPlanTimeline(data);
+  renderPlanCountdowns(data);
+  renderPlanScheduleList(data);
+}
+
+function renderPlanStats(data) {
+  const today = schedTodayIndex();
+  const todayEvents = (data.scheduleEvents || []).filter(e => e.day === today);
+  const doneCount = todayEvents.filter(e => e.done).length;
+  const activeCountdowns = data.countdowns.filter(c => !c.done);
+  const urgentCount = activeCountdowns.filter(c => { const info = getCountdownInfo(c); return info.days <= 7 && info.days >= 0; }).length;
+  $("plan-stats").innerHTML =
+    '<div class="stat-card primary"><div class="stat-label">今日安排</div><div class="stat-value">' + todayEvents.length + '<small>项</small></div></div>' +
+    '<div class="stat-card success"><div class="stat-label">已完成</div><div class="stat-value">' + doneCount + '<small>/' + todayEvents.length + '</small></div></div>' +
+    '<div class="stat-card danger"><div class="stat-label">待办倒计时</div><div class="stat-value">' + activeCountdowns.length + '<small>项</small></div></div>' +
+    '<div class="stat-card warning"><div class="stat-label">即将到期</div><div class="stat-value">' + urgentCount + '<small>项</small></div></div>';
+}
+
+function switchScheduleDayTabs() { planSelectedDay = (planSelectedDay + 1) % 7; renderPlan(); }
+
+function renderPlanDayTabs(data) {
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(); d.setDate(d.getDate() - schedTodayIndex() + i);
+    const dateLabel = (d.getMonth()+1) + '/' + d.getDate();
+    const isToday = i === schedTodayIndex();
+    const isSelected = i === planSelectedDay;
+    html += '<button class="schedule-filter' + (isSelected ? ' active' : '') + '" onclick="selectPlanDay(' + i + ')" style="' + (isToday ? 'border-color:var(--primary);font-weight:700;' : '') + '">' + SCHEDULE_WEEK_DAYS[i].charAt(1) + '<br>' + dateLabel + '</button>';
+  }
+  $("plan-day-tabs").innerHTML = html;
+}
+
+function selectPlanDay(day) { planSelectedDay = day; renderPlan(); }
+
+function renderPlanTimeline(data) {
+  const events = (data.scheduleEvents || []).filter(e => e.day === planSelectedDay).sort((a, b) => a.start - b.start);
+  const cats = data.scheduleCategories || [];
+  if (events.length === 0) { $("plan-timeline").innerHTML = '<div class="empty-state" style="padding:20px;"><div class="empty-desc">这天还没有安排，点击右上角添加</div></div>'; return; }
+  let html = '';
+  events.forEach(e => {
+    const cat = cats.find(c => c.id === e.category) || { color: "#9B9B9B", name: "其他" };
+    const startH = Math.floor(e.start / 60), startM = e.start % 60;
+    const endH = Math.floor(e.end / 60), endM = e.end % 60;
+    html += '<div class="routine-item ' + (e.done ? 'done' : '') + '" style="border-left:3px solid ' + cat.color + ';">' +
+      '<div class="routine-time">' + String(startH).padStart(2,'0')+':'+String(startM).padStart(2,'0') + '<span>' + String(endH).padStart(2,'0')+':'+String(endM).padStart(2,'0') + '</span></div>' +
+      '<div class="routine-title">' + escapeHtml(e.title) + '</div>' +
+      '<div class="routine-meta"><span style="color:' + cat.color + ';">' + cat.name + '</span>' + (e.location ? '<span>📍 ' + escapeHtml(e.location) + '</span>' : '') + '</div>' +
+      '<button class="routine-done-btn" onclick="toggleScheduleDone(\'' + e.id + '\')" title="' + (e.done ? '恢复' : '完成') + '">' + (e.done ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') + '</button></div>';
+  });
+  $("plan-timeline").innerHTML = html;
+}
+
+function renderPlanCountdowns(data) {
+  let cds = data.countdowns.slice();
+  if (state.countdownFilter === "active") cds = cds.filter(c => !c.done);
+  else if (state.countdownFilter === "done") cds = cds.filter(c => c.done);
+  ["all","active","done"].forEach(f => { const btn = document.getElementById("filter-"+f); if (btn) { btn.style.background = state.countdownFilter === f ? "var(--primary)" : ""; btn.style.color = state.countdownFilter === f ? "white" : ""; } });
+  if (cds.length === 0) { $("plan-countdowns").innerHTML = '<div class="empty-state"><div class="empty-desc">暂无倒计时</div></div>'; return; }
+  cds.sort((a,b) => { if (a.done !== b.done) return a.done ? 1 : -1; return new Date(a.date) - new Date(b.date); });
+  $("plan-countdowns").innerHTML = cds.slice(0, 8).map(c => {
+    const info = getCountdownInfo(c);
+    const cat = COUNTDOWN_CATEGORIES[c.category] || COUNTDOWN_CATEGORIES.other;
+    if (c.done) return '<div class="countdown-card priority-low" style="opacity:0.5;"><div class="countdown-header"><div class="countdown-title" style="text-decoration:line-through;">' + escapeHtml(c.name) + '</div></div><div class="countdown-days" style="font-size:22px;">已完成</div></div>';
+    if (info.isPast) return '<div class="countdown-card priority-low" style="opacity:0.6;"><div class="countdown-header"><div class="countdown-title">' + escapeHtml(c.name) + '</div></div><div class="countdown-days" style="font-size:22px;">已过期</div><div class="countdown-days-label">' + Math.abs(info.days) + ' 天前</div></div>';
+    const isUrgent = info.days <= 7 && info.days >= 0;
+    const progress = c.totalDays > 0 ? Math.min(100, Math.max(0, ((c.totalDays - info.days) / c.totalDays) * 100)) : 0;
+    return '<div class="countdown-card priority-' + c.priority + (isUrgent ? ' urgent' : '') + '">' +
+      '<div class="countdown-header"><div class="countdown-title">' + escapeHtml(c.name) + '</div><span class="tag">' + cat.name + '</span></div>' +
+      '<div class="countdown-days ' + (isUrgent ? 'urgent' : '') + '">' + info.days + '</div><div class="countdown-days-label">天</div>' +
+      '<div class="countdown-progress"><div class="countdown-progress-bar" style="width:' + progress + '%;background:' + (isUrgent ? 'var(--danger)' : 'var(--primary)') + ';"></div></div>' +
+      '<div class="countdown-actions"><button class="done-btn" onclick="toggleCountdownDone(\'' + c.id + '\')">完成</button><button class="del-btn" onclick="deleteCountdown(\'' + c.id + '\')">删除</button></div></div>';
+  }).join("");
+}
+
+function renderPlanScheduleList(data) {
+  const events = (data.scheduleEvents || []).sort((a, b) => { if (a.day !== b.day) return a.day - b.day; return a.start - b.start; });
+  const cats = data.scheduleCategories || [];
+  if (events.length === 0) { $("plan-schedule-list").innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-desc">还没有任何安排</div></div>'; return; }
+  $("plan-schedule-list").innerHTML = events.map(e => {
+    const cat = cats.find(c => c.id === e.category) || { color: "#9B9B9B", name: "其他" };
+    const startH = Math.floor(e.start / 60), startM = e.start % 60;
+    const endH = Math.floor(e.end / 60), endM = e.end % 60;
+    const timeStr = String(startH).padStart(2,'0')+':'+String(startM).padStart(2,'0')+' - '+String(endH).padStart(2,'0')+':'+String(endM).padStart(2,'0');
+    return '<div class="countdown-card ' + (e.done ? 'done' : '') + '" style="border-top:3px solid ' + cat.color + ';">' +
+      '<div class="countdown-header"><div class="countdown-title">' + escapeHtml(e.title) + '</div><span class="tag" style="background:' + cat.color + '20;color:' + cat.color + ';">' + cat.name + '</span></div>' +
+      '<div class="countdown-time">🕐 ' + timeStr + ' | ' + SCHEDULE_WEEK_DAYS[e.day] + '</div>' +
+      (e.location ? '<div class="countdown-time">📍 ' + escapeHtml(e.location) + '</div>' : '') +
+      '<div class="countdown-actions"><button onclick="toggleScheduleDone(\'' + e.id + '\')">' + (e.done ? '恢复' : '完成') + '</button><button onclick="editScheduleEvent(\'' + e.id + '\')">编辑</button><button class="del-btn" onclick="deleteScheduleEvent(\'' + e.id + '\')">删除</button></div></div>';
+  }).join("");
+}
 function renderAll() {
   renderDashboard();
   renderGPA();
-  renderCountdown();
+  renderPlan();
   renderFinance();
-  renderSchedule();
-  renderRoutine();
 }
 
 // ========== GPA 模块 ==========
@@ -2574,11 +2504,11 @@ function calcGPA(courses, algorithm) {
 }
 
 function getGradeColor(score) {
-  if (score >= 90) return "linear-gradient(135deg,#34d399,#059669)";
-  if (score >= 80) return "linear-gradient(135deg,#22d3ee,#0891b2)";
-  if (score >= 70) return "linear-gradient(135deg,#a78bfa,#7c3aed)";
-  if (score >= 60) return "linear-gradient(135deg,#fbbf24,#d97706)";
-  return "linear-gradient(135deg,#f87171,#dc2626)";
+  if (score >= 90) return "linear-gradient(135deg,#00B894,#059669)";
+  if (score >= 80) return "linear-gradient(135deg,#00B894,#0891b2)";
+  if (score >= 70) return "linear-gradient(135deg,#A29BFE,#7c3aed)";
+  if (score >= 60) return "linear-gradient(135deg,#FDCB6E,#d97706)";
+  return "linear-gradient(135deg,#E17055,#dc2626)";
 }
 
 function renderGPA() {
@@ -2654,14 +2584,14 @@ function renderGPAChart(data) {
   const textColor = state.theme === "dark" ? "#a0a0b8" : "#505068";
   chart.setOption({
     grid: { left: 50, right: 20, top: 30, bottom: 40 },
-    tooltip: { trigger: "axis", backgroundColor: "rgba(20,20,40,0.95)", borderColor: "rgba(139,92,246,0.3)", textStyle: { color: "#fff" } },
+    tooltip: { trigger: "axis", backgroundColor: "rgba(20,20,40,0.95)", borderColor: "rgba(108,92,231,0.3)", textStyle: { color: "#fff" } },
     xAxis: { type: "category", data: semNames, axisLine: { lineStyle: { color: "rgba(255,255,255,0.1)" } }, axisLabel: { color: textColor, fontSize: 11, rotate: semNames.length > 4 ? 30 : 0 } },
     yAxis: { type: "value", min: 0, max: GPA_ALGORITHMS[state.gpaAlgorithm].max, axisLine: { show: false }, axisLabel: { color: textColor }, splitLine: { lineStyle: { color: "rgba(255,255,255,0.05)" } } },
     series: [{
       type: "line", data: semGPAs, smooth: true, symbol: "circle", symbolSize: 10,
-      lineStyle: { width: 3, color: new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:"#8b5cf6"},{offset:1,color:"#22d3ee"}]) },
-      itemStyle: { color: "#8b5cf6", borderColor: "#fff", borderWidth: 2 },
-      areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"rgba(139,92,246,0.3)"},{offset:1,color:"rgba(139,92,246,0)"}]) }
+      lineStyle: { width: 3, color: new echarts.graphic.LinearGradient(0,0,1,0,[{offset:0,color:"#6C5CE7"},{offset:1,color:"#00B894"}]) },
+      itemStyle: { color: "#6C5CE7", borderColor: "#fff", borderWidth: 2 },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"rgba(108,92,231,0.3)"},{offset:1,color:"rgba(108,92,231,0)"}]) }
     }]
   });
 }
@@ -3098,13 +3028,13 @@ function renderFinanceChart(data) {
   const textColor = state.theme === "dark" ? "#a0a0b8" : "#505068";
   chart.setOption({
     grid: { left: 50, right: 20, top: 30, bottom: 30 },
-    tooltip: { trigger: "axis", backgroundColor: "rgba(20,20,40,0.95)", borderColor: "rgba(139,92,246,0.3)", textStyle: { color: "#fff" } },
+    tooltip: { trigger: "axis", backgroundColor: "rgba(20,20,40,0.95)", borderColor: "rgba(108,92,231,0.3)", textStyle: { color: "#fff" } },
     legend: { data: ["支出","收入"], textStyle: { color: textColor }, top: 0, right: 0 },
     xAxis: { type: "category", data: months, axisLine: { lineStyle: { color: "rgba(255,255,255,0.1)" } }, axisLabel: { color: textColor, fontSize: 11 } },
     yAxis: { type: "value", axisLine: { show: false }, axisLabel: { color: textColor }, splitLine: { lineStyle: { color: "rgba(255,255,255,0.05)" } } },
     series: [
-      { name: "支出", type: "bar", data: expenseData, itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"#f87171"},{offset:1,color:"rgba(248,113,113,0.3)"}]), borderRadius: [4,4,0,0] }, barWidth: 16 },
-      { name: "收入", type: "bar", data: incomeData, itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"#34d399"},{offset:1,color:"rgba(52,211,153,0.3)"}]), borderRadius: [4,4,0,0] }, barWidth: 16 }
+      { name: "支出", type: "bar", data: expenseData, itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"#E17055"},{offset:1,color:"rgba(248,113,113,0.3)"}]), borderRadius: [4,4,0,0] }, barWidth: 16 },
+      { name: "收入", type: "bar", data: incomeData, itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:"#00B894"},{offset:1,color:"rgba(52,211,153,0.3)"}]), borderRadius: [4,4,0,0] }, barWidth: 16 }
     ]
   });
 }
@@ -3236,7 +3166,7 @@ function renderDashboard() {
   if (upcoming.length === 0) {
     $("dashboard-upcoming").innerHTML = '<div class="empty-state" style="padding:20px;"><div class="empty-desc">暂无即将到来的事件</div></div>';
   } else {
-    const colors = { high: "#f87171", mid: "#fbbf24", low: "#34d399" };
+    const colors = { high: "#E17055", mid: "#FDCB6E", low: "#00B894" };
     $("dashboard-upcoming").innerHTML = upcoming.map(c => {
       const info = getCountdownInfo(c);
       const cat = COUNTDOWN_CATEGORIES[c.category] || COUNTDOWN_CATEGORIES.other;
@@ -3265,7 +3195,7 @@ function renderDashboard() {
   if (recentShow.length === 0) {
     $("dashboard-recent").innerHTML = '<div class="empty-state" style="padding:20px;"><div class="empty-desc">暂无动态，开始使用各个功能吧</div></div>';
   } else {
-    const typeColors = { gpa: "#8b5cf6", countdown: "#f87171", finance: "#34d399", schedule: "#f472b6" };
+    const typeColors = { gpa: "#6C5CE7", countdown: "#E17055", finance: "#00B894", schedule: "#FD79A8" };
     $("dashboard-recent").innerHTML = recentShow.map(r => {
       const d = new Date(r.time || Date.now());
       const timeStr = (d.getMonth()+1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
@@ -3336,7 +3266,7 @@ window.addEventListener("resize", () => {
 function initParticles() {
   const container = $("bg-particles");
   if (!container) return;
-  const colors = ["#8b5cf6", "#22d3ee", "#f472b6", "#34d399", "#fbbf24"];
+  const colors = ["#6C5CE7", "#00B894", "#FD79A8", "#00B894", "#FDCB6E"];
   for (let i = 0; i < 25; i++) {
     const p = document.createElement("div");
     p.className = "particle";
@@ -3367,7 +3297,7 @@ function init() {
 
   // 每分钟更新倒计时
   setInterval(() => {
-    if (state.currentProfileId && state.currentView === "countdown") renderCountdown();
+    if (state.currentProfileId && state.currentView === "plan") renderPlan();
   }, 60000);
 }
 
@@ -3415,6 +3345,9 @@ window.deleteScheduleEvent = deleteScheduleEvent;
 window.toggleScheduleDone = toggleScheduleDone;
 window.switchScheduleDay = switchScheduleDay;
 window.selectScheduleCategory = selectScheduleCategory;
+window.renderPlan = renderPlan;
+window.selectPlanDay = selectPlanDay;
+window.switchScheduleDayTabs = switchScheduleDayTabs;
 window.toggleHabit = toggleHabit;
 window.showAddHabit = showAddHabit;
 window.logWater = logWater;
