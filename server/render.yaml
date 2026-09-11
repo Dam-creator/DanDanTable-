@@ -1,0 +1,20 @@
+# Render 一键部署配置
+# 文档: https://render.com/docs/infrastructure-as-code
+
+services:
+  - type: web
+    name: dandantable-server
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /api/health
+    autoDeploy: true
+    pullRequestPreviewsEnabled: false
