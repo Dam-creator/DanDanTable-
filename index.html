@@ -2430,6 +2430,255 @@ body {
     </div>
 
     <!-- ===== View: Tasks 作业任务（彻底重设计） ===== -->
+    <div class="view" id="view-tasks">
+      <!-- 顶部统计 -->
+      <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);">
+        <div class="stat-card blue">
+          <div class="stat-card-header"><span class="stat-card-label">总任务</span></div>
+          <div class="stat-card-value" id="task-total-count">0</div>
+          <div class="stat-card-desc">全部任务数</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-card-header"><span class="stat-card-label">待办</span></div>
+          <div class="stat-card-value" id="task-pending-count">0</div>
+          <div class="stat-card-desc">未完成任务</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-header"><span class="stat-card-label">已完成</span></div>
+          <div class="stat-card-value" id="task-completed-count">0</div>
+          <div class="stat-card-desc">已完成任务</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-card-header"><span class="stat-card-label">已过期</span></div>
+          <div class="stat-card-value" id="task-overdue-count">0</div>
+          <div class="stat-card-desc">超过截止日期</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-card-header"><span class="stat-card-label">完成率</span></div>
+          <div class="stat-card-value" id="task-completion-rate">0%</div>
+          <div class="stat-card-desc">总完成率</div>
+        </div>
+      </div>
+
+      <!-- 视图切换 + 筛选 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="task-view-btn active" onclick="switchTaskView('board', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            📋 看板视图
+          </button>
+          <button class="task-view-btn" onclick="switchTaskView('list', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            📝 列表视图
+          </button>
+          <button class="task-view-btn" onclick="switchTaskView('matrix', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            🎯 优先级矩阵
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select id="task-course-filter" onchange="renderTasksView()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);font-size:13px;">
+            <option value="">全部课程</option>
+          </select>
+          <select id="task-priority-filter" onchange="renderTasksView()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);font-size:13px;">
+            <option value="">全部优先级</option>
+            <option value="high">高优先级</option>
+            <option value="medium">中优先级</option>
+            <option value="low">低优先级</option>
+          </select>
+          <button class="btn btn-primary" onclick="showAddTask()">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            添加任务
+          </button>
+        </div>
+      </div>
+
+      <!-- 看板视图 -->
+      <div id="task-view-board">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <!-- 待办 -->
+          <div class="kanban-column" style="background:var(--bg-secondary);border-radius:12px;padding:12px;min-height:400px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div style="font-weight:700;color:var(--orange);">⏳ 待办</div>
+              <div style="background:var(--orange);color:#fff;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;" id="kanban-pending-count">0</div>
+            </div>
+            <div id="kanban-pending-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <!-- 进行中 -->
+          <div class="kanban-column" style="background:var(--bg-secondary);border-radius:12px;padding:12px;min-height:400px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div style="font-weight:700;color:var(--blue);">🔄 进行中</div>
+              <div style="background:var(--blue);color:#fff;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;" id="kanban-progress-count">0</div>
+            </div>
+            <div id="kanban-progress-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <!-- 已完成 -->
+          <div class="kanban-column" style="background:var(--bg-secondary);border-radius:12px;padding:12px;min-height:400px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div style="font-weight:700;color:var(--green);">✅ 已完成</div>
+              <div style="background:var(--green);color:#fff;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;" id="kanban-completed-count">0</div>
+            </div>
+            <div id="kanban-completed-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 列表视图 -->
+      <div id="task-view-list" style="display:none;">
+        <div class="task-filter-tabs" id="task-filter-tabs" style="margin-bottom:16px;">
+          <button class="task-filter-tab active" onclick="setTaskFilter('all', this)">全部</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('pending', this)">待办</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('completed', this)">已完成</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('today', this)">今日截止</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('week', this)">本周截止</button>
+        </div>
+        <div id="tasks-list"></div>
+      </div>
+
+      <!-- 优先级矩阵视图 -->
+      <div id="task-view-matrix" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;min-height:500px;">
+          <div class="matrix-quadrant" style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:12px;padding:16px;border:2px solid #ef4444;">
+            <div style="font-weight:700;color:#991b1b;margin-bottom:12px;">🔴 重要且紧急</div>
+            <div id="matrix-urgent-important" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <div class="matrix-quadrant" style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:16px;border:2px solid #f59e0b;">
+            <div style="font-weight:700;color:#92400e;margin-bottom:12px;">🟡 重要不紧急</div>
+            <div id="matrix-important-not-urgent" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <div class="matrix-quadrant" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:12px;padding:16px;border:2px solid #3b82f6;">
+            <div style="font-weight:700;color:#1e40af;margin-bottom:12px;">🔵 紧急不重要</div>
+            <div id="matrix-urgent-not-important" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+          <div class="matrix-quadrant" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:16px;border:2px solid #10b981;">
+            <div style="font-weight:700;color:#065f46;margin-bottom:12px;">🟢 不紧急不重要</div>
+            <div id="matrix-not-urgent-not-important" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部统计图表 -->
+      <div class="content-grid" style="margin-top:20px;">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">近7天完成趋势</div>
+            </div>
+            <div class="chart-container" id="task-weekly-chart" style="height:250px;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">各课程任务分布</div>
+            </div>
+            <div class="chart-container" id="task-course-chart" style="height:250px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== View: Goals 目标管理（彻底重设计） ===== -->
+    <div class="view" id="view-goals">
+      <!-- 顶部统计 -->
+      <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);">
+        <div class="stat-card purple">
+          <div class="stat-card-header"><span class="stat-card-label">总目标</span></div>
+          <div class="stat-card-value" id="goal-total-count">0</div>
+          <div class="stat-card-desc">全部目标数</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-header"><span class="stat-card-label">进行中</span></div>
+          <div class="stat-card-value" id="goal-active-count">0</div>
+          <div class="stat-card-desc">正在进行</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-header"><span class="stat-card-label">已完成</span></div>
+          <div class="stat-card-value" id="goal-completed-count">0</div>
+          <div class="stat-card-desc">已达成目标</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-card-header"><span class="stat-card-label">平均进度</span></div>
+          <div class="stat-card-value" id="goal-avg-progress">0%</div>
+          <div class="stat-card-desc">进行中目标平均</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-card-header"><span class="stat-card-label">即将到期</span></div>
+          <div class="stat-card-value" id="goal-due-soon">0</div>
+          <div class="stat-card-desc">7天内到期</div>
+        </div>
+      </div>
+
+      <!-- 视图切换 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0;flex-wrap:wrap;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="goal-view-btn active" onclick="switchGoalView('cards', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            🃏 卡片视图
+          </button>
+          <button class="goal-view-btn" onclick="switchGoalView('timeline', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            📅 时间线
+          </button>
+          <button class="goal-view-btn" onclick="switchGoalView('progress', this)" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;">
+            📊 进度追踪
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="goal-category-filter" onchange="renderGoalsView()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);font-size:13px;">
+            <option value="">全部分类</option>
+            <option value="academic">学业</option>
+            <option value="health">健康</option>
+            <option value="finance">财务</option>
+            <option value="skill">技能</option>
+            <option value="other">其他</option>
+          </select>
+          <button class="btn btn-primary" onclick="showAddGoal()">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            创建目标
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片视图 -->
+      <div id="goal-view-cards">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px;" id="goals-grid"></div>
+      </div>
+
+      <!-- 时间线视图 -->
+      <div id="goal-view-timeline" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">目标时间线</div>
+          </div>
+          <div id="goals-timeline" style="padding:20px;min-height:400px;"></div>
+        </div>
+      </div>
+
+      <!-- 进度追踪视图 -->
+      <div id="goal-view-progress" style="display:none;">
+        <div class="content-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">各目标进度对比</div>
+              </div>
+              <div class="chart-container" id="goal-progress-chart" style="height:350px;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">目标分类分布</div>
+              </div>
+              <div class="chart-container" id="goal-category-chart" style="height:250px;"></div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">月度达成统计</div>
+              </div>
+              <div class="chart-container" id="goal-monthly-chart" style="height:250px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== View: Focus 专注计时 ===== -->
     <div class="view" id="view-focus" style="display:none;">
       <div class="focus-container">
