@@ -1,0 +1,25 @@
+# 依赖目录
+node_modules/
+
+# 数据目录（包含用户数据，不应上传）
+data/
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 环境变量文件
+.env
+.env.local
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 测试文件
+test_*.js
+*_test.js
+
+# 临时文件
+*.tmp
+*.temp
