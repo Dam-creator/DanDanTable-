@@ -1,0 +1,19 @@
+{
+  "name": "dandantable-server",
+  "version": "1.0.0",
+  "description": "DanDanTable 后端API - 用户系统与数据云同步",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
