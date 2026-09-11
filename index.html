@@ -1670,6 +1670,60 @@ body {
   line-height: 1.6;
 }
 
+
+/* ===== 压力指数小型组件 ===== */
+.stress-mini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid var(--border-color);
+}
+.stress-mini:hover {
+  background: var(--bg-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.stress-mini-ring {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: conic-gradient(#10B981 0deg, #e5e7eb 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.stress-mini-ring::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+}
+.stress-mini-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.stress-mini-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.stress-mini-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+  .stress-mini { padding: 4px 8px; }
+  .stress-mini-info { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1743,25 +1797,17 @@ body {
         <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
         记账本
       </button>
-      <button class="nav-item" data-view="plan" onclick="switchView('plan')">
-        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-        规划中心
-      </button>
       
       
       <div class="nav-section">学习</div>
       <button class="nav-item" data-view="schedule" onclick="switchView('schedule')">
         <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-        课程表
+        规划中心
       </button>
       <button class="nav-item" data-view="tasks" onclick="switchView('tasks')">
         <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         作业任务
         <span class="nav-badge" id="tasks-badge" style="display:none;">0</span>
-      </button>
-      <button class="nav-item" data-view="focus" onclick="switchView('focus')">
-        <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
-        专注计时
       </button>
       <button class="nav-item" data-view="goals" onclick="switchView('goals')">
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
@@ -1799,6 +1845,16 @@ body {
         </div>
       </div>
       <div class="topbar-actions">
+        <div class="stress-mini" id="stress-mini" onclick="showStressDetail()" title="点击查看压力详情">
+          <div class="stress-mini-ring" id="stress-mini-ring"></div>
+          <div class="stress-mini-info">
+            <div class="stress-mini-value" id="stress-mini-value">--</div>
+            <div class="stress-mini-label" id="stress-mini-label">压力</div>
+          </div>
+        <button class="icon-btn" onclick="showSmartAnalysis()" title="智能分析" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </button>
+        </div>
         <div class="search-box">
           <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           <input type="text" placeholder="搜索功能、数据...">
@@ -2290,7 +2346,7 @@ body {
     </div>
 
     <!-- ===== View: Focus 专注计时 ===== -->
-    <div class="view" id="view-focus">
+    <div class="view" id="view-focus" style="display:none;">
       <div class="focus-container">
         <div class="focus-timer-circle" id="focus-timer-circle">
           <svg viewBox="0 0 100 100">
@@ -2784,6 +2840,25 @@ body {
 </div>
 
 
+
+<!-- 智能分析 -->
+<div class="modal-overlay" id="modal-smart-analysis">
+  <div class="modal" style="max-width:600px;max-height:85vh;overflow-y:auto;">
+    <h2 class="modal-title">🤖 智能分析</h2>
+    <p class="modal-desc">基于你的数据，给出个性化的学习生活建议</p>
+    <div id="smart-analysis-content" style="margin-bottom:16px;">
+      <div style="text-align:center;padding:40px;color:var(--text-secondary);">
+        <div style="font-size:32px;margin-bottom:12px;">🔮</div>
+        <div>正在分析你的数据...</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-smart-analysis')">关闭</button>
+      <button class="btn btn-primary" onclick="generateSmartAnalysis()">重新分析</button>
+    </div>
+  </div>
+</div>
+
 <!-- 档案管理 -->
 <div class="modal-overlay" id="modal-profile-manager">
   <div class="modal">
@@ -3240,7 +3315,7 @@ function toast(msg, type = "info") {
 
 // ===== Modal =====
 function showModal(id) { const el = $(id); if (el) el.classList.add("show"); }
-function closeModal(id) { const el = $(id); if (el) el.classList.remove("show"); }
+function closeModal(id) { const el = $(id); if (el) { el.classList.remove("show"); if (id === 'modal-schedule-course' || id === 'modal-task-form' || id === 'modal-goal-form') { setTimeout(() => { if (el.parentNode) el.remove(); }, 300); } } }
 
 // 点击遮罩关闭弹窗
 document.addEventListener("click", e => {
@@ -4701,7 +4776,10 @@ function showScheduleCourseModal(course, day, time) {
   const isEdit = !!course;
   const days = ['周一','周二','周三','周四','周五','周六','周日'];
   const colors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'];
-  let html = '<div class="modal-overlay active" id="modal-schedule-course" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>' + (isEdit ? '编辑课程' : '添加课程') + '</h3><button class="modal-close" onclick="closeModal(\'modal-schedule-course\')">&times;</button></div><div class="modal-body">';
+  // 移除已存在的模态框
+  const existing = document.getElementById('modal-schedule-course');
+  if (existing) existing.remove();
+  let html = '<div class="modal-overlay" id="modal-schedule-course"><div class="modal" style="max-width:480px;"><h2 class="modal-title">' + (isEdit ? '编辑课程' : '添加课程') + '</h2><p class="modal-desc">设置课程信息</p>';
   html += '<div class="form-group"><label>课程名称 *</label><input id="sc-name" class="input" value="' + (course ? escapeAttr(course.name) : '') + '"></div>';
   html += '<div class="form-group"><label>授课老师</label><input id="sc-teacher" class="input" value="' + (course ? escapeAttr(course.teacher || '') : '') + '"></div>';
   html += '<div class="form-group"><label>上课教室</label><input id="sc-location" class="input" value="' + (course ? escapeAttr(course.location || '') : '') + '"></div>';
@@ -4715,12 +4793,13 @@ function showScheduleCourseModal(course, day, time) {
   html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#4F46E5') + '"></div>';
   html += '<div class="form-group"><label>备注</label><input id="sc-note" class="input" value="' + (course ? escapeAttr(course.note || '') : '') + '"></div>';
   if (isEdit) { html += '<input type="hidden" id="sc-id" value="' + course.id + '">'; }
-  html += '</div><div class="modal-footer">';
+  html += '<div class="modal-actions">';
   if (isEdit) { html += '<button class="btn btn-danger" onclick="scheduleDeleteCourse(\'' + course.id + '\')">删除</button>'; }
   html += '<button class="btn btn-ghost" onclick="closeModal(\'modal-schedule-course\')">取消</button>';
   html += '<button class="btn btn-primary" onclick="scheduleSaveCourse()">保存</button>';
   html += '</div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
+  showModal('modal-schedule-course');
 }
 
 function scheduleSaveCourse() {
@@ -4857,7 +4936,7 @@ function setTaskFilter(filter, btn) {
 function showAddTask() {
   const data = getProfileDataCached(state.currentProfileId) || {};
   const courses = data.scheduleCourses || [];
-  let html = '<div class="modal-overlay active" id="modal-task-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>添加任务</h3><button class="modal-close" onclick="closeModal(\'modal-task-form\')">&times;</button></div><div class="modal-body">';
+  const existingTask = document.getElementById('modal-task-form'); if (existingTask) existingTask.remove(); let html = '<div class="modal-overlay" id="modal-task-form"><div class="modal" style="max-width:480px;"><h2 class="modal-title">添加任务</h2><p class="modal-desc">记录作业或待办事项</p>';
   html += '<div class="form-group"><label>任务标题 *</label><input id="task-title" class="input"></div>';
   html += '<div class="form-group"><label>详细描述</label><textarea id="task-desc" class="input" rows="2"></textarea></div>';
   html += '<div class="form-group"><label>关联课程</label><select id="task-course" class="input"><option value="">无</option>';
@@ -4866,8 +4945,9 @@ function showAddTask() {
   html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;"><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'high\';this.style.borderColor=\'#EF4444\';return false;" style="border:2px solid #EF4444;color:#EF4444;">高</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'medium\';return false;" style="border:2px solid #F59E0B;color:#F59E0B;">中</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'low\';return false;" style="border:2px solid #10B981;color:#10B981;">低</button></div><input type="hidden" id="task-priority" value="medium"></div>';
   html += '<div class="form-group"><label>截止日期</label><input id="task-due" class="input" type="datetime-local"></div>';
   html += '<input type="hidden" id="task-edit-id" value="">';
-  html += '</div><div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
+  html += '</div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
+  showModal('modal-task-form');
 }
 
 function taskEdit(taskId) {
@@ -4875,7 +4955,7 @@ function taskEdit(taskId) {
   const task = (data.tasksData || []).find(t => t.id === taskId);
   if (!task) return;
   const courses = data.scheduleCourses || [];
-  let html = '<div class="modal-overlay active" id="modal-task-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>编辑任务</h3><button class="modal-close" onclick="closeModal(\'modal-task-form\')">&times;</button></div><div class="modal-body">';
+  const existingTaskEdit = document.getElementById('modal-task-form'); if (existingTaskEdit) existingTaskEdit.remove(); let html = '<div class="modal-overlay" id="modal-task-form"><div class="modal" style="max-width:480px;"><h2 class="modal-title">编辑任务</h2><p class="modal-desc">修改任务信息</p>';
   html += '<div class="form-group"><label>任务标题 *</label><input id="task-title" class="input" value="' + escapeAttr(task.title) + '"></div>';
   html += '<div class="form-group"><label>详细描述</label><textarea id="task-desc" class="input" rows="2">' + escapeHtml(task.description || '') + '</textarea></div>';
   html += '<div class="form-group"><label>关联课程</label><select id="task-course" class="input"><option value="">无</option>';
@@ -4889,8 +4969,9 @@ function taskEdit(taskId) {
   html += '</div><input type="hidden" id="task-priority" value="' + task.priority + '"></div>';
   html += '<div class="form-group"><label>截止日期</label><input id="task-due" class="input" type="datetime-local" value="' + (task.dueDate ? task.dueDate.slice(0,16) : '') + '"></div>';
   html += '<input type="hidden" id="task-edit-id" value="' + task.id + '">';
-  html += '</div><div class="modal-footer"><button class="btn btn-danger" onclick="taskDelete(\'' + task.id + '\')">删除</button><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
+  html += '</div><div class="modal-actions"><button class="btn btn-danger" onclick="taskDelete(\'' + task.id + '\')">删除</button><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
+  showModal('modal-task-form');
 }
 
 function taskSave() {
@@ -5102,7 +5183,7 @@ function renderGoalsView() {
 function setGoalFilter(filter, btn) { goalFilter = filter; document.querySelectorAll('#goal-filter-tabs .task-filter-tab').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderGoalsView(); }
 
 function showAddGoal() {
-  let html = '<div class="modal-overlay active" id="modal-goal-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>创建目标</h3><button class="modal-close" onclick="closeModal(\'modal-goal-form\')">&times;</button></div><div class="modal-body">';
+  let html = '<div class="modal-overlay" id="modal-goal-form"><div class="modal" style="max-width:480px;"><h2 class="modal-title">创建目标</h2><p class="modal-desc">设置信息</p>';
   html += '<div class="form-group"><label>目标标题 *</label><input id="goal-title" class="input"></div>';
   html += '<div class="form-group"><label>详细描述</label><textarea id="goal-desc" class="input" rows="2"></textarea></div>';
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input"><option value="academic">📚 学业</option><option value="health">💪 健康</option><option value="finance">💰 财务</option><option value="skill">🔧 技能</option><option value="other">⭐ 其他</option></select></div>';
@@ -5110,15 +5191,16 @@ function showAddGoal() {
   ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
   html += '</div><input type="hidden" id="goal-color" value="#4F46E5"></div>';
   html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date"></div>';
-  html += '<input type="hidden" id="goal-edit-id" value=""></div><div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">创建</button></div></div></div>';
+  html += '<input type="hidden" id="goal-edit-id" value=""></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">创建</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
+  showModal('modal-goal-form');
 }
 
 function goalEdit(goalId) {
   const data = getProfileDataCached(state.currentProfileId) || {};
   const goal = (data.goalsData || []).find(g => g.id === goalId); if (!goal) return;
   const cats = [{v:'academic',l:'📚 学业'},{v:'health',l:'💪 健康'},{v:'finance',l:'💰 财务'},{v:'skill',l:'🔧 技能'},{v:'other',l:'⭐ 其他'}];
-  let html = '<div class="modal-overlay active" id="modal-goal-form" style="display:flex;"><div class="modal" style="max-width:520px;"><div class="modal-header"><h3>编辑目标</h3><button class="modal-close" onclick="closeModal(\'modal-goal-form\')">&times;</button></div><div class="modal-body">';
+  let html = '<div class="modal-overlay" id="modal-goal-form"><div class="modal" style="max-width:520px;"><h2 class="modal-title">编辑目标</h2><p class="modal-desc">设置信息</p>';
   html += '<div class="form-group"><label>目标标题</label><input id="goal-title" class="input" value="' + escapeAttr(goal.title) + '"></div>';
   html += '<div class="form-group"><label>描述</label><textarea id="goal-desc" class="input" rows="2">' + escapeHtml(goal.description||'') + '</textarea></div>';
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input">';
@@ -5131,7 +5213,7 @@ function goalEdit(goalId) {
   (goal.milestones||[]).forEach(m => { html += '<div style="display:flex;gap:8px;margin-bottom:4px;"><input class="input" value="' + escapeAttr(m.title) + '" data-mid="' + m.id + '" style="flex:1;"><button class="btn btn-ghost" onclick="this.parentElement.remove();" style="padding:4px 8px;">✕</button></div>'; });
   html += '</div><button class="btn btn-ghost" onclick="goalAddMilestoneField()" style="margin-top:4px;">+ 添加子任务</button></div>';
   html += '<div class="form-group"><label>状态</label><select id="goal-status" class="input"><option value="active"' + (goal.status==='active'?' selected':'') + '>进行中</option><option value="completed"' + (goal.status==='completed'?' selected':'') + '>已完成</option><option value="abandoned"' + (goal.status==='abandoned'?' selected':'') + '>已放弃</option></select></div>';
-  html += '<input type="hidden" id="goal-edit-id" value="' + goal.id + '"></div><div class="modal-footer"><button class="btn btn-danger" onclick="goalDelete(\'' + goal.id + '\')">删除目标</button><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">保存</button></div></div></div>';
+  html += '<input type="hidden" id="goal-edit-id" value="' + goal.id + '"></div><div class="modal-actions"><button class="btn btn-danger" onclick="goalDelete(\'' + goal.id + '\')">删除目标</button><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">保存</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
 }
 
@@ -5210,7 +5292,33 @@ function renderStressIndex() {
   const x=cx+r*Math.cos(-rad); const y=cy-r*Math.sin(-rad);
   container.innerHTML =
     '<div class="stress-gauge"><svg viewBox="0 0 200 140" style="width:100%;max-width:280px;"><path d="M 30 95 A 70 70 0 0 1 170 95" fill="none" stroke="#e5e7eb" stroke-width="12" stroke-linecap="round"/><path d="M 30 95 A 70 70 0 0 1 '+x.toFixed(1)+' '+y.toFixed(1)+'" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round" style="transition:all 0.6s ease;"/><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="'+color+'"/></svg><div class="stress-value" style="color:'+color+';">'+score+'</div><div class="stress-label" style="color:'+color+';">'+levelLabel+'</div></div><div class="stress-advice">'+advice.map(a=>'<div class="stress-advice-item">💬 '+a+'</div>').join('')+'</div>';
+  
+  // 更新顶部小型组件
+  const miniRing = document.getElementById('stress-mini-ring');
+  const miniValue = document.getElementById('stress-mini-value');
+  const miniLabel = document.getElementById('stress-mini-label');
+  if (miniRing) {
+    const angle = (score / 100) * 360;
+    miniRing.style.background = 'conic-gradient(' + color + ' ' + angle + 'deg, #e5e7eb ' + angle + 'deg)';
+  }
+  if (miniValue) miniValue.textContent = score;
+  if (miniLabel) miniLabel.textContent = levelLabel;
 }
+
+function showStressDetail() {
+  // 滚动到仪表盘的压力指数卡片，或显示详情
+  if (document.getElementById('view-dashboard').classList.contains('active')) {
+    const stressCard = document.querySelector('.stress-card');
+    if (stressCard) stressCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    switchView('dashboard');
+    setTimeout(() => {
+      const stressCard = document.querySelector('.stress-card');
+      if (stressCard) stressCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  }
+}
+window.showStressDetail = showStressDetail;
 
 function renderFinanceInsight() {
   const finView = document.getElementById('view-finance');
@@ -5335,6 +5443,136 @@ window.showHealthRecord = showHealthRecord;
 window.saveHealthRecord = saveHealthRecord;
 window.renderDashboard = renderDashboard;
 window.showDataManager = showDataManager;
+
+// ===== 智能分析 =====
+function showSmartAnalysis() {
+  showModal('modal-smart-analysis');
+  setTimeout(() => generateSmartAnalysis(), 300);
+}
+window.showSmartAnalysis = showSmartAnalysis;
+
+function generateSmartAnalysis() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const container = document.getElementById('smart-analysis-content');
+  if (!container) return;
+  
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const weekAgo = new Date(now.getTime() - 7*86400000).toISOString();
+  
+  // 分析学习情况
+  const courses = data.courses || [];
+  const gpaData = data.semesters || [];
+  const currentGPA = gpaData.length > 0 ? gpaData[gpaData.length-1].gpa : null;
+  
+  // 分析支出
+  const transactions = data.transactions || [];
+  const monthTx = transactions.filter(t => t.date && t.date.startsWith(today.slice(0,7)));
+  const monthExpense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
+  const monthIncome = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
+  
+  // 分析任务
+  const tasks = data.tasksData || [];
+  const pendingTasks = tasks.filter(t => !t.completed);
+  const completedTasks = tasks.filter(t => t.completed);
+  const taskCompletionRate = tasks.length > 0 ? Math.round(completedTasks.length / tasks.length * 100) : 0;
+  
+  // 分析作息
+  const schedules = data.scheduleCourses || [];
+  const todayCourses = schedules.filter(c => c.dayOfWeek === (now.getDay() === 0 ? 7 : now.getDay()));
+  
+  // 分析压力
+  const stressHistory = data.stressHistory || [];
+  const todayStress = stressHistory.find(h => h.date === today);
+  
+  // 生成建议
+  const suggestions = [];
+  const encouragements = [];
+  
+  // 学习建议
+  if (currentGPA !== null) {
+    if (currentGPA >= 3.8) {
+      encouragements.push({icon:'🏆', text:'你的GPA达到了' + currentGPA.toFixed(2) + '，非常优秀！继续保持！'});
+    } else if (currentGPA >= 3.5) {
+      encouragements.push({icon:'👍', text:'你的GPA是' + currentGPA.toFixed(2) + '，表现不错，还有提升空间！'});
+    } else {
+      suggestions.push({icon:'📚', text:'当前GPA是' + currentGPA.toFixed(2) + '，建议增加学习时间，重点攻克薄弱科目。'});
+    }
+  }
+  
+  // 任务建议
+  if (pendingTasks.length > 5) {
+    suggestions.push({icon:'📝', text:'你有' + pendingTasks.length + '项待办任务，建议优先处理高优先级和临近截止的任务。'});
+  } else if (pendingTasks.length === 0 && tasks.length > 0) {
+    encouragements.push({icon:'🎉', text:'太棒了！你完成了所有任务，给自己放个假吧！'});
+  }
+  
+  if (taskCompletionRate >= 80) {
+    encouragements.push({icon:'⭐', text:'你的任务完成率达到' + taskCompletionRate + '%，执行力很强！'});
+  }
+  
+  // 支出建议
+  if (monthIncome > 0) {
+    const savingsRate = Math.round((monthIncome - monthExpense) / monthIncome * 100);
+    if (savingsRate >= 30) {
+      encouragements.push({icon:'💰', text:'本月结余率' + savingsRate + '%，理财习惯很好，继续保持！'});
+    } else if (savingsRate < 0) {
+      suggestions.push({icon:'⚠️', text:'本月支出超过收入' + Math.abs(savingsRate) + '%，建议控制非必要支出。'});
+    }
+  }
+  
+  // 今日课程
+  if (todayCourses.length > 0) {
+    suggestions.push({icon:'📅', text:'今天有' + todayCourses.length + '门课：' + todayCourses.map(c => c.name).join('、') + '，记得提前准备。'});
+  }
+  
+  // 压力建议
+  if (todayStress) {
+    if (todayStress.score >= 70) {
+      suggestions.push({icon:'🧘', text:'当前压力指数' + todayStress.score + '，偏高！建议今天早点休息，做些放松的活动。'});
+    } else if (todayStress.score <= 30) {
+      encouragements.push({icon:'😊', text:'当前压力指数' + todayStress.score + '，状态轻松，适合挑战一些有难度的任务！'});
+    }
+  }
+  
+  // 通用鼓励
+  if (encouragements.length === 0) {
+    encouragements.push({icon:'💪', text:'每一天的努力都在积累，相信自己，你可以的！'});
+  }
+  
+  // 生成HTML
+  let html = '';
+  
+  // 概览卡片
+  html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">';
+  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--blue);">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:11px;color:var(--text-secondary);">当前GPA</div></div>';
+  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--green);">' + pendingTasks.length + '</div><div style="font-size:11px;color:var(--text-secondary);">待办任务</div></div>';
+  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--orange);">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:11px;color:var(--text-secondary);">本月支出</div></div>';
+  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:' + (todayStress ? (todayStress.score >= 70 ? 'var(--red)' : todayStress.score >= 50 ? 'var(--orange)' : 'var(--green)') : 'var(--text-secondary)') + ';">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:11px;color:var(--text-secondary);">压力指数</div></div>';
+  html += '</div>';
+  
+  // 鼓励区
+  html += '<div style="background:linear-gradient(135deg,#667eea22,#764ba222);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #667eea;">';
+  html += '<div style="font-weight:700;margin-bottom:8px;color:#667eea;">✨ 给你的鼓励</div>';
+  encouragements.forEach(e => {
+    html += '<div style="margin-bottom:6px;font-size:13px;">' + e.icon + ' ' + e.text + '</div>';
+  });
+  html += '</div>';
+  
+  // 建议区
+  if (suggestions.length > 0) {
+    html += '<div style="background:var(--bg-secondary);border-radius:12px;padding:16px;border-left:4px solid var(--orange);">';
+    html += '<div style="font-weight:700;margin-bottom:8px;color:var(--orange);">💡 小建议</div>';
+    suggestions.forEach(s => {
+      html += '<div style="margin-bottom:8px;font-size:13px;line-height:1.5;">' + s.icon + ' ' + s.text + '</div>';
+    });
+    html += '</div>';
+  }
+  
+  container.innerHTML = html;
+}
+window.generateSmartAnalysis = generateSmartAnalysis;
+
 window.exportData = exportData;
 window.importData = importData;
 window.clearAllData = clearAllData;
