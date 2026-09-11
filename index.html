@@ -2007,11 +2007,6 @@ body {
     </div>
     
     
-      <!-- Stress Index -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">🧘 压力指数</div>
-        <div id="stress-gauge-container" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:20px;padding:16px 0;"></div>
-      </div>
 <!-- ===== View: GPA ===== -->
     <div class="view" id="view-gpa">
       <div class="stats-grid">
@@ -2223,128 +2218,218 @@ body {
     </div>
     
     <!-- ===== View: Plan ===== -->
+    <!-- ===== View: Planner 规划中心（课程表+作息管理合并） ===== -->
     <div class="view" id="view-plan">
-      <div class="stats-grid">
-        <div class="stat-card purple">
+      <!-- 顶部统计卡片 -->
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card blue">
+          <div class="stat-card-header">
+            <span class="stat-card-label">今日课程</span>
+            <span class="stat-card-change up">节</span>
+          </div>
+          <div class="stat-card-value" id="planner-today-courses">0</div>
+          <div class="stat-card-desc">今天要上的课</div>
+        </div>
+        <div class="stat-card green">
           <div class="stat-card-header">
             <span class="stat-card-label">今日安排</span>
             <span class="stat-card-change up">项</span>
           </div>
-          <div class="stat-card-value" id="plan-today-count">0</div>
-          <div class="stat-card-desc">今日待完成安排</div>
+          <div class="stat-card-value" id="planner-today-events">0</div>
+          <div class="stat-card-desc">今日待完成</div>
         </div>
-        <div class="stat-card green">
+        <div class="stat-card purple">
           <div class="stat-card-header">
-            <span class="stat-card-label">已完成</span>
-            <span class="stat-card-change up">项</span>
+            <span class="stat-card-label">本周课程</span>
+            <span class="stat-card-change up">节</span>
           </div>
-          <div class="stat-card-value" id="plan-done-count">0</div>
-          <div class="stat-card-desc">本周已完成安排</div>
+          <div class="stat-card-value" id="planner-week-courses">0</div>
+          <div class="stat-card-desc">本周总课时</div>
         </div>
-        <div class="stat-card teal">
+        <div class="stat-card orange">
           <div class="stat-card-header">
-            <span class="stat-card-label">完成率</span>
-            <span class="stat-card-change up">%</span>
+            <span class="stat-card-label">习惯打卡</span>
+            <span class="stat-card-change up">/7</span>
           </div>
-          <div class="stat-card-value" id="plan-completion-rate">0%</div>
-          <div class="stat-card-desc">本周安排完成率</div>
+          <div class="stat-card-value" id="planner-habit-streak">0</div>
+          <div class="stat-card-desc">连续打卡天数</div>
         </div>
       </div>
-      
-      <div class="content-grid">
-        <div>
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <div class="card-title">作息总表</div>
-                <div class="card-subtitle">
-                  <div id="plan-day-tabs" style="display:flex;gap:6px;margin-top:8px;"></div>
-                </div>
-              </div>
-              <button class="btn btn-primary" onclick="showAddScheduleEvent()">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                添加安排
-              </button>
-            </div>
-            <div id="plan-schedule-list"></div>
-          </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">本周统计</div>
-            </div>
-            <div class="chart-container" id="plan-weekly-chart"></div>
-          </div>
-        </div>
-        
-        <div>
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">今日作息</div>
-              <button class="card-action" id="plan-today-date-label">今天</button>
-            </div>
-            <div id="plan-today-timeline"></div>
-          </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">习惯打卡</div>
-            </div>
-            <div id="plan-habits-list"></div>
-          </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">健康记录</div>
-              <button class="card-action" onclick="showHealthRecord()">记录</button>
-            </div>
-            <div id="plan-health-list"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- ===== View: Schedule 课程表 ===== -->
-    <div class="view" id="view-schedule">
-      <div class="schedule-header">
-        <div class="schedule-week-selector">
-          <button onclick="schedulePrevWeek()">◀</button>
-          <span class="week-label" id="schedule-week-label">第1周</span>
-          <button onclick="scheduleNextWeek()">▶</button>
-        </div>
+
+      <!-- Tab切换 -->
+      <div class="planner-tabs" style="display:flex;gap:8px;margin:20px 0;flex-wrap:wrap;">
+        <button class="planner-tab active" onclick="switchPlannerTab('schedule', this)" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;transition:all 0.2s;">
+          📅 课程表
+        </button>
+        <button class="planner-tab" onclick="switchPlannerTab('timeline', this)" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;transition:all 0.2s;">
+          ⏰ 今日时间线
+        </button>
+        <button class="planner-tab" onclick="switchPlannerTab('weekly', this)" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;transition:all 0.2s;">
+          📊 周视图
+        </button>
+        <button class="planner-tab" onclick="switchPlannerTab('habits', this)" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;transition:all 0.2s;">
+          ✅ 习惯打卡
+        </button>
+        <button class="planner-tab" onclick="switchPlannerTab('health', this)" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-weight:600;transition:all 0.2s;">
+          💪 健康记录
+        </button>
+        <div style="flex:1;"></div>
         <button class="btn btn-primary" onclick="showScheduleCourseModal()">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
           添加课程
         </button>
-      </div>
-      <div class="card" style="overflow-x:auto;">
-        <div class="schedule-grid" id="schedule-grid"></div>
-      </div>
-      <div style="margin-top:16px;text-align:center;">
-        <button class="btn btn-ghost" onclick="scheduleToggleView()" id="schedule-view-toggle">切换列表视图</button>
-      </div>
-      <div id="schedule-list-view" style="display:none;"></div>
-    </div>
-
-    <!-- ===== View: Tasks 作业任务 ===== -->
-    <div class="view" id="view-tasks">
-      <div class="tasks-header">
-        <div class="task-filter-tabs" id="task-filter-tabs">
-          <button class="task-filter-tab active" onclick="setTaskFilter('all', this)">全部</button>
-          <button class="task-filter-tab" onclick="setTaskFilter('pending', this)">待办</button>
-          <button class="task-filter-tab" onclick="setTaskFilter('completed', this)">已完成</button>
-          <button class="task-filter-tab" onclick="setTaskFilter('today', this)">今日截止</button>
-          <button class="task-filter-tab" onclick="setTaskFilter('week', this)">本周截止</button>
-        </div>
-        <button class="btn btn-primary" onclick="showAddTask()">
+        <button class="btn btn-ghost" onclick="showAddScheduleEvent()">
           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-          添加任务
+          添加安排
         </button>
       </div>
-      <div class="insight-cards" id="task-stats-cards"></div>
-      <div id="tasks-list"></div>
+
+      <!-- 课程表Tab -->
+      <div class="planner-tab-content" id="planner-tab-schedule">
+        <div class="schedule-header" style="margin-bottom:16px;">
+          <div class="schedule-week-selector">
+            <button onclick="schedulePrevWeek()">◀</button>
+            <span class="week-label" id="schedule-week-label">第1周</span>
+            <button onclick="scheduleNextWeek()">▶</button>
+          </div>
+          <button class="btn btn-ghost" onclick="scheduleToggleView()" id="schedule-view-toggle">切换列表视图</button>
+        </div>
+        <div class="card" style="overflow-x:auto;">
+          <div class="schedule-grid" id="schedule-grid"></div>
+        </div>
+      </div>
+
+      <!-- 今日时间线Tab -->
+      <div class="planner-tab-content" id="planner-tab-timeline" style="display:none;">
+        <div class="content-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">今日时间线</div>
+                <button class="card-action" id="planner-today-date">今天</button>
+              </div>
+              <div id="planner-today-timeline" style="min-height:300px;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">今日课程</div>
+              </div>
+              <div id="planner-today-course-list" style="min-height:150px;"></div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">时间分配统计</div>
+              </div>
+              <div class="chart-container" id="planner-time-chart" style="height:250px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 周视图Tab -->
+      <div class="planner-tab-content" id="planner-tab-weekly" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">本周安排总览</div>
+            <div id="plan-day-tabs" style="display:flex;gap:6px;"></div>
+          </div>
+          <div id="plan-schedule-list"></div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+          <div class="card-header">
+            <div class="card-title">本周完成统计</div>
+          </div>
+          <div class="chart-container" id="plan-weekly-chart" style="height:300px;"></div>
+        </div>
+      </div>
+
+      <!-- 习惯打卡Tab -->
+      <div class="planner-tab-content" id="planner-tab-habits" style="display:none;">
+        <div class="content-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">今日习惯</div>
+                <button class="card-action" onclick="showAddHabit()">+ 添加习惯</button>
+              </div>
+              <div id="plan-habits-list" style="min-height:200px;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">打卡热力图（近12周）</div>
+              </div>
+              <div id="planner-habit-heatmap" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:16px;"></div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">各习惯完成率</div>
+              </div>
+              <div class="chart-container" id="planner-habit-chart" style="height:250px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 健康记录Tab -->
+      <div class="planner-tab-content" id="planner-tab-health" style="display:none;">
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
+          <div class="stat-card green">
+            <div class="stat-card-header"><span class="stat-card-label">今日步数</span></div>
+            <div class="stat-card-value" id="health-steps-today">--</div>
+            <div class="stat-card-desc">步</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-card-header"><span class="stat-card-label">睡眠时长</span></div>
+            <div class="stat-card-value" id="health-sleep-today">--</div>
+            <div class="stat-card-desc">小时</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-card-header"><span class="stat-card-label">饮水量</span></div>
+            <div class="stat-card-value" id="health-water-today">--</div>
+            <div class="stat-card-desc">杯</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-card-header"><span class="stat-card-label">运动时长</span></div>
+            <div class="stat-card-value" id="health-exercise-today">--</div>
+            <div class="stat-card-desc">分钟</div>
+          </div>
+        </div>
+        <div class="content-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">健康记录</div>
+                <button class="btn btn-primary" onclick="showHealthRecord()" style="padding:6px 12px;font-size:12px;">+ 记录</button>
+              </div>
+              <div id="plan-health-list" style="min-height:200px;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">近7天睡眠趋势</div>
+              </div>
+              <div class="chart-container" id="health-sleep-chart" style="height:250px;"></div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">健康指数</div>
+              </div>
+              <div id="health-score-display" style="text-align:center;padding:20px;">
+                <div style="font-size:48px;font-weight:800;color:var(--green);" id="health-score-value">--</div>
+                <div style="color:var(--text-secondary);margin-top:8px;" id="health-score-label">暂无数据</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- ===== View: Tasks 作业任务（彻底重设计） ===== -->
     <!-- ===== View: Focus 专注计时 ===== -->
     <div class="view" id="view-focus" style="display:none;">
       <div class="focus-container">
@@ -2382,22 +2467,6 @@ body {
       </div>
     </div>
 
-    <!-- ===== View: Goals 目标管理 ===== -->
-    <div class="view" id="view-goals">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
-        <div class="task-filter-tabs" id="goal-filter-tabs">
-          <button class="task-filter-tab active" onclick="setGoalFilter('all', this)">全部</button>
-          <button class="task-filter-tab" onclick="setGoalFilter('active', this)">进行中</button>
-          <button class="task-filter-tab" onclick="setGoalFilter('completed', this)">已完成</button>
-        </div>
-        <button class="btn btn-primary" onclick="showAddGoal()">
-          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-          创建目标
-        </button>
-      </div>
-      <div class="insight-cards" id="goal-stats-cards"></div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;" id="goals-grid"></div>
-    </div>
   </main>
 </div>
 
@@ -5260,34 +5329,174 @@ function goalDelete(goalId) {
 // ===== Stress Index & Finance Insight =====
 function renderStressIndex() {
   const data = getProfileDataCached(state.currentProfileId) || {};
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  const weekAgo = new Date(now.getTime() - 7*86400000);
+  
+  // ===== 多维度真实计算压力指数 =====
+  
+  // 1. 任务压力（权重30%）
   const tasks = data.tasksData || [];
-  const sessions = data.focusSessions || [];
-  const now = new Date(); const today = now.toISOString().split('T')[0]; const weekAgo = new Date(now.getTime() - 7*86400000).toISOString();
   const pendingTasks = tasks.filter(t => !t.completed);
-  const highPriority = pendingTasks.filter(t => t.priority === 'high').length;
-  const todayDue = pendingTasks.filter(t => t.dueDate && t.dueDate.split('T')[0] === today).length;
-  const taskScore = Math.min(100, pendingTasks.length * 8 + highPriority * 10 + todayDue * 15);
-  const weekFocus = (sessions||[]).filter(s => s.type==='focus'&&s.completed&&s.startTime>=weekAgo);
-  const weekMins = weekFocus.reduce((s,ss)=>s+(ss.duration||0),0); const avgDaily = weekMins/7;
-  const focusScore = Math.min(100, avgDaily>360?Math.round((avgDaily-360)/3):0);
-  const sleepScore = 30; const moodScore = 20; const examScore = 0;
-  const score = Math.round(examScore*0.30+taskScore*0.25+sleepScore*0.20+moodScore*0.15+focusScore*0.10);
+  const highPriorityTasks = pendingTasks.filter(t => t.priority === 'high');
+  const todayDueTasks = pendingTasks.filter(t => {
+    if (!t.dueDate) return false;
+    const due = new Date(t.dueDate);
+    return due.toDateString() === now.toDateString();
+  });
+  const weekDueTasks = pendingTasks.filter(t => {
+    if (!t.dueDate) return false;
+    const due = new Date(t.dueDate);
+    return due >= now && due <= weekAgo;
+  });
+  const overdueTasks = pendingTasks.filter(t => {
+    if (!t.dueDate) return false;
+    return new Date(t.dueDate) < now;
+  });
+  // 任务压力评分：待办数量+高优先级+今日截止+本周截止+已过期
+  let taskScore = 0;
+  taskScore += Math.min(30, pendingTasks.length * 3);
+  taskScore += Math.min(25, highPriorityTasks.length * 8);
+  taskScore += Math.min(20, todayDueTasks.length * 10);
+  taskScore += Math.min(15, weekDueTasks.length * 3);
+  taskScore += Math.min(20, overdueTasks.length * 12);
+  taskScore = Math.min(100, taskScore);
+  
+  // 2. 学业压力（权重25%）- GPA趋势、考试倒计时
+  const semesters = data.semesters || [];
+  const countdowns = data.countdowns || [];
+  let gpaTrend = 0;
+  if (semesters.length >= 2) {
+    const recent = semesters.slice(-2);
+    gpaTrend = (recent[1].gpa || 0) - (recent[0].gpa || 0);
+  }
+  const upcomingExams = countdowns.filter(c => {
+    if (!c.date) return false;
+    const days = Math.ceil((new Date(c.date) - now) / 86400000);
+    return days >= 0 && days <= 14;
+  });
+  let academicScore = 0;
+  if (gpaTrend < -0.3) academicScore += 30;
+  else if (gpaTrend < 0) academicScore += 15;
+  academicScore += Math.min(40, upcomingExams.length * 15);
+  // 近期考试越近压力越大
+  upcomingExams.forEach(c => {
+    const days = Math.ceil((new Date(c.date) - now) / 86400000);
+    if (days <= 3) academicScore += 15;
+    else if (days <= 7) academicScore += 8;
+  });
+  academicScore = Math.min(100, academicScore);
+  
+  // 3. 财务压力（权重15%）
+  const transactions = data.transactions || [];
+  const month = today.slice(0,7);
+  const monthTx = transactions.filter(t => t.date && t.date.startsWith(month));
+  const monthExpense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
+  const monthIncome = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
+  const budgets = data.budgets || [];
+  const budget = budgets.find(b => b.month === month);
+  let financeScore = 0;
+  if (monthIncome > 0) {
+    const expenseRatio = monthExpense / monthIncome;
+    if (expenseRatio > 1) financeScore += 50;
+    else if (expenseRatio > 0.8) financeScore += 30;
+    else if (expenseRatio > 0.6) financeScore += 15;
+  }
+  if (budget && budget.totalBudget > 0) {
+    const budgetRatio = monthExpense / budget.totalBudget;
+    if (budgetRatio > 1) financeScore += 40;
+    else if (budgetRatio > 0.9) financeScore += 25;
+  }
+  financeScore = Math.min(100, financeScore);
+  
+  // 4. 作息压力（权重15%）- 课程密度、健康记录
+  const scheduleCourses = data.scheduleCourses || [];
+  const todayDay = now.getDay() === 0 ? 7 : now.getDay();
+  const todayCourses = scheduleCourses.filter(c => c.dayOfWeek === todayDay);
+  const healthRecords = data.healthRecords || [];
+  const todayHealth = healthRecords.find(h => h.date === today);
+  let scheduleScore = 0;
+  scheduleScore += Math.min(40, todayCourses.length * 10);
+  // 连续课程压力
+  if (todayCourses.length >= 4) scheduleScore += 20;
+  // 睡眠不足压力
+  if (todayHealth && todayHealth.sleepHours) {
+    if (todayHealth.sleepHours < 6) scheduleScore += 30;
+    else if (todayHealth.sleepHours < 7) scheduleScore += 15;
+  }
+  scheduleScore = Math.min(100, scheduleScore);
+  
+  // 5. 目标压力（权重15%）- 即将到期的目标
+  const goals = data.goals || [];
+  const activeGoals = goals.filter(g => g.status === 'active' || !g.status);
+  const dueSoonGoals = activeGoals.filter(g => {
+    if (!g.deadline) return false;
+    const days = Math.ceil((new Date(g.deadline) - now) / 86400000);
+    return days >= 0 && days <= 14;
+  });
+  let goalScore = 0;
+  goalScore += Math.min(30, activeGoals.length * 5);
+  goalScore += Math.min(50, dueSoonGoals.length * 15);
+  dueSoonGoals.forEach(g => {
+    if (g.deadline) {
+      const days = Math.ceil((new Date(g.deadline) - now) / 86400000);
+      if (days <= 3) goalScore += 15;
+    }
+  });
+  goalScore = Math.min(100, goalScore);
+  
+  // ===== 综合计算 =====
+  const score = Math.round(
+    taskScore * 0.30 +
+    academicScore * 0.25 +
+    financeScore * 0.15 +
+    scheduleScore * 0.15 +
+    goalScore * 0.15
+  );
+  
+  // 等级和建议
   let level, levelLabel, color, advice;
-  if (score<=30){level='relaxed';levelLabel='轻松';color='#10B981';advice=['状态不错，继续保持','今天适合做些运动放松一下'];}
-  else if(score<=50){level='moderate';levelLabel='适中';color='#F59E0B';advice=['有点忙，注意劳逸结合','记得按时吃饭和休息'];}
-  else if(score<=70){level='elevated';levelLabel='偏高';color='#F97316';advice=['最近有点累，记得给自己放松时间','要不要试试番茄钟提高效率？'];}
-  else{level='high';levelLabel='高压';color='#EF4444';advice=['你最近压力太大了，请务必注意休息','建议减少一些非必要的任务'];}
+  if (score <= 25) {
+    level = 'relaxed'; levelLabel = '轻松'; color = '#10B981';
+    advice = ['状态非常好，继续保持健康的生活节奏', '可以适当挑战一些有难度的目标', '今天适合做些创造性的工作'];
+  } else if (score <= 45) {
+    level = 'moderate'; levelLabel = '适中'; color = '#84CC16';
+    advice = ['状态不错，注意劳逸结合', '记得按时吃饭和休息', '可以适当安排一些放松活动'];
+  } else if (score <= 60) {
+    level = 'normal'; levelLabel = '正常'; color = '#F59E0B';
+    advice = ['有点忙，注意合理安排时间', '建议每天留出30分钟放松时间', '记得多喝水，保持精力充沛'];
+  } else if (score <= 75) {
+    level = 'elevated'; levelLabel = '偏高'; color = '#F97316';
+    advice = ['最近有点累，记得给自己放松时间', '建议优先处理高优先级任务', '要不要试试番茄钟提高效率？', '保证每天7小时以上睡眠'];
+  } else if (score <= 90) {
+    level = 'high'; levelLabel = '高压'; color = '#EF4444';
+    advice = ['你最近压力太大了，请务必注意休息', '建议减少一些非必要的任务', '今天早点睡，明天效率会更高', '可以和朋友聊聊天释放压力'];
+  } else {
+    level = 'critical'; levelLabel = '过载'; color = '#DC2626';
+    advice = ['⚠️ 你已经处于压力过载状态！', '请立即减少任务量，优先保证休息', '建议今天只做最重要的1-2件事', '如果持续感到焦虑，请寻求专业帮助'];
+  }
+  
+  // 保存历史记录
   if (!data.stressHistory) data.stressHistory = [];
-  const ei = data.stressHistory.findIndex(h=>h.date===today);
-  const entry = {date:today,score,level,color,advice};
-  if(ei>=0)data.stressHistory[ei]=entry;else data.stressHistory.push(entry);
-  if(data.stressHistory.length>90)data.stressHistory=data.stressHistory.slice(-90);
+  const ei = data.stressHistory.findIndex(h => h.date === today);
+  const entry = {
+    date: today,
+    score,
+    level,
+    color,
+    advice,
+    breakdown: {
+      task: Math.round(taskScore),
+      academic: Math.round(academicScore),
+      finance: Math.round(financeScore),
+      schedule: Math.round(scheduleScore),
+      goal: Math.round(goalScore)
+    }
+  };
+  if (ei >= 0) data.stressHistory[ei] = entry;
+  else data.stressHistory.push(entry);
+  if (data.stressHistory.length > 90) data.stressHistory = data.stressHistory.slice(-90);
   saveProfileDataCached(state.currentProfileId, data);
-  const container = document.getElementById('stress-gauge-container'); if(!container) return;
-  const angle = (score/100)*180-90; const rad = angle*Math.PI/180; const cx=100,cy=90,r=70;
-  const x=cx+r*Math.cos(-rad); const y=cy-r*Math.sin(-rad);
-  container.innerHTML =
-    '<div class="stress-gauge"><svg viewBox="0 0 200 140" style="width:100%;max-width:280px;"><path d="M 30 95 A 70 70 0 0 1 170 95" fill="none" stroke="#e5e7eb" stroke-width="12" stroke-linecap="round"/><path d="M 30 95 A 70 70 0 0 1 '+x.toFixed(1)+' '+y.toFixed(1)+'" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round" style="transition:all 0.6s ease;"/><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="'+color+'"/></svg><div class="stress-value" style="color:'+color+';">'+score+'</div><div class="stress-label" style="color:'+color+';">'+levelLabel+'</div></div><div class="stress-advice">'+advice.map(a=>'<div class="stress-advice-item">💬 '+a+'</div>').join('')+'</div>';
   
   // 更新顶部小型组件
   const miniRing = document.getElementById('stress-mini-ring');
@@ -5299,22 +5508,403 @@ function renderStressIndex() {
   }
   if (miniValue) miniValue.textContent = score;
   if (miniLabel) miniLabel.textContent = levelLabel;
+  
+  return { score, level, levelLabel, color, advice, breakdown: entry.breakdown };
 }
 
 function showStressDetail() {
-  // 滚动到仪表盘的压力指数卡片，或显示详情
-  if (document.getElementById('view-dashboard').classList.contains('active')) {
-    const stressCard = document.querySelector('.stress-card');
-    if (stressCard) stressCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // 显示压力详情弹窗
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const today = new Date().toISOString().split('T')[0];
+  const todayStress = (data.stressHistory || []).find(h => h.date === today);
+  
+  let html = '<div style="text-align:center;margin-bottom:20px;">';
+  if (todayStress) {
+    html += '<div style="font-size:64px;font-weight:800;color:' + todayStress.color + ';">' + todayStress.score + '</div>';
+    html += '<div style="font-size:18px;font-weight:600;color:' + todayStress.color + ';">' + todayStress.levelLabel + '</div>';
   } else {
-    switchView('dashboard');
-    setTimeout(() => {
-      const stressCard = document.querySelector('.stress-card');
-      if (stressCard) stressCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
+    html += '<div style="font-size:48px;color:var(--text-secondary);">--</div>';
   }
+  html += '</div>';
+  
+  if (todayStress && todayStress.breakdown) {
+    html += '<div style="margin-bottom:20px;">';
+    html += '<div style="font-weight:700;margin-bottom:12px;">压力来源分析</div>';
+    const items = [
+      {label:'任务压力', value: todayStress.breakdown.task, color:'#F59E0B'},
+      {label:'学业压力', value: todayStress.breakdown.academic, color:'#3B82F6'},
+      {label:'财务压力', value: todayStress.breakdown.finance, color:'#10B981'},
+      {label:'作息压力', value: todayStress.breakdown.schedule, color:'#8B5CF6'},
+      {label:'目标压力', value: todayStress.breakdown.goal, color:'#EC4899'}
+    ];
+    items.forEach(item => {
+      html += '<div style="margin-bottom:10px;">';
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px;"><span>' + item.label + '</span><span style="font-weight:600;">' + item.value + '</span></div>';
+      html += '<div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + item.value + '%;background:' + item.color + ';border-radius:4px;transition:width 0.5s;"></div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  
+  if (todayStress && todayStress.advice) {
+    html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:16px;">';
+    html += '<div style="font-weight:700;margin-bottom:10px;">💡 建议</div>';
+    todayStress.advice.forEach(a => {
+      html += '<div style="margin-bottom:6px;font-size:13px;">' + a + '</div>';
+    });
+    html += '</div>';
+  }
+  
+  // 创建或更新弹窗
+  let modal = document.getElementById('modal-stress-detail');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'modal-stress-detail';
+    modal.innerHTML = '<div class="modal" style="max-width:480px;"><h2 class="modal-title">🧘 压力指数详情</h2><p class="modal-desc">基于你的数据多维度计算</p><div id="stress-detail-content"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal(\'modal-stress-detail\')">知道了</button></div></div>';
+    document.body.appendChild(modal);
+  }
+  document.getElementById('stress-detail-content').innerHTML = html;
+  showModal('modal-stress-detail');
 }
 window.showStressDetail = showStressDetail;
+
+// ===== 规划中心Tab切换 =====
+function switchPlannerTab(tab, btn) {
+  document.querySelectorAll('.planner-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.planner-tab-content').forEach(c => c.style.display = 'none');
+  if (btn) btn.classList.add('active');
+  const content = document.getElementById('planner-tab-' + tab);
+  if (content) content.style.display = 'block';
+  // 触发对应渲染
+  if (tab === 'timeline') renderPlannerTimeline();
+  if (tab === 'habits') renderPlannerHabits();
+  if (tab === 'health') renderPlannerHealth();
+  if (tab === 'weekly') renderPlanView();
+}
+window.switchPlannerTab = switchPlannerTab;
+
+// ===== 规划中心今日时间线渲染 =====
+function renderPlannerTimeline() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const now = new Date();
+  const todayDay = now.getDay() === 0 ? 7 : now.getDay();
+  const todayStr = now.toISOString().split('T')[0];
+  
+  // 今日课程
+  const courses = (data.scheduleCourses || []).filter(c => c.dayOfWeek === todayDay);
+  // 今日安排
+  const events = (data.scheduleEvents || []).filter(e => e.date === todayStr);
+  
+  // 合并并排序
+  const allItems = [];
+  courses.forEach(c => {
+    allItems.push({
+      type: 'course',
+      startTime: c.startTime,
+      endTime: c.endTime,
+      title: c.name,
+      subtitle: c.teacher + (c.location ? ' · ' + c.location : ''),
+      color: c.color || '#4F46E5'
+    });
+  });
+  events.forEach(e => {
+    allItems.push({
+      type: 'event',
+      startTime: e.startTime,
+      endTime: e.endTime,
+      title: e.title,
+      subtitle: e.description || '',
+      color: e.color || '#10B981'
+    });
+  });
+  allItems.sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
+  
+  const container = document.getElementById('planner-today-timeline');
+  const courseList = document.getElementById('planner-today-course-list');
+  
+  if (!container) return;
+  
+  if (allItems.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary);"><div style="font-size:48px;margin-bottom:12px;">🌴</div><div>今天没有安排，好好休息吧！</div></div>';
+  } else {
+    let html = '';
+    let lastEnd = '06:00';
+    allItems.forEach((item, idx) => {
+      // 空闲时间
+      if (item.startTime > lastEnd) {
+        html += '<div style="display:flex;gap:12px;padding:8px 0;opacity:0.5;"><div style="width:60px;text-align:right;font-size:12px;color:var(--text-secondary);">' + lastEnd + '</div><div style="width:2px;background:var(--border-color);"></div><div style="flex:1;font-size:12px;color:var(--text-secondary);padding-top:4px;">空闲时间</div></div>';
+      }
+      // 事件
+      html += '<div style="display:flex;gap:12px;padding:12px 0;border-left:3px solid ' + item.color + ';padding-left:16px;margin-left:61px;position:relative;">';
+      html += '<div style="position:absolute;left:-68px;top:12px;width:60px;text-align:right;font-size:12px;font-weight:600;color:var(--text-secondary);">' + item.startTime + '</div>';
+      html += '<div style="flex:1;">';
+      html += '<div style="font-weight:600;font-size:14px;">' + item.title + '</div>';
+      if (item.subtitle) html += '<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">' + item.subtitle + '</div>';
+      html += '<div style="font-size:11px;color:var(--text-3);margin-top:4px;">' + item.startTime + ' - ' + item.endTime + '</div>';
+      html += '</div></div>';
+      lastEnd = item.endTime || lastEnd;
+    });
+    container.innerHTML = html;
+  }
+  
+  // 今日课程列表
+  if (courseList) {
+    if (courses.length === 0) {
+      courseList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;">今天没有课程</div>';
+    } else {
+      courseList.innerHTML = courses.map(c => '<div style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--border-color);"><div style="width:4px;height:32px;background:' + (c.color || '#4F46E5') + ';border-radius:2px;"></div><div style="flex:1;"><div style="font-weight:600;font-size:13px;">' + c.name + '</div><div style="font-size:11px;color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + (c.location ? ' · ' + c.location : '') + '</div></div></div>').join('');
+    }
+  }
+  
+  // 更新统计
+  const todayCoursesEl = document.getElementById('planner-today-courses');
+  const todayEventsEl = document.getElementById('planner-today-events');
+  if (todayCoursesEl) todayCoursesEl.textContent = courses.length;
+  if (todayEventsEl) todayEventsEl.textContent = events.length;
+}
+window.renderPlannerTimeline = renderPlannerTimeline;
+
+// ===== 规划中心习惯打卡渲染 =====
+function renderPlannerHabits() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const habits = data.habits || [];
+  const container = document.getElementById('plan-habits-list');
+  if (!container) return;
+  
+  if (habits.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><div style="font-size:36px;margin-bottom:8px;">🎯</div><div>还没有习惯，点击右上角添加</div></div>';
+    return;
+  }
+  
+  const today = new Date().toISOString().split('T')[0];
+  container.innerHTML = habits.map(h => {
+    const checked = (h.records || []).includes(today);
+    const streak = calculateHabitStreak(h);
+    return '<div style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border-radius:10px;margin-bottom:8px;">' +
+      '<div onclick="toggleHabit(\'' + h.id + '\')" style="width:28px;height:28px;border-radius:50%;border:2px solid ' + (checked ? h.color : 'var(--border-color)') + ';background:' + (checked ? h.color : 'transparent') + ';display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;">' +
+      (checked ? '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#fff;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' : '') +
+      '</div>' +
+      '<div style="flex:1;"><div style="font-weight:600;font-size:14px;">' + h.name + '</div>' +
+      '<div style="font-size:11px;color:var(--text-secondary);">连续打卡 ' + streak + ' 天</div></div>' +
+      '<div style="font-size:20px;">' + (h.icon || '✅') + '</div>' +
+      '</div>';
+  }).join('');
+}
+window.renderPlannerHabits = renderPlannerHabits;
+
+function calculateHabitStreak(habit) {
+  if (!habit.records || habit.records.length === 0) return 0;
+  const records = [...habit.records].sort().reverse();
+  let streak = 0;
+  let current = new Date();
+  for (let i = 0; i < 365; i++) {
+    const dateStr = current.toISOString().split('T')[0];
+    if (records.includes(dateStr)) {
+      streak++;
+      current.setDate(current.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function toggleHabit(habitId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const habits = data.habits || [];
+  const habit = habits.find(h => h.id === habitId);
+  if (!habit) return;
+  const today = new Date().toISOString().split('T')[0];
+  if (!habit.records) habit.records = [];
+  const idx = habit.records.indexOf(today);
+  if (idx >= 0) {
+    habit.records.splice(idx, 1);
+    toast('已取消打卡', 'info');
+  } else {
+    habit.records.push(today);
+    toast('打卡成功！继续加油', 'success');
+  }
+  saveProfileDataCached(state.currentProfileId, data);
+  renderPlannerHabits();
+}
+window.toggleHabit = toggleHabit;
+
+// ===== 规划中心健康记录渲染 =====
+function renderPlannerHealth() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const records = data.healthRecords || [];
+  const today = new Date().toISOString().split('T')[0];
+  const todayRecord = records.find(r => r.date === today);
+  
+  // 更新今日统计
+  const stepsEl = document.getElementById('health-steps-today');
+  const sleepEl = document.getElementById('health-sleep-today');
+  const waterEl = document.getElementById('health-water-today');
+  const exerciseEl = document.getElementById('health-exercise-today');
+  
+  if (stepsEl) stepsEl.textContent = todayRecord?.steps || '--';
+  if (sleepEl) sleepEl.textContent = todayRecord?.sleepHours || '--';
+  if (waterEl) waterEl.textContent = todayRecord?.waterCups || '--';
+  if (exerciseEl) exerciseEl.textContent = todayRecord?.exerciseMinutes || '--';
+  
+  // 健康指数计算
+  let healthScore = 0;
+  if (todayRecord) {
+    if (todayRecord.steps >= 8000) healthScore += 25;
+    else if (todayRecord.steps >= 5000) healthScore += 15;
+    if (todayRecord.sleepHours >= 7 && todayRecord.sleepHours <= 9) healthScore += 25;
+    else if (todayRecord.sleepHours >= 6) healthScore += 15;
+    if (todayRecord.waterCups >= 8) healthScore += 25;
+    else if (todayRecord.waterCups >= 5) healthScore += 15;
+    if (todayRecord.exerciseMinutes >= 30) healthScore += 25;
+    else if (todayRecord.exerciseMinutes >= 15) healthScore += 15;
+  }
+  
+  const scoreEl = document.getElementById('health-score-value');
+  const labelEl = document.getElementById('health-score-label');
+  if (scoreEl) {
+    scoreEl.textContent = healthScore;
+    scoreEl.style.color = healthScore >= 80 ? 'var(--green)' : healthScore >= 60 ? 'var(--orange)' : 'var(--red)';
+  }
+  if (labelEl) {
+    labelEl.textContent = healthScore >= 80 ? '非常健康！继续保持' : healthScore >= 60 ? '还不错，可以更好' : healthScore > 0 ? '需要注意健康了' : '暂无数据，快去记录吧';
+  }
+  
+  // 记录列表
+  const listEl = document.getElementById('plan-health-list');
+  if (listEl) {
+    const recent = records.slice(-7).reverse();
+    if (recent.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><div style="font-size:36px;margin-bottom:8px;">📝</div><div>还没有健康记录</div></div>';
+    } else {
+      listEl.innerHTML = recent.map(r => '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:10px;margin-bottom:8px;">' +
+        '<div style="width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">' + (r.steps ? Math.round(r.steps/1000) + 'k' : '?') + '</div>' +
+        '<div style="flex:1;"><div style="font-weight:600;font-size:13px;">' + r.date + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary);">睡眠' + (r.sleepHours || '--') + 'h · 饮水' + (r.waterCups || '--') + '杯 · 运动' + (r.exerciseMinutes || '--') + 'min</div></div>' +
+        '</div>').join('');
+    }
+  }
+}
+window.renderPlannerHealth = renderPlannerHealth;
+
+// ===== 作业任务视图切换 =====
+function switchTaskView(view, btn) {
+  document.querySelectorAll('.task-view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="task-view-"]').forEach(v => v.style.display = 'none');
+  if (btn) btn.classList.add('active');
+  const viewEl = document.getElementById('task-view-' + view);
+  if (viewEl) viewEl.style.display = 'block';
+  renderTasksView();
+}
+window.switchTaskView = switchTaskView;
+
+// ===== 目标管理视图切换 =====
+function switchGoalView(view, btn) {
+  document.querySelectorAll('.goal-view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="goal-view-"]').forEach(v => v.style.display = 'none');
+  if (btn) btn.classList.add('active');
+  const viewEl = document.getElementById('goal-view-' + view);
+  if (viewEl) viewEl.style.display = 'block';
+  if (view === 'timeline') renderGoalsTimeline();
+  if (view === 'progress') renderGoalsCharts();
+  renderGoalsView();
+}
+window.switchGoalView = switchGoalView;
+
+// ===== 目标时间线渲染 =====
+function renderGoalsTimeline() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const goals = data.goals || [];
+  const container = document.getElementById('goals-timeline');
+  if (!container) return;
+  
+  const sorted = [...goals].sort((a, b) => {
+    if (!a.deadline) return 1;
+    if (!b.deadline) return -1;
+    return new Date(a.deadline) - new Date(b.deadline);
+  });
+  
+  if (sorted.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary);"><div style="font-size:48px;margin-bottom:12px;">🎯</div><div>还没有目标，创建一个吧</div></div>';
+    return;
+  }
+  
+  const categoryColors = { academic: '#3B82F6', health: '#10B981', finance: '#F59E0B', skill: '#8B5CF6', other: '#6B7280' };
+  const categoryLabels = { academic: '学业', health: '健康', finance: '财务', skill: '技能', other: '其他' };
+  
+  let html = '<div style="position:relative;padding-left:30px;">';
+  html += '<div style="position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--border-color);"></div>';
+  
+  sorted.forEach(g => {
+    const color = categoryColors[g.category] || '#6B7280';
+    const progress = g.progress || 0;
+    const isCompleted = g.status === 'completed' || progress >= 100;
+    const deadlineStr = g.deadline ? new Date(g.deadline).toLocaleDateString('zh-CN') : '无截止日期';
+    
+    html += '<div style="position:relative;margin-bottom:24px;">';
+    html += '<div style="position:absolute;left:-26px;top:4px;width:14px;height:14px;border-radius:50%;background:' + color + ';border:3px solid var(--bg-primary);"></div>';
+    html += '<div style="background:var(--bg-secondary);border-radius:12px;padding:16px;border-left:4px solid ' + color + ';">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">';
+    html += '<div style="font-weight:700;font-size:15px;">' + g.title + '</div>';
+    html += '<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:' + color + '22;color:' + color + ';">' + (categoryLabels[g.category] || '其他') + '</span>';
+    html += '</div>';
+    if (g.description) html += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">' + g.description + '</div>';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">';
+    html += '<div style="flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + progress + '%;background:' + (isCompleted ? 'var(--green)' : color) + ';border-radius:4px;"></div></div>';
+    html += '<span style="font-size:13px;font-weight:600;">' + progress + '%</span>';
+    html += '</div>';
+    html += '<div style="font-size:11px;color:var(--text-3);">截止日期: ' + deadlineStr + (isCompleted ? ' · ✅ 已完成' : '') + '</div>';
+    html += '</div></div>';
+  });
+  
+  html += '</div>';
+  container.innerHTML = html;
+}
+window.renderGoalsTimeline = renderGoalsTimeline;
+
+// ===== 目标图表渲染 =====
+function renderGoalsCharts() {
+  // 这个函数在ECharts加载后会被调用，这里先占位
+  setTimeout(() => {
+    if (typeof echarts === 'undefined') return;
+    const data = getProfileDataCached(state.currentProfileId) || {};
+    const goals = data.goals || [];
+    
+    // 进度对比图
+    const progressChart = echarts.init(document.getElementById('goal-progress-chart'));
+    if (goals.length > 0) {
+      progressChart.setOption({
+        tooltip: { trigger: 'axis' },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+        xAxis: { type: 'category', data: goals.map(g => g.title.slice(0, 6)), axisLabel: { rotate: 30 } },
+        yAxis: { type: 'value', max: 100 },
+        series: [{
+          type: 'bar',
+          data: goals.map(g => ({ value: g.progress || 0, itemStyle: { color: g.status === 'completed' ? '#10B981' : '#667eea' } })),
+          barWidth: '50%'
+        }]
+      });
+    }
+    
+    // 分类分布图
+    const categoryChart = echarts.init(document.getElementById('goal-category-chart'));
+    const catCount = {};
+    goals.forEach(g => { catCount[g.category] = (catCount[g.category] || 0) + 1; });
+    const catColors = { academic: '#3B82F6', health: '#10B981', finance: '#F59E0B', skill: '#8B5CF6', other: '#6B7280' };
+    const catLabels = { academic: '学业', health: '健康', finance: '财务', skill: '技能', other: '其他' };
+    categoryChart.setOption({
+      tooltip: { trigger: 'item' },
+      series: [{
+        type: 'pie',
+        radius: ['40%', '70%'],
+        data: Object.entries(catCount).map(([cat, count]) => ({ value: count, name: catLabels[cat] || cat, itemStyle: { color: catColors[cat] } }))
+      }]
+    });
+  }, 100);
+}
+window.renderGoalsCharts = renderGoalsCharts;
+
 
 function renderFinanceInsight() {
   const finView = document.getElementById('view-finance');
@@ -5454,118 +6044,229 @@ function generateSmartAnalysis() {
   
   const now = new Date();
   const today = now.toISOString().split('T')[0];
-  const weekAgo = new Date(now.getTime() - 7*86400000).toISOString();
+  const weekAgo = new Date(now.getTime() - 7*86400000);
   
-  // 分析学习情况
-  const courses = data.courses || [];
-  const gpaData = data.semesters || [];
-  const currentGPA = gpaData.length > 0 ? gpaData[gpaData.length-1].gpa : null;
+  // 显示加载动画
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="display:inline-block;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:16px;color:var(--text-secondary);">正在深度分析你的数据...</div></div>';
   
-  // 分析支出
-  const transactions = data.transactions || [];
-  const monthTx = transactions.filter(t => t.date && t.date.startsWith(today.slice(0,7)));
-  const monthExpense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
-  const monthIncome = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
-  
-  // 分析任务
-  const tasks = data.tasksData || [];
-  const pendingTasks = tasks.filter(t => !t.completed);
-  const completedTasks = tasks.filter(t => t.completed);
-  const taskCompletionRate = tasks.length > 0 ? Math.round(completedTasks.length / tasks.length * 100) : 0;
-  
-  // 分析作息
-  const schedules = data.scheduleCourses || [];
-  const todayCourses = schedules.filter(c => c.dayOfWeek === (now.getDay() === 0 ? 7 : now.getDay()));
-  
-  // 分析压力
-  const stressHistory = data.stressHistory || [];
-  const todayStress = stressHistory.find(h => h.date === today);
-  
-  // 生成建议
-  const suggestions = [];
-  const encouragements = [];
-  
-  // 学习建议
-  if (currentGPA !== null) {
-    if (currentGPA >= 3.8) {
-      encouragements.push({icon:'🏆', text:'你的GPA达到了' + currentGPA.toFixed(2) + '，非常优秀！继续保持！'});
-    } else if (currentGPA >= 3.5) {
-      encouragements.push({icon:'👍', text:'你的GPA是' + currentGPA.toFixed(2) + '，表现不错，还有提升空间！'});
-    } else {
-      suggestions.push({icon:'📚', text:'当前GPA是' + currentGPA.toFixed(2) + '，建议增加学习时间，重点攻克薄弱科目。'});
+  setTimeout(() => {
+    // ===== 数据收集 =====
+    
+    // 学习情况
+    const courses = data.courses || [];
+    const semesters = data.semesters || [];
+    const currentGPA = semesters.length > 0 ? semesters[semesters.length-1].gpa : null;
+    const gpaTrend = semesters.length >= 2 ? (semesters[semesters.length-1].gpa || 0) - (semesters[semesters.length-2].gpa || 0) : 0;
+    
+    // 任务情况
+    const tasks = data.tasksData || [];
+    const pendingTasks = tasks.filter(t => !t.completed);
+    const completedTasks = tasks.filter(t => t.completed);
+    const taskCompletionRate = tasks.length > 0 ? Math.round(completedTasks.length / tasks.length * 100) : 0;
+    const highPriorityPending = pendingTasks.filter(t => t.priority === 'high');
+    const overdueTasks = pendingTasks.filter(t => t.dueDate && new Date(t.dueDate) < now);
+    
+    // 支出情况
+    const transactions = data.transactions || [];
+    const month = today.slice(0,7);
+    const monthTx = transactions.filter(t => t.date && t.date.startsWith(month));
+    const monthExpense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
+    const monthIncome = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
+    const todayDay = now.getDate();
+    const avgDailyExpense = todayDay > 0 ? monthExpense / todayDay : 0;
+    const budgets = data.budgets || [];
+    const budget = budgets.find(b => b.month === month);
+    
+    // 作息情况
+    const scheduleCourses = data.scheduleCourses || [];
+    const todayDayNum = now.getDay() === 0 ? 7 : now.getDay();
+    const todayCourses = scheduleCourses.filter(c => c.dayOfWeek === todayDayNum);
+    const healthRecords = data.healthRecords || [];
+    const recentHealth = healthRecords.filter(r => r.date >= weekAgo.toISOString().split('T')[0]);
+    const avgSleep = recentHealth.length > 0 ? recentHealth.reduce((s,r) => s + (r.sleepHours || 0), 0) / recentHealth.length : null;
+    
+    // 目标情况
+    const goals = data.goals || [];
+    const activeGoals = goals.filter(g => g.status !== 'completed' && (g.progress || 0) < 100);
+    const completedGoals = goals.filter(g => g.status === 'completed' || (g.progress || 0) >= 100);
+    const avgGoalProgress = activeGoals.length > 0 ? Math.round(activeGoals.reduce((s,g) => s + (g.progress || 0), 0) / activeGoals.length) : 0;
+    
+    // 压力情况
+    const stressHistory = data.stressHistory || [];
+    const todayStress = stressHistory.find(h => h.date === today);
+    const weekStress = stressHistory.filter(h => h.date >= weekAgo.toISOString().split('T')[0]);
+    const avgStress = weekStress.length > 0 ? Math.round(weekStress.reduce((s,h) => s + h.score, 0) / weekStress.length) : null;
+    
+    // ===== 生成分析和建议 =====
+    const encouragements = [];
+    const suggestions = [];
+    const warnings = [];
+    
+    // 学习分析
+    if (currentGPA !== null) {
+      if (currentGPA >= 3.8) {
+        encouragements.push({icon:'🏆', title:'学业表现优异', detail:'当前GPA ' + currentGPA.toFixed(2) + '，属于顶尖水平！你的学习方法很有效，继续保持。'});
+      } else if (currentGPA >= 3.5) {
+        encouragements.push({icon:'👍', title:'学业表现良好', detail:'当前GPA ' + currentGPA.toFixed(2) + '，表现不错。如果能在薄弱科目上多花些时间，还有提升空间。'});
+      } else if (currentGPA >= 3.0) {
+        suggestions.push({icon:'📚', title:'学业有提升空间', detail:'当前GPA ' + currentGPA.toFixed(2) + '，建议分析一下哪些科目拉低了分数，制定针对性的学习计划。'});
+      } else {
+        warnings.push({icon:'⚠️', title:'学业需要重视', detail:'当前GPA ' + currentGPA.toFixed(2) + '，偏低。建议立即调整学习状态，必要时寻求老师或同学的帮助。'});
+      }
+      if (gpaTrend > 0.1) {
+        encouragements.push({icon:'📈', title:'GPA持续上升', detail:'相比上学期提升了 ' + gpaTrend.toFixed(2) + '，你的努力正在见效！'});
+      } else if (gpaTrend < -0.1) {
+        warnings.push({icon:'📉', title:'GPA有所下降', detail:'相比上学期下降了 ' + Math.abs(gpaTrend).toFixed(2) + '，需要注意是不是学习方法出了问题。'});
+      }
     }
-  }
-  
-  // 任务建议
-  if (pendingTasks.length > 5) {
-    suggestions.push({icon:'📝', text:'你有' + pendingTasks.length + '项待办任务，建议优先处理高优先级和临近截止的任务。'});
-  } else if (pendingTasks.length === 0 && tasks.length > 0) {
-    encouragements.push({icon:'🎉', text:'太棒了！你完成了所有任务，给自己放个假吧！'});
-  }
-  
-  if (taskCompletionRate >= 80) {
-    encouragements.push({icon:'⭐', text:'你的任务完成率达到' + taskCompletionRate + '%，执行力很强！'});
-  }
-  
-  // 支出建议
-  if (monthIncome > 0) {
-    const savingsRate = Math.round((monthIncome - monthExpense) / monthIncome * 100);
-    if (savingsRate >= 30) {
-      encouragements.push({icon:'💰', text:'本月结余率' + savingsRate + '%，理财习惯很好，继续保持！'});
-    } else if (savingsRate < 0) {
-      suggestions.push({icon:'⚠️', text:'本月支出超过收入' + Math.abs(savingsRate) + '%，建议控制非必要支出。'});
+    
+    // 任务分析
+    if (tasks.length > 0) {
+      if (taskCompletionRate >= 80) {
+        encouragements.push({icon:'⭐', title:'任务执行力很强', detail:'任务完成率 ' + taskCompletionRate + '%，你是一个行动派！'});
+      } else if (taskCompletionRate < 50) {
+        warnings.push({icon:'⏰', title:'任务完成率偏低', detail:'任务完成率仅 ' + taskCompletionRate + '%，建议减少任务数量，优先保证重要任务的完成。'});
+      }
+      if (overdueTasks.length > 0) {
+        warnings.push({icon:'🚨', title:'有任务已过期', detail:'有 ' + overdueTasks.length + ' 项任务已超过截止日期，建议尽快处理或调整截止日期。'});
+      }
+      if (highPriorityPending.length >= 3) {
+        suggestions.push({icon:'🎯', title:'高优先级任务较多', detail:'有 ' + highPriorityPending.length + ' 项高优先级任务待完成，建议今天集中精力先处理这些。'});
+      }
     }
-  }
-  
-  // 今日课程
-  if (todayCourses.length > 0) {
-    suggestions.push({icon:'📅', text:'今天有' + todayCourses.length + '门课：' + todayCourses.map(c => c.name).join('、') + '，记得提前准备。'});
-  }
-  
-  // 压力建议
-  if (todayStress) {
-    if (todayStress.score >= 70) {
-      suggestions.push({icon:'🧘', text:'当前压力指数' + todayStress.score + '，偏高！建议今天早点休息，做些放松的活动。'});
-    } else if (todayStress.score <= 30) {
-      encouragements.push({icon:'😊', text:'当前压力指数' + todayStress.score + '，状态轻松，适合挑战一些有难度的任务！'});
+    
+    // 支出分析
+    if (monthIncome > 0 || monthExpense > 0) {
+      const balance = monthIncome - monthExpense;
+      if (balance > 0) {
+        const savingsRate = Math.round(balance / monthIncome * 100);
+        if (savingsRate >= 30) {
+          encouragements.push({icon:'💰', title:'理财习惯很好', detail:'本月结余率 ' + savingsRate + '%，继续保持，可以考虑做一些稳健投资。'});
+        } else {
+          suggestions.push({icon:'💡', title:'可以增加储蓄', detail:'本月结余率 ' + savingsRate + '%，如果能控制一些非必要支出，结余会更多。'});
+        }
+      } else if (balance < 0) {
+        warnings.push({icon:'💸', title:'本月入不敷出', detail:'本月支出比收入多 ' + Math.abs(balance).toFixed(1) + ' 元，建议立即控制支出，避免透支。'});
+      }
+      if (budget && budget.totalBudget > 0) {
+        const budgetUsage = Math.round(monthExpense / budget.totalBudget * 100);
+        if (budgetUsage > 100) {
+          warnings.push({icon:'📊', title:'已超出预算', detail:'本月预算使用 ' + budgetUsage + '%，已超出预算 ' + (budgetUsage - 100) + '%。'});
+        } else if (budgetUsage > 80) {
+          suggestions.push({icon:'📊', title:'预算使用较快', detail:'本月预算已使用 ' + budgetUsage + '%，剩下的日子需要注意控制支出。'});
+        }
+      }
+      if (avgDailyExpense > 0) {
+        suggestions.push({icon:'📅', title:'日均支出参考', detail:'本月日均支出 ' + avgDailyExpense.toFixed(1) + ' 元，可以作为后续预算的参考。'});
+      }
     }
-  }
-  
-  // 通用鼓励
-  if (encouragements.length === 0) {
-    encouragements.push({icon:'💪', text:'每一天的努力都在积累，相信自己，你可以的！'});
-  }
-  
-  // 生成HTML
-  let html = '';
-  
-  // 概览卡片
-  html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">';
-  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--blue);">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:11px;color:var(--text-secondary);">当前GPA</div></div>';
-  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--green);">' + pendingTasks.length + '</div><div style="font-size:11px;color:var(--text-secondary);">待办任务</div></div>';
-  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:var(--orange);">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:11px;color:var(--text-secondary);">本月支出</div></div>';
-  html += '<div style="background:var(--bg-secondary);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:20px;font-weight:700;color:' + (todayStress ? (todayStress.score >= 70 ? 'var(--red)' : todayStress.score >= 50 ? 'var(--orange)' : 'var(--green)') : 'var(--text-secondary)') + ';">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:11px;color:var(--text-secondary);">压力指数</div></div>';
-  html += '</div>';
-  
-  // 鼓励区
-  html += '<div style="background:linear-gradient(135deg,#667eea22,#764ba222);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #667eea;">';
-  html += '<div style="font-weight:700;margin-bottom:8px;color:#667eea;">✨ 给你的鼓励</div>';
-  encouragements.forEach(e => {
-    html += '<div style="margin-bottom:6px;font-size:13px;">' + e.icon + ' ' + e.text + '</div>';
-  });
-  html += '</div>';
-  
-  // 建议区
-  if (suggestions.length > 0) {
-    html += '<div style="background:var(--bg-secondary);border-radius:12px;padding:16px;border-left:4px solid var(--orange);">';
-    html += '<div style="font-weight:700;margin-bottom:8px;color:var(--orange);">💡 小建议</div>';
-    suggestions.forEach(s => {
-      html += '<div style="margin-bottom:8px;font-size:13px;line-height:1.5;">' + s.icon + ' ' + s.text + '</div>';
-    });
+    
+    // 作息分析
+    if (avgSleep !== null) {
+      if (avgSleep >= 7 && avgSleep <= 9) {
+        encouragements.push({icon:'😴', title:'睡眠习惯良好', detail:'近7天平均睡眠 ' + avgSleep.toFixed(1) + ' 小时，睡眠充足，继续保持！'});
+      } else if (avgSleep < 7) {
+        warnings.push({icon:'🌙', title:'睡眠不足', detail:'近7天平均睡眠仅 ' + avgSleep.toFixed(1) + ' 小时，长期睡眠不足会影响学习效率和健康，建议早点休息。'});
+      }
+    }
+    if (todayCourses.length >= 5) {
+      suggestions.push({icon:'📖', title:'今天课程较多', detail:'今天有 ' + todayCourses.length + ' 门课，建议提前做好准备，课间注意休息。'});
+    }
+    
+    // 目标分析
+    if (goals.length > 0) {
+      if (completedGoals.length > 0) {
+        encouragements.push({icon:'🎊', title:'已完成 ' + completedGoals.length + ' 个目标', detail:'你已经达成了 ' + completedGoals.length + ' 个目标，非常有成就感！继续向新目标前进。'});
+      }
+      if (activeGoals.length > 0) {
+        if (avgGoalProgress >= 70) {
+          encouragements.push({icon:'🚀', title:'目标进展顺利', detail:'进行中目标平均进度 ' + avgGoalProgress + '%，胜利在望！'});
+        } else if (avgGoalProgress < 30) {
+          suggestions.push({icon:'🎯', title:'目标进展较慢', detail:'进行中目标平均进度仅 ' + avgGoalProgress + '%，建议把大目标拆解成小任务，逐步推进。'});
+        }
+      }
+    }
+    
+    // 压力分析
+    if (todayStress) {
+      if (todayStress.score <= 40) {
+        encouragements.push({icon:'😊', title:'当前状态轻松', detail:'压力指数 ' + todayStress.score + '，状态很好，适合挑战一些有难度的任务。'});
+      } else if (todayStress.score >= 75) {
+        warnings.push({icon:'🧘', title:'当前压力较大', detail:'压力指数 ' + todayStress.score + '，建议今天适当减少任务量，保证充足休息。'});
+      }
+    }
+    
+    // 通用鼓励
+    if (encouragements.length === 0) {
+      encouragements.push({icon:'💪', title:'每一天都在进步', detail:'即使数据还不够完美，你坚持记录和管理本身就是一种进步。继续加油！'});
+    }
+    
+    // ===== 生成HTML =====
+    let html = '';
+    
+    // 概览卡片
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">';
+    html += '<div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#1e40af;">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:10px;color:#6b7280;">当前GPA</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#92400e;">' + pendingTasks.length + '</div><div style="font-size:10px;color:#6b7280;">待办任务</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#065f46;">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:10px;color:#6b7280;">本月支出</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#9d174d;">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:10px;color:#6b7280;">压力指数</div></div>';
     html += '</div>';
-  }
-  
-  container.innerHTML = html;
+    
+    // 鼓励区
+    if (encouragements.length > 0) {
+      html += '<div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #10b981;">';
+      html += '<div style="font-weight:700;margin-bottom:12px;color:#065f46;font-size:15px;">✨ 做得好的地方</div>';
+      encouragements.forEach(e => {
+        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + e.icon + ' ' + e.title + '</div>';
+        html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + e.detail + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    
+    // 建议区
+    if (suggestions.length > 0) {
+      html += '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #f59e0b;">';
+      html += '<div style="font-weight:700;margin-bottom:12px;color:#92400e;font-size:15px;">💡 改进建议</div>';
+      suggestions.forEach(s => {
+        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + s.icon + ' ' + s.title + '</div>';
+        html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + s.detail + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    
+    // 警告区
+    if (warnings.length > 0) {
+      html += '<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #ef4444;">';
+      html += '<div style="font-weight:700;margin-bottom:12px;color:#991b1b;font-size:15px;">⚠️ 需要注意</div>';
+      warnings.forEach(w => {
+        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + w.icon + ' ' + w.title + '</div>';
+        html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + w.detail + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    
+    // 综合评分
+    const totalScore = Math.round(
+      (currentGPA ? (currentGPA / 4) * 25 : 12.5) +
+      (tasks.length > 0 ? (taskCompletionRate / 100) * 25 : 12.5) +
+      (monthIncome > 0 ? (balance >= 0 ? 25 : Math.max(0, 25 + balance / monthIncome * 25)) : 12.5) +
+      (avgSleep !== null ? (avgSleep >= 7 && avgSleep <= 9 ? 25 : Math.max(0, 25 - Math.abs(avgSleep - 8) * 5)) : 12.5)
+    );
+    
+    html += '<div style="text-align:center;padding:16px;background:var(--bg-secondary);border-radius:12px;">';
+    html += '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">综合生活管理评分</div>';
+    html += '<div style="font-size:48px;font-weight:800;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">' + totalScore + '</div>';
+    html += '<div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">' + (totalScore >= 85 ? '非常优秀！继续保持' : totalScore >= 70 ? '表现不错，还有提升空间' : totalScore >= 50 ? '还需要努力，加油！' : '需要立即调整状态') + '</div>';
+    html += '</div>';
+    
+    container.innerHTML = html;
+  }, 800);
 }
 window.generateSmartAnalysis = generateSmartAnalysis;
 
