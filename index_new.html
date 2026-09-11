@@ -1,0 +1,3482 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DanDanTable - 大学生工具台</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+/* ===== CSS Variables ===== */
+:root {
+  --bg: #f0efe9;
+  --bg-card: #ffffff;
+  --bg-sidebar: #1e1e24;
+  --bg-sidebar-hover: #2a2a32;
+  --text-1: #1a1a2e;
+  --text-2: #5a5a6e;
+  --text-3: #9a9aae;
+  --text-sidebar: #e0e0e8;
+  --text-sidebar-muted: #8a8a98;
+  --border: #e8e7e0;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --green: #a8c5a0;
+  --green-dark: #7ba87a;
+  --yellow: #f0d080;
+  --yellow-dark: #d4a84a;
+  --blue: #8b9cf0;
+  --blue-dark: #6b7cd0;
+  --purple: #b8a5e0;
+  --purple-dark: #9885c0;
+  --pink: #f0a5b8;
+  --pink-dark: #d08598;
+  --teal: #85c5c0;
+  --teal-dark: #65a5a0;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d0cfc8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #b0afa8; }
+
+/* ===== App Layout ===== */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  width: 240px;
+  background: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transition: transform var(--transition);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+
+.sidebar-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-logo-text span { color: var(--blue); }
+
+.sidebar-user {
+  padding: 24px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+}
+
+.sidebar-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  background: #4ade80;
+  border-radius: 50%;
+  border: 2px solid var(--bg-sidebar);
+}
+
+.sidebar-welcome {
+  font-size: 12px;
+  color: var(--text-sidebar-muted);
+  margin-bottom: 4px;
+}
+
+.sidebar-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  overflow-y: auto;
+}
+
+.nav-section {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-sidebar-muted);
+  padding: 12px 12px 8px;
+  font-weight: 600;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--text-sidebar-muted);
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-sidebar);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 156, 240, 0.3);
+}
+
+.nav-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--pink);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.sidebar-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--text-sidebar-muted);
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-footer-btn:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-sidebar);
+}
+
+.sidebar-footer-btn svg { width: 18px; height: 18px; }
+
+/* ===== Main Content ===== */
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 28px 32px;
+  min-height: 100vh;
+}
+
+/* ===== Top Bar ===== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.topbar-title h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.topbar-title p {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-box {
+  position: relative;
+  width: 280px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+  font-size: 13px;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(139, 156, 240, 0.1);
+}
+
+.search-box svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  fill: var(--text-3);
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.icon-btn:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.icon-btn svg { width: 18px; height: 18px; fill: var(--text-2); }
+
+.icon-btn .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  background: var(--pink);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== View System ===== */
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Stats Cards ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card.green { background: linear-gradient(135deg, #e8f0e4, #d8e8d4); }
+.stat-card.yellow { background: linear-gradient(135deg, #faf0d8, #f0e4c0); }
+.stat-card.blue { background: linear-gradient(135deg, #e4e8fa, #d4d8f0); }
+.stat-card.purple { background: linear-gradient(135deg, #ece4fa, #dcd4f0); }
+.stat-card.pink { background: linear-gradient(135deg, #fae4ec, #f0d4dc); }
+.stat-card.teal { background: linear-gradient(135deg, #e0f0ee, #d0e0de); }
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stat-card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.stat-card-change {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.6);
+}
+
+.stat-card-change.up { color: #2d8a4e; }
+.stat-card-change.down { color: #c44a4a; }
+
+.stat-card-value {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-1);
+}
+
+.stat-card-desc {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.stat-card-chart {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  opacity: 0.5;
+}
+
+/* ===== Content Grid ===== */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+.card-action {
+  font-size: 12px;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-weight: 600;
+  background: none;
+  border: none;
+  transition: color var(--transition);
+}
+
+.card-action:hover { color: var(--blue); }
+
+/* ===== Chart Container ===== */
+.chart-container {
+  width: 100%;
+  height: 280px;
+}
+
+.chart-container.small { height: 200px; }
+.chart-container.tiny { height: 120px; }
+
+/* ===== List Items ===== */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.list-item:last-child { border-bottom: none; }
+
+.list-item:hover { background: rgba(0,0,0,0.02); }
+
+.list-item-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.list-item-subtitle {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.list-item-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.list-item-value.positive { color: #2d8a4e; }
+.list-item-value.negative { color: #c44a4a; }
+
+.list-item-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 12px;
+}
+
+.status-completed { background: #e0f0e4; color: #2d8a4e; }
+.status-pending { background: #faf0d8; color: #b8860b; }
+.status-urgent { background: #fae4e4; color: #c44a4a; }
+
+/* ===== Buttons ===== */
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(139, 156, 240, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(139, 156, 240, 0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--bg);
+  border-color: var(--text-3);
+}
+
+.btn-success { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: #fff; }
+.btn-warning { background: linear-gradient(135deg, var(--yellow), var(--yellow-dark)); color: #fff; }
+.btn-danger { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); color: #fff; }
+
+.btn-block { width: 100%; justify-content: center; }
+.btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* ===== Form ===== */
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 7px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  transition: all var(--transition);
+  outline: none;
+  background: var(--bg-card);
+  color: var(--text-1);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(139, 156, 240, 0.1);
+}
+
+.form-input::placeholder { color: var(--text-3); }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translateY(20px) scale(0.95);
+  transition: transform var(--transition);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-overlay.show .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.modal-actions .btn { flex: 1; justify-content: center; }
+
+/* ===== Toast ===== */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+  border-left: 4px solid var(--blue);
+}
+
+.toast.success { border-left-color: var(--green-dark); }
+.toast.error { border-left-color: var(--pink-dark); }
+.toast.warning { border-left-color: var(--yellow-dark); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== Welcome Screen ===== */
+.welcome-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.welcome-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  width: 90%;
+  max-width: 440px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.welcome-logo {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 24px rgba(139, 156, 240, 0.3);
+}
+
+.welcome-logo svg { width: 36px; height: 36px; fill: #fff; }
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.welcome-title span { color: var(--blue); }
+
+.welcome-desc {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+.welcome-profiles {
+  margin-bottom: 24px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.welcome-profile-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+
+.welcome-profile-item:hover {
+  background: var(--bg);
+  border-color: var(--blue);
+}
+
+.welcome-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-right: 12px;
+}
+
+.welcome-profile-info { text-align: left; flex: 1; }
+.welcome-profile-name { font-size: 14px; font-weight: 600; }
+.welcome-profile-username { font-size: 12px; color: var(--text-3); }
+
+.welcome-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.welcome-divider::before,
+.welcome-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.welcome-divider span {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* ===== Avatar Colors ===== */
+.avatar-colors {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.avatar-color {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 3px solid transparent;
+}
+
+.avatar-color:hover { transform: scale(1.1); }
+
+.avatar-color.selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--blue);
+  transform: scale(1.1);
+}
+
+/* ===== Quick Actions ===== */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.quick-action {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-action-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.quick-action-icon svg { width: 22px; height: 22px; fill: #fff; }
+
+.quick-action-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+/* ===== Table ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-3);
+  border-bottom: 2px solid var(--border);
+}
+
+.data-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table tr:hover td { background: rgba(0,0,0,0.02); }
+
+/* ===== Progress Bar ===== */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* ===== Tags ===== */
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-green { background: #e0f0e4; color: #2d8a4e; }
+.tag-yellow { background: #faf0d8; color: #b8860b; }
+.tag-blue { background: #e4e8fa; color: #4a5ac4; }
+.tag-purple { background: #ece4fa; color: #7a5ac4; }
+.tag-pink { background: #fae4ec; color: #c44a7a; }
+.tag-teal { background: #e0f0ee; color: #2a8a85; }
+.tag-gray { background: #eee; color: #666; }
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-3);
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.empty-state-icon svg { width: 28px; height: 28px; fill: var(--text-3); }
+
+.empty-state-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+.empty-state-desc {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+/* ===== Mobile Bottom Nav ===== */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 8px 0;
+  z-index: 90;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  flex: 1;
+  transition: color var(--transition);
+}
+
+.bottom-nav-item.active { color: var(--blue); }
+.bottom-nav-item svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .content-grid { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 16px; padding-bottom: 80px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .bottom-nav { display: flex; }
+  .topbar { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .search-box { width: 100%; }
+  .form-row { grid-template-columns: 1fr; }
+  .card { padding: 16px; }
+  .welcome-card { padding: 32px 24px; }
+}
+
+/* ===== Mobile Menu Toggle ===== */
+.mobile-menu-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-menu-toggle svg { width: 20px; height: 20px; fill: var(--text-2); }
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle { display: flex; }
+}
+
+/* ===== Sidebar Overlay ===== */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+.sidebar-overlay.show { display: block; }
+
+/* ===== Animation Delays ===== */
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+
+.card { animation: fadeInUp 0.4s ease; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Welcome Screen ===== -->
+<div class="welcome-screen" id="welcome-screen">
+  <div class="welcome-card">
+    <div class="welcome-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+    </div>
+    <h1 class="welcome-title">DanDan<span>Table</span></h1>
+    <p class="welcome-desc">GPA计算 · 考试倒计时 · 记账管理 · 生活作息<br>一个应用，搞定大学生活的方方面面</p>
+    <div class="welcome-profiles" id="welcome-profiles"></div>
+    <div class="welcome-divider"><span>或</span></div>
+    <button class="btn btn-primary btn-block" onclick="showCreateProfile()">
+      <svg viewBox="0 0 24 24"><path d="M15 12c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm9-.44S17 5 12 5 4 9 4 11.56V17c0 .55.45.98.98.98h1.83c.53 0 .99-.44 1.03-.97l.27-3.15c.02-.18.18-.31.36-.31h7.06c.18 0 .34.13.36.31l.27 3.15c.04.53.5.97 1.03.97h1.83c.53 0 .98-.43.98-.98v-5.44z"/></svg>
+      创建新档案
+    </button>
+  </div>
+</div>
+
+<!-- ===== Main App ===== -->
+<div class="app" id="app" style="display:none;">
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+  
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+      </div>
+      <div class="sidebar-logo-text">DanDan<span>Table</span></div>
+    </div>
+    
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebar-avatar">学</div>
+      <div class="sidebar-welcome">欢迎回来，</div>
+      <div class="sidebar-name" id="sidebar-name">同学</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">主功能</div>
+      <button class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        仪表盘
+      </button>
+      <button class="nav-item" data-view="gpa" onclick="switchView('gpa')">
+        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+        GPA计算
+      </button>
+      <button class="nav-item" data-view="countdown" onclick="switchView('countdown')">
+        <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+        考试倒计时
+        <span class="nav-badge" id="countdown-badge" style="display:none;">0</span>
+      </button>
+      <button class="nav-item" data-view="finance" onclick="switchView('finance')">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+        记账本
+      </button>
+      <button class="nav-item" data-view="plan" onclick="switchView('plan')">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        规划中心
+      </button>
+      
+      <div class="nav-section">工具</div>
+      <button class="nav-item" onclick="showDataManager()">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        数据管理
+      </button>
+      <button class="nav-item" onclick="showProfileManager()">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        档案管理
+      </button>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn" onclick="logout()">
+        <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        退出登录
+      </button>
+    </div>
+  </aside>
+  
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+          <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <div class="topbar-title">
+          <h1 id="page-title">仪表盘</h1>
+          <p id="page-subtitle">欢迎回来，今天也要加油哦</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" placeholder="搜索功能、数据...">
+        </div>
+        <button class="icon-btn" onclick="showDataManager()" title="数据管理">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="showProfileManager()" title="档案管理">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- ===== View: Dashboard ===== -->
+    <div class="view active" id="view-dashboard">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="quick-action" onclick="switchView('gpa');setTimeout(()=>showAddCourse(),300)">
+          <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--green),var(--green-dark))">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </div>
+          <div class="quick-action-label">添加课程</div>
+        </button>
+        <button class="quick-action" onclick="switchView('countdown');setTimeout(()=>showAddCountdown(),300)">
+          <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--yellow),var(--yellow-dark))">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </div>
+          <div class="quick-action-label">添加倒计时</div>
+        </button>
+        <button class="quick-action" onclick="switchView('finance');setTimeout(()=>showAddTransaction(),300)">
+          <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--blue),var(--blue-dark))">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </div>
+          <div class="quick-action-label">记一笔</div>
+        </button>
+        <button class="quick-action" onclick="switchView('plan')">
+          <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark))">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </div>
+          <div class="quick-action-label">规划中心</div>
+        </button>
+      </div>
+      
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-card-header">
+            <span class="stat-card-label">当前GPA</span>
+            <span class="stat-card-change up" id="dashboard-gpa-change">--</span>
+          </div>
+          <div class="stat-card-value" id="dashboard-gpa">--</div>
+          <div class="stat-card-desc" id="dashboard-gpa-desc">暂无课程数据</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-card-header">
+            <span class="stat-card-label">近期考试</span>
+            <span class="stat-card-change up" id="dashboard-countdown-change">--</span>
+          </div>
+          <div class="stat-card-value" id="dashboard-countdown">--</div>
+          <div class="stat-card-desc" id="dashboard-countdown-desc">暂无倒计时</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-header">
+            <span class="stat-card-label">本月收支</span>
+            <span class="stat-card-change" id="dashboard-finance-change">--</span>
+          </div>
+          <div class="stat-card-value" id="dashboard-finance">--</div>
+          <div class="stat-card-desc" id="dashboard-finance-desc">暂无记账数据</div>
+        </div>
+      </div>
+      
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <div>
+          <!-- GPA Trend Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">GPA趋势</div>
+                <div class="card-subtitle">各学期GPA变化</div>
+              </div>
+              <button class="card-action" onclick="switchView('gpa')">查看详情</button>
+            </div>
+            <div class="chart-container" id="dashboard-gpa-chart"></div>
+          </div>
+          
+          <!-- Recent Countdowns -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">近期考试</div>
+                <div class="card-subtitle">即将到来的考试和截止日期</div>
+              </div>
+              <button class="card-action" onclick="switchView('countdown')">全部</button>
+            </div>
+            <div id="dashboard-countdown-list"></div>
+          </div>
+        </div>
+        
+        <div>
+          <!-- Finance Overview -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">收支概览</div>
+                <div class="card-subtitle">本月收支情况</div>
+              </div>
+              <button class="card-action" onclick="switchView('finance')">详情</button>
+            </div>
+            <div class="chart-container small" id="dashboard-finance-chart"></div>
+          </div>
+          
+          <!-- Today's Schedule -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">今日安排</div>
+                <div class="card-subtitle" id="dashboard-today-date">今天</div>
+              </div>
+              <button class="card-action" onclick="switchView('plan')">规划中心</button>
+            </div>
+            <div id="dashboard-today-list"></div>
+          </div>
+          
+          <!-- Quick Stats -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">数据统计</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:var(--green-dark)" id="stat-courses">0</div>
+                <div style="font-size:11px;color:var(--text-3)">已修课程</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:var(--yellow-dark)" id="stat-exams">0</div>
+                <div style="font-size:11px;color:var(--text-3)">考试倒计时</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:var(--blue-dark)" id="stat-transactions">0</div>
+                <div style="font-size:11px;color:var(--text-3)">记账记录</div>
+              </div>
+              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:var(--purple-dark)" id="stat-schedules">0</div>
+                <div style="font-size:11px;color:var(--text-3)">作息安排</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== View: GPA ===== -->
+    <div class="view" id="view-gpa">
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-card-header">
+            <span class="stat-card-label">总GPA</span>
+            <span class="stat-card-change up" id="gpa-total-change">4.0制</span>
+          </div>
+          <div class="stat-card-value" id="gpa-total">--</div>
+          <div class="stat-card-desc" id="gpa-total-desc">加权平均绩点</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-header">
+            <span class="stat-card-label">已修学分</span>
+            <span class="stat-card-change up">学分</span>
+          </div>
+          <div class="stat-card-value" id="gpa-credits">0</div>
+          <div class="stat-card-desc">累计已修学分</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-card-header">
+            <span class="stat-card-label">课程数量</span>
+            <span class="stat-card-change up">门</span>
+          </div>
+          <div class="stat-card-value" id="gpa-courses-count">0</div>
+          <div class="stat-card-desc">已录入课程总数</div>
+        </div>
+      </div>
+      
+      <div class="content-grid">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">课程列表</div>
+                <div class="card-subtitle">
+                  <select class="form-select" style="width:auto;display:inline-block;padding:6px 12px;font-size:12px;" id="gpa-semester-select" onchange="selectSemester(this.value)"></select>
+                  <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-left:8px;" onclick="addSemester()">+ 学期</button>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showAddCourse()">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                添加课程
+              </button>
+            </div>
+            <div id="gpa-courses-list"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">GPA趋势图</div>
+              <button class="card-action" onclick="showCustomGPASettings()">自定义算法</button>
+            </div>
+            <div class="chart-container" id="gpa-trend-chart"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">算法设置</div>
+            </div>
+            <div id="gpa-algorithm-list"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">成绩分布</div>
+            </div>
+            <div class="chart-container small" id="gpa-distribution-chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== View: Countdown ===== -->
+    <div class="view" id="view-countdown">
+      <div class="stats-grid">
+        <div class="stat-card yellow">
+          <div class="stat-card-header">
+            <span class="stat-card-label">进行中</span>
+            <span class="stat-card-change up">个</span>
+          </div>
+          <div class="stat-card-value" id="countdown-active">0</div>
+          <div class="stat-card-desc">未完成的倒计时</div>
+        </div>
+        <div class="stat-card pink">
+          <div class="stat-card-header">
+            <span class="stat-card-label">紧急</span>
+            <span class="stat-card-change down">7天内</span>
+          </div>
+          <div class="stat-card-value" id="countdown-urgent">0</div>
+          <div class="stat-card-desc">一周内到期</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-card-header">
+            <span class="stat-card-label">已完成</span>
+            <span class="stat-card-change up">个</span>
+          </div>
+          <div class="stat-card-value" id="countdown-done">0</div>
+          <div class="stat-card-desc">已完成的倒计时</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">考试倒计时</div>
+            <div class="card-subtitle">
+              <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;" onclick="toggleCountdownFilter('all')">全部</button>
+              <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-left:4px;" onclick="toggleCountdownFilter('active')">进行中</button>
+              <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-left:4px;" onclick="toggleCountdownFilter('done')">已完成</button>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="showAddCountdown()">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            添加倒计时
+          </button>
+        </div>
+        <div id="countdown-list"></div>
+      </div>
+    </div>
+    
+    <!-- ===== View: Finance ===== -->
+    <div class="view" id="view-finance">
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-card-header">
+            <span class="stat-card-label">本月收入</span>
+            <span class="stat-card-change up">收入</span>
+          </div>
+          <div class="stat-card-value" id="finance-income">¥0</div>
+          <div class="stat-card-desc">本月总收入</div>
+        </div>
+        <div class="stat-card pink">
+          <div class="stat-card-header">
+            <span class="stat-card-label">本月支出</span>
+            <span class="stat-card-change down">支出</span>
+          </div>
+          <div class="stat-card-value" id="finance-expense">¥0</div>
+          <div class="stat-card-desc">本月总支出</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-header">
+            <span class="stat-card-label">本月结余</span>
+            <span class="stat-card-change">结余</span>
+          </div>
+          <div class="stat-card-value" id="finance-balance">¥0</div>
+          <div class="stat-card-desc">收入 - 支出</div>
+        </div>
+      </div>
+      
+      <div class="content-grid">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">交易记录</div>
+                <div class="card-subtitle">
+                  <select class="form-select" style="width:auto;display:inline-block;padding:6px 12px;font-size:12px;" id="finance-filter" onchange="filterTransactions(this.value)">
+                    <option value="all">全部</option>
+                    <option value="income">收入</option>
+                    <option value="expense">支出</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-ghost" onclick="exportFinanceCSV()">导出</button>
+                <button class="btn btn-primary" onclick="showAddTransaction()">
+                  <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                  记一笔
+                </button>
+              </div>
+            </div>
+            <div id="finance-transactions-list"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">收支趋势</div>
+              <button class="card-action" onclick="showBudgetSetting()">预算设置</button>
+            </div>
+            <div class="chart-container" id="finance-trend-chart"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">支出分类</div>
+            </div>
+            <div class="chart-container small" id="finance-category-chart"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">本月预算</div>
+            </div>
+            <div id="finance-budget-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ===== View: Plan ===== -->
+    <div class="view" id="view-plan">
+      <div class="stats-grid">
+        <div class="stat-card purple">
+          <div class="stat-card-header">
+            <span class="stat-card-label">今日安排</span>
+            <span class="stat-card-change up">项</span>
+          </div>
+          <div class="stat-card-value" id="plan-today-count">0</div>
+          <div class="stat-card-desc">今日待完成安排</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-header">
+            <span class="stat-card-label">已完成</span>
+            <span class="stat-card-change up">项</span>
+          </div>
+          <div class="stat-card-value" id="plan-done-count">0</div>
+          <div class="stat-card-desc">本周已完成安排</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-card-header">
+            <span class="stat-card-label">完成率</span>
+            <span class="stat-card-change up">%</span>
+          </div>
+          <div class="stat-card-value" id="plan-completion-rate">0%</div>
+          <div class="stat-card-desc">本周安排完成率</div>
+        </div>
+      </div>
+      
+      <div class="content-grid">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">作息总表</div>
+                <div class="card-subtitle">
+                  <div id="plan-day-tabs" style="display:flex;gap:6px;margin-top:8px;"></div>
+                </div>
+              </div>
+              <button class="btn btn-primary" onclick="showAddScheduleEvent()">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                添加安排
+              </button>
+            </div>
+            <div id="plan-schedule-list"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">本周统计</div>
+            </div>
+            <div class="chart-container" id="plan-weekly-chart"></div>
+          </div>
+        </div>
+        
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">今日作息</div>
+              <button class="card-action" id="plan-today-date-label">今天</button>
+            </div>
+            <div id="plan-today-timeline"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">习惯打卡</div>
+            </div>
+            <div id="plan-habits-list"></div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">健康记录</div>
+              <button class="card-action" onclick="showHealthRecord()">记录</button>
+            </div>
+            <div id="plan-health-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== Bottom Nav (Mobile) ===== -->
+<div class="bottom-nav">
+  <button class="bottom-nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+    仪表盘
+  </button>
+  <button class="bottom-nav-item" data-view="gpa" onclick="switchView('gpa')">
+    <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+    GPA
+  </button>
+  <button class="bottom-nav-item" data-view="countdown" onclick="switchView('countdown')">
+    <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+    倒计时
+  </button>
+  <button class="bottom-nav-item" data-view="finance" onclick="switchView('finance')">
+    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    记账
+  </button>
+  <button class="bottom-nav-item" data-view="plan" onclick="switchView('plan')">
+    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+    规划
+  </button>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ===== Modals ===== -->
+<!-- 创建档案 -->
+<div class="modal-overlay" id="modal-create-profile">
+  <div class="modal">
+    <h2 class="modal-title">创建新档案</h2>
+    <p class="modal-desc">设置你的用户名和昵称，开始使用DanDanTable</p>
+    <div class="form-group">
+      <label class="form-label">用户名（唯一标识）</label>
+      <input type="text" class="form-input" id="new-profile-username" placeholder="输入用户名，如：dandan2024" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">昵称（显示名称）</label>
+      <input type="text" class="form-input" id="new-profile-name" placeholder="输入昵称，如：蛋蛋同学" maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">选择头像颜色</label>
+      <div class="avatar-colors" id="avatar-colors"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-profile')">取消</button>
+      <button class="btn btn-primary" onclick="createProfile()">创建档案</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加课程 -->
+<div class="modal-overlay" id="modal-add-course">
+  <div class="modal">
+    <h2 class="modal-title" id="course-modal-title">添加课程</h2>
+    <p class="modal-desc">录入课程信息，自动计算绩点</p>
+    <div class="form-group">
+      <label class="form-label">课程名称</label>
+      <input type="text" class="form-input" id="course-name" placeholder="如：高等数学">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">学分</label>
+        <input type="number" class="form-input" id="course-credit" step="0.5" min="0.5" max="10" placeholder="3.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">成绩</label>
+        <input type="number" class="form-input" id="course-score" step="0.5" min="0" max="100" placeholder="85">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">课程类型</label>
+        <select class="form-select" id="course-type">
+          <option value="required">必修</option>
+          <option value="elective">选修</option>
+          <option value="general">通识</option>
+          <option value="practice">实践</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">所属学期</label>
+        <select class="form-select" id="course-semester"></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-course')">取消</button>
+      <button class="btn btn-primary" onclick="saveCourse()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加倒计时 -->
+<div class="modal-overlay" id="modal-add-countdown">
+  <div class="modal">
+    <h2 class="modal-title" id="countdown-modal-title">添加倒计时</h2>
+    <p class="modal-desc">记录重要考试和截止日期</p>
+    <div class="form-group">
+      <label class="form-label">名称</label>
+      <input type="text" class="form-input" id="countdown-name" placeholder="如：高等数学期末考试">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">日期</label>
+        <input type="date" class="form-input" id="countdown-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">时间</label>
+        <input type="time" class="form-input" id="countdown-time" value="09:00">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">分类</label>
+        <select class="form-select" id="countdown-category">
+          <option value="exam">考试</option>
+          <option value="assignment">作业</option>
+          <option value="project">项目</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">优先级</label>
+        <select class="form-select" id="countdown-priority">
+          <option value="high">高</option>
+          <option value="medium">中</option>
+          <option value="low">低</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">备注（可选）</label>
+      <textarea class="form-textarea" id="countdown-note" rows="2" placeholder="添加备注..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-countdown')">取消</button>
+      <button class="btn btn-primary" onclick="saveCountdown()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加交易 -->
+<div class="modal-overlay" id="modal-add-transaction">
+  <div class="modal">
+    <h2 class="modal-title" id="transaction-modal-title">记一笔</h2>
+    <p class="modal-desc">记录你的收入和支出</p>
+    <div class="form-group">
+      <label class="form-label">类型</label>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-primary" id="tx-type-expense" onclick="setTxType('expense')" style="flex:1;">支出</button>
+        <button class="btn btn-ghost" id="tx-type-income" onclick="setTxType('income')" style="flex:1;">收入</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">金额</label>
+        <input type="number" class="form-input" id="tx-amount" step="0.01" min="0" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">日期</label>
+        <input type="date" class="form-input" id="tx-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">分类</label>
+      <select class="form-select" id="tx-category"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">备注（可选）</label>
+      <input type="text" class="form-input" id="tx-note" placeholder="添加备注...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-transaction')">取消</button>
+      <button class="btn btn-primary" onclick="saveTransaction()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 预算设置 -->
+<div class="modal-overlay" id="modal-budget">
+  <div class="modal">
+    <h2 class="modal-title">预算设置</h2>
+    <p class="modal-desc">设置每月各分类的预算上限</p>
+    <div id="budget-settings-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-budget')">取消</button>
+      <button class="btn btn-primary" onclick="saveBudget()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加安排 -->
+<div class="modal-overlay" id="modal-schedule-event">
+  <div class="modal">
+    <h2 class="modal-title" id="schedule-modal-title">添加安排</h2>
+    <p class="modal-desc">规划你的作息时间</p>
+    <div class="form-group">
+      <label class="form-label">标题</label>
+      <input type="text" class="form-input" id="schedule-title" placeholder="如：晨读英语">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">开始时间</label>
+        <input type="time" class="form-input" id="schedule-start">
+      </div>
+      <div class="form-group">
+        <label class="form-label">结束时间</label>
+        <input type="time" class="form-input" id="schedule-end">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">分类</label>
+      <div id="schedule-category-list" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">重复</label>
+      <select class="form-select" id="schedule-repeat">
+        <option value="once">仅一次</option>
+        <option value="daily">每天</option>
+        <option value="weekday">工作日</option>
+        <option value="weekend">周末</option>
+        <option value="custom">自定义</option>
+      </select>
+    </div>
+    <div class="form-group" id="schedule-days-group" style="display:none;">
+      <label class="form-label">选择星期</label>
+      <div id="schedule-days-list" style="display:flex;gap:8px;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-schedule-event')">取消</button>
+      <button class="btn btn-primary" onclick="saveScheduleEvent()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 数据管理 -->
+<div class="modal-overlay" id="modal-data-manager">
+  <div class="modal" style="max-width:600px;">
+    <h2 class="modal-title">数据管理</h2>
+    <p class="modal-desc">导出、导入或清除你的数据</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <button class="btn btn-primary" onclick="exportData()" style="flex-direction:column;padding:20px;">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;margin-bottom:8px;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        导出数据
+      </button>
+      <button class="btn btn-warning" onclick="document.getElementById('import-file').click()" style="flex-direction:column;padding:20px;">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;margin-bottom:8px;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+        导入数据
+      </button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
+    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-weight:600;color:#991b1b;margin-bottom:8px;">危险操作</div>
+      <button class="btn btn-danger" onclick="clearAllData()">清除所有数据</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-data-manager')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 档案管理 -->
+<div class="modal-overlay" id="modal-profile-manager">
+  <div class="modal">
+    <h2 class="modal-title">档案管理</h2>
+    <p class="modal-desc">管理你的用户档案</p>
+    <div id="profile-manager-list" style="max-height:300px;overflow-y:auto;margin-bottom:16px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="showCreateProfile();closeModal('modal-profile-manager')">创建新档案</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-profile-manager')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 自定义GPA（动态生成） -->
+<div class="modal-overlay" id="modal-custom-gpa">
+  <div class="modal" style="max-width:500px;max-height:80vh;overflow-y:auto;">
+    <h2 class="modal-title">自定义GPA算法</h2>
+    <p class="modal-desc">设置每个分数段对应的GPA值</p>
+    <div id="custom-gpa-ranges"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:12px;" onclick="addCustomGPARange()">+ 添加分数段</button>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCustomGPAModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveCustomGPASettings()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 健康记录 -->
+<div class="modal-overlay" id="modal-health-record">
+  <div class="modal">
+    <h2 class="modal-title">健康记录</h2>
+    <p class="modal-desc">记录你的健康数据</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">体重(kg)</label>
+        <input type="number" class="form-input" id="health-weight" step="0.1" placeholder="60.0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">睡眠(小时)</label>
+        <input type="number" class="form-input" id="health-sleep" step="0.5" placeholder="8.0">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">饮水量(ml)</label>
+        <input type="number" class="form-input" id="health-water" placeholder="2000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">运动(分钟)</label>
+        <input type="number" class="form-input" id="health-exercise" placeholder="30">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">心情</label>
+      <select class="form-select" id="health-mood">
+        <option value="great">非常好</option>
+        <option value="good">好</option>
+        <option value="normal">一般</option>
+        <option value="bad">差</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-health-record')">取消</button>
+      <button class="btn btn-primary" onclick="saveHealthRecord()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ===== Utilities =====
+const $ = id => document.getElementById(id);
+const uuid = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+const STORAGE_PREFIX = "campus_toolbox_";
+
+// ===== Constants =====
+const AVATAR_COLORS = [
+  { from: "#6C5CE7", to: "#5B4CC4", char: "学" },
+  { from: "#00B894", to: "#0891b2", char: "同" },
+  { from: "#FD79A8", to: "#db2777", char: "少" },
+  { from: "#00B894", to: "#059669", char: "青" },
+  { from: "#FDCB6E", to: "#d97706", char: "阳" },
+  { from: "#F0A500", to: "#ea580c", char: "光" },
+  { from: "#E17055", to: "#dc2626", char: "热" },
+  { from: "#A29BFE", to: "#7c3aed", char: "梦" }
+];
+
+const GPA_ALGORITHMS = {
+  standard4: { name: "标准4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 80 ? 3.0 : s >= 70 ? 2.0 : s >= 60 ? 1.0 : 0 },
+  improved4: { name: "改进4.0制", max: 4.0, calc: s => s >= 85 ? 4.0 : s >= 75 ? 3.0 : s >= 65 ? 2.0 : s >= 60 ? 1.0 : 0 },
+  peking4: { name: "北大4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
+  tsinghua4: { name: "清华4.0制", max: 4.0, calc: s => s >= 95 ? 4.0 : s >= 90 ? 3.7 : s >= 85 ? 3.3 : s >= 80 ? 3.0 : s >= 75 ? 2.7 : s >= 70 ? 2.3 : s >= 65 ? 2.0 : s >= 60 ? 1.0 : 0 },
+  zhejiang5: { name: "浙大5.0制", max: 5.0, calc: s => s >= 95 ? 5.0 : s >= 90 ? 4.8 : s >= 85 ? 4.5 : s >= 80 ? 4.0 : s >= 75 ? 3.5 : s >= 70 ? 3.0 : s >= 65 ? 2.5 : s >= 60 ? 2.0 : 0 },
+  shanghai4: { name: "交大4.3制", max: 4.3, calc: s => s >= 95 ? 4.3 : s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  fudan4: { name: "复旦4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  nju4: { name: "南大4.5制", max: 4.5, calc: s => s >= 95 ? 4.5 : s >= 90 ? 4.2 : s >= 85 ? 3.9 : s >= 80 ? 3.6 : s >= 75 ? 3.3 : s >= 70 ? 3.0 : s >= 65 ? 2.7 : s >= 60 ? 2.4 : 0 },
+  ustc4: { name: "中科大4.3制", max: 4.3, calc: s => s >= 95 ? 4.3 : s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 80 ? 3.3 : s >= 75 ? 3.0 : s >= 70 ? 2.7 : s >= 65 ? 2.3 : s >= 60 ? 2.0 : 0 },
+  whu4: { name: "武大4.0制", max: 4.0, calc: s => s >= 90 ? 4.0 : s >= 85 ? 3.7 : s >= 82 ? 3.3 : s >= 78 ? 3.0 : s >= 75 ? 2.7 : s >= 72 ? 2.3 : s >= 68 ? 2.0 : s >= 64 ? 1.5 : s >= 60 ? 1.0 : 0 },
+  custom: { name: "自定义", max: 4.0, calc: s => calcCustomGPA(s) }
+};
+
+const EXPENSE_CATEGORIES = [
+  { id: "food", name: "餐饮", icon: "🍜", color: "#FD79A8" },
+  { id: "transport", name: "交通", icon: "🚌", color: "#00B894" },
+  { id: "shopping", name: "购物", icon: "🛍️", color: "#6C5CE7" },
+  { id: "entertainment", name: "娱乐", icon: "🎮", color: "#FDCB6E" },
+  { id: "study", name: "学习", icon: "📚", color: "#0984E3" },
+  { id: "medical", name: "医疗", icon: "💊", color: "#E17055" },
+  { id: "other", name: "其他", icon: "📦", color: "#636E72" }
+];
+
+const INCOME_CATEGORIES = [
+  { id: "allowance", name: "生活费", icon: "💰", color: "#00B894" },
+  { id: "parttime", name: "兼职", icon: "💼", color: "#6C5CE7" },
+  { id: "scholarship", name: "奖学金", icon: "🏆", color: "#FDCB6E" },
+  { id: "other", name: "其他", icon: "📦", color: "#636E72" }
+];
+
+const SCHEDULE_CATEGORIES = [
+  { id: "study", name: "学习", color: "#6C5CE7" },
+  { id: "exercise", name: "运动", color: "#00B894" },
+  { id: "rest", name: "休息", color: "#FDCB6E" },
+  { id: "social", name: "社交", color: "#FD79A8" },
+  { id: "work", name: "工作", color: "#0984E3" },
+  { id: "other", name: "其他", color: "#636E72" }
+];
+
+const DEFAULT_HABITS = [
+  { id: "drink_water", name: "喝水", target: 8, unit: "杯", icon: "💧" },
+  { id: "read", name: "阅读", target: 30, unit: "分钟", icon: "📖" },
+  { id: "exercise", name: "运动", target: 30, unit: "分钟", icon: "🏃" },
+  { id: "early_sleep", name: "早睡", target: 1, unit: "次", icon: "🌙" }
+];
+
+// ===== State =====
+let state = {
+  currentProfileId: null,
+  profiles: [],
+  currentView: "dashboard",
+  selectedAvatarColor: 0,
+  currentSemesterId: null,
+  countdownFilter: "all",
+  txType: "expense",
+  selectedScheduleDay: 0,
+  selectedScheduleCategory: null,
+  editingCourseId: null,
+  editingCountdownId: null,
+  editingScheduleId: null,
+  customGPARanges: [],
+  charts: {}
+};
+
+// ===== Storage =====
+function storageGet(key, def) {
+  try { const v = localStorage.getItem(STORAGE_PREFIX + key); return v ? JSON.parse(v) : def; }
+  catch(e) { return def; }
+}
+function storageSet(key, val) {
+  try { localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(val)); } catch(e) {}
+}
+
+function getProfileData(profileId) {
+  return storageGet("data_" + profileId, {
+    courses: [],
+    semesters: [],
+    countdowns: [],
+    transactions: [],
+    budget: {},
+    gpaAlgorithm: "standard4",
+    scheduleEvents: [],
+    habits: DEFAULT_HABITS.map(h => ({...h, completed: {}})),
+    health: [],
+    customGPASettings: null
+  });
+}
+
+function saveProfileData(profileId, data) {
+  storageSet("data_" + profileId, data);
+}
+
+// ===== Toast =====
+function toast(msg, type = "info") {
+  const container = $("toast-container");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = "0"; el.style.transform = "translateX(30px)"; setTimeout(() => el.remove(), 300); }, 2500);
+}
+
+// ===== Modal =====
+function showModal(id) { const el = $(id); if (el) el.classList.add("show"); }
+function closeModal(id) { const el = $(id); if (el) el.classList.remove("show"); }
+
+// 点击遮罩关闭弹窗
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("modal-overlay")) {
+    e.target.classList.remove("show");
+  }
+});
+
+// ===== Sidebar Toggle (Mobile) =====
+function toggleSidebar() {
+  const sidebar = $("sidebar");
+  const overlay = $("sidebar-overlay");
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+}
+
+// ===== View Switching =====
+function switchView(view) {
+  const viewEl = $("view-" + view);
+  if (!viewEl) { console.warn("View not found:", view); return; }
+  state.currentView = view;
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  viewEl.classList.add("active");
+  document.querySelectorAll(".nav-item[data-view]").forEach(n => {
+    n.classList.toggle("active", n.dataset.view === view);
+  });
+  document.querySelectorAll(".bottom-nav-item").forEach(n => {
+    n.classList.toggle("active", n.dataset.view === view);
+  });
+  
+  // 更新标题
+  const titles = {
+    dashboard: ["仪表盘", "欢迎回来，今天也要加油哦"],
+    gpa: ["GPA计算", "管理你的课程和成绩"],
+    countdown: ["考试倒计时", "追踪重要考试和截止日期"],
+    finance: ["记账本", "记录你的每一笔收支"],
+    plan: ["规划中心", "规划你的作息和生活"]
+  };
+  if (titles[view]) {
+    $("page-title").textContent = titles[view][0];
+    $("page-subtitle").textContent = titles[view][1];
+  }
+  
+  // 关闭移动端侧边栏
+  if (window.innerWidth <= 768) {
+    $("sidebar").classList.remove("open");
+    $("sidebar-overlay").classList.remove("show");
+  }
+  
+  // 渲染对应视图
+  if (view === "dashboard") renderDashboard();
+  else if (view === "gpa") renderGPA();
+  else if (view === "countdown") renderCountdown();
+  else if (view === "finance") renderFinance();
+  else if (view === "plan") renderPlan();
+  
+  document.querySelector(".main").scrollTop = 0;
+}
+
+// ===== Profile Management =====
+function loadProfiles() {
+  state.profiles = storageGet("profiles", []);
+  state.currentProfileId = storageGet("current_profile", null);
+}
+
+function renderWelcomeProfiles() {
+  const container = $("welcome-profiles");
+  if (state.profiles.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-3);font-size:13px;padding:16px;">还没有档案，创建一个开始使用吧</div>';
+    return;
+  }
+  container.innerHTML = state.profiles.map(p => `
+    <div class="welcome-profile-item" onclick="enterProfile('${p.id}')">
+      <div class="welcome-profile-avatar" style="background:linear-gradient(135deg,${p.colorFrom},${p.colorTo})">${p.name.charAt(0)}</div>
+      <div class="welcome-profile-info">
+        <div class="welcome-profile-name">${p.name}</div>
+        <div class="welcome-profile-username">@${p.username}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderAvatarColors() {
+  const container = $("avatar-colors");
+  if (!container) return;
+  container.innerHTML = AVATAR_COLORS.map((c, i) =>
+    `<div class="avatar-color ${i === state.selectedAvatarColor ? 'selected' : ''}" style="background:linear-gradient(135deg,${c.from},${c.to})" onclick="selectAvatarColor(${i})"></div>`
+  ).join("");
+}
+
+function selectAvatarColor(i) {
+  state.selectedAvatarColor = i;
+  renderAvatarColors();
+}
+
+function showCreateProfile() {
+  showModal("modal-create-profile");
+  try {
+    $("new-profile-username").value = "";
+    $("new-profile-name").value = "";
+    state.selectedAvatarColor = 0;
+    renderAvatarColors();
+  } catch(e) { console.error("showCreateProfile error:", e); }
+}
+
+function createProfile() {
+  const username = $("new-profile-username").value.trim();
+  const name = $("new-profile-name").value.trim();
+  if (!username) { toast("请输入用户名", "error"); return; }
+  if (!name) { toast("请输入昵称", "error"); return; }
+  if (state.profiles.find(p => p.username === username)) {
+    toast("该用户名已存在，请换一个", "error");
+    return;
+  }
+  const color = AVATAR_COLORS[state.selectedAvatarColor];
+  const profile = {
+    id: uuid(),
+    username: username,
+    name: name,
+    colorFrom: color.from,
+    colorTo: color.to,
+    createdAt: Date.now()
+  };
+  state.profiles.push(profile);
+  storageSet("profiles", state.profiles);
+  // 初始化默认学期
+  const data = getProfileData(profile.id);
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
+  const semName = month >= 8 ? (year + "-" + (year+1) + " 第一学期") : (year-1 + "-" + year + " 第二学期");
+  data.semesters = [{ id: uuid(), name: semName }];
+  saveProfileData(profile.id, data);
+  enterProfile(profile.id);
+  closeModal("modal-create-profile");
+  toast("档案创建成功，欢迎 " + name, "success");
+}
+
+function enterProfile(profileId) {
+  state.currentProfileId = profileId;
+  storageSet("current_profile", profileId);
+  const profile = state.profiles.find(p => p.id === profileId);
+  if (!profile) return;
+  // 更新侧边栏
+  $("sidebar-name").textContent = profile.name;
+  const avatar = $("sidebar-avatar");
+  avatar.style.background = `linear-gradient(135deg,${profile.colorFrom},${profile.colorTo})`;
+  avatar.textContent = profile.name.charAt(0);
+  // 隐藏欢迎页，显示应用
+  $("welcome-screen").style.display = "none";
+  $("app").style.display = "flex";
+  // 初始化数据
+  const data = getProfileData(profileId);
+  if (data.semesters.length > 0) {
+    state.currentSemesterId = data.semesters[0].id;
+  }
+  // 渲染仪表盘
+  switchView("dashboard");
+}
+
+function logout() {
+  state.currentProfileId = null;
+  storageSet("current_profile", null);
+  $("welcome-screen").style.display = "flex";
+  $("app").style.display = "none";
+  renderWelcomeProfiles();
+  toast("已退出登录", "info");
+}
+
+function showProfileManager() {
+  showModal("modal-profile-manager");
+  const container = $("profile-manager-list");
+  if (state.profiles.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:20px;">暂无档案</div>';
+    return;
+  }
+  container.innerHTML = state.profiles.map(p => `
+    <div style="display:flex;align-items:center;padding:12px;border-bottom:1px solid var(--border);">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,${p.colorFrom},${p.colorTo});display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;margin-right:12px;">${p.name.charAt(0)}</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:14px;">${p.name}</div>
+        <div style="font-size:12px;color:var(--text-3);">@${p.username}</div>
+      </div>
+      <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;" onclick="enterProfile('${p.id}');closeModal('modal-profile-manager')">切换</button>
+      <button class="btn btn-danger" style="padding:6px 12px;font-size:12px;margin-left:8px;" onclick="deleteProfile('${p.id}')">删除</button>
+    </div>
+  `).join("");
+}
+
+function deleteProfile(profileId) {
+  if (!confirm("确定要删除这个档案吗？所有数据将被清除！")) return;
+  state.profiles = state.profiles.filter(p => p.id !== profileId);
+  storageSet("profiles", state.profiles);
+  localStorage.removeItem(STORAGE_PREFIX + "data_" + profileId);
+  if (state.currentProfileId === profileId) {
+    logout();
+  }
+  showProfileManager();
+  toast("档案已删除", "success");
+}
+
+// ===== GPA Calculation =====
+function calcCustomGPA(score) {
+  const data = getProfileData(state.currentProfileId);
+  const ranges = data.customGPASettings || [{min:90,max:100,gpa:4.0},{min:80,max:89,gpa:3.0},{min:70,max:79,gpa:2.0},{min:60,max:69,gpa:1.0},{min:0,max:59,gpa:0}];
+  for (const r of ranges) {
+    if (score >= r.min && score <= r.max) return r.gpa;
+  }
+  return 0;
+}
+
+function calculateGPA(courses, algorithm) {
+  const algo = GPA_ALGORITHMS[algorithm] || GPA_ALGORITHMS.standard4;
+  let totalCredits = 0;
+  let totalPoints = 0;
+  courses.forEach(c => {
+    const gpa = algo.calc(c.score);
+    totalCredits += c.credit;
+    totalPoints += gpa * c.credit;
+  });
+  return totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "--";
+}
+
+function renderGPA() {
+  const data = getProfileData(state.currentProfileId);
+  const semesterCourses = data.courses.filter(c => c.semesterId === state.currentSemesterId);
+  const allCourses = data.courses;
+  
+  // 统计卡片
+  $("gpa-total").textContent = calculateGPA(allCourses, data.gpaAlgorithm);
+  $("gpa-credits").textContent = allCourses.reduce((sum, c) => sum + c.credit, 0).toFixed(1);
+  $("gpa-courses-count").textContent = allCourses.length;
+  
+  // 学期选择
+  const select = $("gpa-semester-select");
+  select.innerHTML = data.semesters.map(s => 
+    `<option value="${s.id}" ${s.id === state.currentSemesterId ? 'selected' : ''}>${s.name}</option>`
+  ).join("");
+  
+  // 课程列表
+  const list = $("gpa-courses-list");
+  if (semesterCourses.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg></div>
+        <div class="empty-state-title">暂无课程</div>
+        <div class="empty-state-desc">点击右上角添加课程开始记录</div>
+      </div>`;
+  } else {
+    list.innerHTML = `
+      <table class="data-table">
+        <thead><tr><th>课程名称</th><th>学分</th><th>成绩</th><th>类型</th><th>GPA</th><th>操作</th></tr></thead>
+        <tbody>
+          ${semesterCourses.map(c => {
+            const algo = GPA_ALGORITHMS[data.gpaAlgorithm] || GPA_ALGORITHMS.standard4;
+            const gpa = algo.calc(c.score);
+            const typeNames = {required:"必修",elective:"选修",general:"通识",practice:"实践"};
+            return `<tr>
+              <td style="font-weight:600;">${c.name}</td>
+              <td>${c.credit}</td>
+              <td>${c.score}</td>
+              <td><span class="tag tag-blue">${typeNames[c.type] || c.type}</span></td>
+              <td style="font-weight:700;color:var(--green-dark);">${gpa.toFixed(1)}</td>
+              <td>
+                <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="editCourse('${c.id}')">编辑</button>
+                <button class="btn btn-danger" style="padding:4px 8px;font-size:11px;margin-left:4px;" onclick="deleteCourse('${c.id}')">删除</button>
+              </td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>`;
+  }
+  
+  // 算法列表
+  $("gpa-algorithm-list").innerHTML = Object.entries(GPA_ALGORITHMS).map(([key, algo]) => `
+    <div style="display:flex;align-items:center;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;${data.gpaAlgorithm === key ? 'background:var(--bg);border:1px solid var(--blue);' : 'border:1px solid transparent;'}" onclick="setGPAAlgorithm('${key}')">
+      <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${data.gpaAlgorithm === key ? 'var(--blue)' : 'var(--border)'};display:flex;align-items:center;justify-content:center;margin-right:10px;">
+        ${data.gpaAlgorithm === key ? '<div style="width:10px;height:10px;border-radius:50%;background:var(--blue);"></div>' : ''}
+      </div>
+      <span style="font-size:13px;font-weight:500;">${algo.name}</span>
+    </div>
+  `).join("");
+  
+  // 渲染图表
+  renderGPACharts(data);
+}
+
+function renderGPACharts(data) {
+  // 趋势图
+  const trendEl = $("gpa-trend-chart");
+  if (trendEl && typeof echarts !== 'undefined') {
+    if (state.charts.gpaTrend) state.charts.gpaTrend.dispose();
+    const chart = echarts.init(trendEl);
+    const semData = data.semesters.map(s => {
+      const courses = data.courses.filter(c => c.semesterId === s.id);
+      return { name: s.name.substring(0, 10), gpa: parseFloat(calculateGPA(courses, data.gpaAlgorithm)) || 0 };
+    });
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: 40, right: 20, top: 20, bottom: 40 },
+      xAxis: { type: 'category', data: semData.map(d => d.name), axisLabel: { fontSize: 11 } },
+      yAxis: { type: 'value', max: 4.3, axisLabel: { fontSize: 11 } },
+      series: [{
+        type: 'line',
+        data: semData.map(d => d.gpa),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: { width: 3, color: '#6C5CE7' },
+        itemStyle: { color: '#6C5CE7' },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(108,92,231,0.3)' }, { offset: 1, color: 'rgba(108,92,231,0)' }]) }
+      }]
+    });
+    state.charts.gpaTrend = chart;
+  }
+  
+  // 分布图
+  const distEl = $("gpa-distribution-chart");
+  if (distEl && typeof echarts !== 'undefined') {
+    if (state.charts.gpaDist) state.charts.gpaDist.dispose();
+    const chart = echarts.init(distEl);
+    const ranges = [{name:'90+',min:90},{name:'80-89',min:80},{name:'70-79',min:70},{name:'60-69',min:60},{name:'<60',min:0}];
+    const counts = ranges.map(r => data.courses.filter(c => c.score >= r.min && (r.min === 0 ? c.score < 60 : c.score < r.min + 10 || (r.min === 90))).length);
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: 40, right: 20, top: 20, bottom: 30 },
+      xAxis: { type: 'category', data: ranges.map(r => r.name), axisLabel: { fontSize: 11 } },
+      yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
+      series: [{ type: 'bar', data: counts, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#00B894' }, { offset: 1, color: '#0891b2' }]), borderRadius: [6, 6, 0, 0] }, barWidth: '50%' }]
+    });
+    state.charts.gpaDist = chart;
+  }
+}
+
+function setGPAAlgorithm(algo) {
+  const data = getProfileData(state.currentProfileId);
+  data.gpaAlgorithm = algo;
+  saveProfileData(state.currentProfileId, data);
+  renderGPA();
+  toast("已切换到 " + GPA_ALGORITHMS[algo].name, "success");
+}
+
+function selectSemester(semId) {
+  state.currentSemesterId = semId;
+  renderGPA();
+}
+
+function addSemester() {
+  const name = prompt("请输入学期名称：", "2024-2025 第二学期");
+  if (!name) return;
+  const data = getProfileData(state.currentProfileId);
+  const sem = { id: uuid(), name: name };
+  data.semesters.push(sem);
+  saveProfileData(state.currentProfileId, data);
+  state.currentSemesterId = sem.id;
+  renderGPA();
+  toast("学期已添加", "success");
+}
+
+function showAddCourse() {
+  state.editingCourseId = null;
+  $("course-modal-title").textContent = "添加课程";
+  $("course-name").value = "";
+  $("course-credit").value = "";
+  $("course-score").value = "";
+  $("course-type").value = "required";
+  const data = getProfileData(state.currentProfileId);
+  $("course-semester").innerHTML = data.semesters.map(s => 
+    `<option value="${s.id}" ${s.id === state.currentSemesterId ? 'selected' : ''}>${s.name}</option>`
+  ).join("");
+  showModal("modal-add-course");
+}
+
+function editCourse(courseId) {
+  const data = getProfileData(state.currentProfileId);
+  const course = data.courses.find(c => c.id === courseId);
+  if (!course) return;
+  state.editingCourseId = courseId;
+  $("course-modal-title").textContent = "编辑课程";
+  $("course-name").value = course.name;
+  $("course-credit").value = course.credit;
+  $("course-score").value = course.score;
+  $("course-type").value = course.type;
+  $("course-semester").value = course.semesterId;
+  showModal("modal-add-course");
+}
+
+function saveCourse() {
+  const name = $("course-name").value.trim();
+  const credit = parseFloat($("course-credit").value);
+  const score = parseFloat($("course-score").value);
+  const type = $("course-type").value;
+  const semesterId = $("course-semester").value;
+  if (!name) { toast("请输入课程名称", "error"); return; }
+  if (!credit || credit <= 0) { toast("请输入有效学分", "error"); return; }
+  if (isNaN(score) || score < 0 || score > 100) { toast("请输入有效成绩(0-100)", "error"); return; }
+  
+  const data = getProfileData(state.currentProfileId);
+  if (state.editingCourseId) {
+    const idx = data.courses.findIndex(c => c.id === state.editingCourseId);
+    if (idx >= 0) data.courses[idx] = { ...data.courses[idx], name, credit, score, type, semesterId };
+  } else {
+    data.courses.push({ id: uuid(), name, credit, score, type, semesterId, createdAt: Date.now() });
+  }
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-add-course");
+  renderGPA();
+  toast(state.editingCourseId ? "课程已更新" : "课程已添加", "success");
+}
+
+function deleteCourse(courseId) {
+  if (!confirm("确定要删除这门课程吗？")) return;
+  const data = getProfileData(state.currentProfileId);
+  data.courses = data.courses.filter(c => c.id !== courseId);
+  saveProfileData(state.currentProfileId, data);
+  renderGPA();
+  toast("课程已删除", "success");
+}
+
+// ===== Custom GPA =====
+function showCustomGPASettings() {
+  const data = getProfileData(state.currentProfileId);
+  state.customGPARanges = data.customGPASettings || [{min:90,max:100,gpa:4.0},{min:80,max:89,gpa:3.0},{min:70,max:79,gpa:2.0},{min:60,max:69,gpa:1.0},{min:0,max:59,gpa:0}];
+  renderCustomGPARanges();
+  showModal("modal-custom-gpa");
+}
+
+function renderCustomGPARanges() {
+  const container = $("custom-gpa-ranges");
+  container.innerHTML = state.customGPARanges.map((r, i) => `
+    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+      <input type="number" class="form-input" style="flex:1;" value="${r.min}" onchange="state.customGPARanges[${i}].min=parseFloat(this.value)" placeholder="最低分">
+      <span style="color:var(--text-3);">-</span>
+      <input type="number" class="form-input" style="flex:1;" value="${r.max}" onchange="state.customGPARanges[${i}].max=parseFloat(this.value)" placeholder="最高分">
+      <span style="color:var(--text-3);">=</span>
+      <input type="number" class="form-input" style="flex:1;" value="${r.gpa}" step="0.1" onchange="state.customGPARanges[${i}].gpa=parseFloat(this.value)" placeholder="GPA">
+      <button class="btn btn-danger" style="padding:6px 10px;" onclick="removeCustomGPARange(${i})">×</button>
+    </div>
+  `).join("");
+}
+
+function addCustomGPARange() {
+  state.customGPARanges.push({min:0,max:100,gpa:0});
+  renderCustomGPARanges();
+}
+
+function removeCustomGPARange(i) {
+  state.customGPARanges.splice(i, 1);
+  renderCustomGPARanges();
+}
+
+function closeCustomGPAModal() {
+  closeModal("modal-custom-gpa");
+}
+
+function saveCustomGPASettings() {
+  const data = getProfileData(state.currentProfileId);
+  data.customGPASettings = state.customGPARanges;
+  data.gpaAlgorithm = "custom";
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-custom-gpa");
+  renderGPA();
+  toast("自定义GPA算法已保存", "success");
+}
+
+// ===== Countdown =====
+function renderCountdown() {
+  const data = getProfileData(state.currentProfileId);
+  const now = Date.now();
+  
+  const active = data.countdowns.filter(c => !c.done && new Date(c.date).getTime() >= now);
+  const urgent = active.filter(c => (new Date(c.date).getTime() - now) < 7 * 24 * 60 * 60 * 1000);
+  const done = data.countdowns.filter(c => c.done);
+  
+  $("countdown-active").textContent = active.length;
+  $("countdown-urgent").textContent = urgent.length;
+  $("countdown-done").textContent = done.length;
+  
+  // 更新导航徽章
+  const badge = $("countdown-badge");
+  if (urgent.length > 0) {
+    badge.style.display = "inline-block";
+    badge.textContent = urgent.length;
+  } else {
+    badge.style.display = "none";
+  }
+  
+  let list = data.countdowns;
+  if (state.countdownFilter === "active") list = active;
+  else if (state.countdownFilter === "done") list = done;
+  
+  list.sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  const container = $("countdown-list");
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61z"/></svg></div>
+        <div class="empty-state-title">暂无倒计时</div>
+        <div class="empty-state-desc">点击右上角添加考试倒计时</div>
+      </div>`;
+    return;
+  }
+  
+  const categoryNames = {exam:"考试",assignment:"作业",project:"项目",other:"其他"};
+  const priorityColors = {high:"tag-pink",medium:"tag-yellow",low:"tag-blue"};
+  
+  container.innerHTML = list.map(c => {
+    const target = new Date(c.date).getTime();
+    const diff = target - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const isUrgent = days <= 3 && !c.done;
+    
+    return `
+      <div class="list-item" style="${c.done ? 'opacity:0.6;' : ''}">
+        <div class="list-item-avatar" style="background:${c.done ? '#ccc' : (isUrgent ? 'linear-gradient(135deg,#FD79A8,#db2777)' : 'linear-gradient(135deg,#FDCB6E,#d97706)')}">
+          ${c.done ? '✓' : categoryNames[c.category]?.charAt(0) || '?'}
+        </div>
+        <div class="list-item-content">
+          <div class="list-item-title" style="${c.done ? 'text-decoration:line-through;' : ''}">${c.name}</div>
+          <div class="list-item-subtitle">
+            ${new Date(c.date).toLocaleDateString('zh-CN')} ${c.time || ''}
+            ${!c.done ? ` · 还剩 ${days >= 0 ? days + '天' + hours + '小时' : '已过期'}` : ''}
+          </div>
+        </div>
+        <span class="tag ${priorityColors[c.priority] || 'tag-gray'}">${categoryNames[c.category] || c.category}</span>
+        <div style="display:flex;gap:4px;margin-left:12px;">
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="toggleCountdownDone('${c.id}')">${c.done ? '恢复' : '完成'}</button>
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="editCountdown('${c.id}')">编辑</button>
+          <button class="btn btn-danger" style="padding:4px 8px;font-size:11px;" onclick="deleteCountdown('${c.id}')">删除</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function toggleCountdownFilter(filter) {
+  state.countdownFilter = filter;
+  renderCountdown();
+}
+
+function showAddCountdown() {
+  state.editingCountdownId = null;
+  $("countdown-modal-title").textContent = "添加倒计时";
+  $("countdown-name").value = "";
+  $("countdown-date").value = new Date().toISOString().split('T')[0];
+  $("countdown-time").value = "09:00";
+  $("countdown-category").value = "exam";
+  $("countdown-priority").value = "medium";
+  $("countdown-note").value = "";
+  showModal("modal-add-countdown");
+}
+
+function editCountdown(id) {
+  const data = getProfileData(state.currentProfileId);
+  const c = data.countdowns.find(x => x.id === id);
+  if (!c) return;
+  state.editingCountdownId = id;
+  $("countdown-modal-title").textContent = "编辑倒计时";
+  $("countdown-name").value = c.name;
+  $("countdown-date").value = c.date;
+  $("countdown-time").value = c.time || "09:00";
+  $("countdown-category").value = c.category;
+  $("countdown-priority").value = c.priority;
+  $("countdown-note").value = c.note || "";
+  showModal("modal-add-countdown");
+}
+
+function saveCountdown() {
+  const name = $("countdown-name").value.trim();
+  const date = $("countdown-date").value;
+  const time = $("countdown-time").value;
+  const category = $("countdown-category").value;
+  const priority = $("countdown-priority").value;
+  const note = $("countdown-note").value.trim();
+  if (!name) { toast("请输入名称", "error"); return; }
+  if (!date) { toast("请选择日期", "error"); return; }
+  
+  const data = getProfileData(state.currentProfileId);
+  if (state.editingCountdownId) {
+    const idx = data.countdowns.findIndex(c => c.id === state.editingCountdownId);
+    if (idx >= 0) data.countdowns[idx] = { ...data.countdowns[idx], name, date, time, category, priority, note };
+  } else {
+    data.countdowns.push({ id: uuid(), name, date, time, category, priority, note, done: false, createdAt: Date.now() });
+  }
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-add-countdown");
+  renderCountdown();
+  toast(state.editingCountdownId ? "倒计时已更新" : "倒计时已添加", "success");
+}
+
+function toggleCountdownDone(id) {
+  const data = getProfileData(state.currentProfileId);
+  const c = data.countdowns.find(x => x.id === id);
+  if (c) {
+    c.done = !c.done;
+    saveProfileData(state.currentProfileId, data);
+    renderCountdown();
+  }
+}
+
+function deleteCountdown(id) {
+  if (!confirm("确定要删除这个倒计时吗？")) return;
+  const data = getProfileData(state.currentProfileId);
+  data.countdowns = data.countdowns.filter(c => c.id !== id);
+  saveProfileData(state.currentProfileId, data);
+  renderCountdown();
+  toast("倒计时已删除", "success");
+}
+
+// ===== Finance =====
+function renderFinance() {
+  const data = getProfileData(state.currentProfileId);
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+  const monthTx = data.transactions.filter(t => new Date(t.date) >= monthStart);
+  const income = monthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+  const expense = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+  
+  $("finance-income").textContent = "¥" + income.toFixed(2);
+  $("finance-expense").textContent = "¥" + expense.toFixed(2);
+  $("finance-balance").textContent = "¥" + (income - expense).toFixed(2);
+  
+  // 交易列表
+  let list = [...data.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const filter = $("finance-filter")?.value || "all";
+  if (filter !== "all") list = list.filter(t => t.type === filter);
+  
+  const container = $("finance-transactions-list");
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+        <div class="empty-state-title">暂无记录</div>
+        <div class="empty-state-desc">点击右上角记一笔开始记录</div>
+      </div>`;
+  } else {
+    container.innerHTML = list.slice(0, 50).map(t => {
+      const cats = t.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+      const cat = cats.find(c => c.id === t.category) || {name:t.category, icon:"📦", color:"#999"};
+      return `
+        <div class="list-item">
+          <div class="list-item-avatar" style="background:${cat.color}20;color:${cat.color};">${cat.icon}</div>
+          <div class="list-item-content">
+            <div class="list-item-title">${t.note || cat.name}</div>
+            <div class="list-item-subtitle">${new Date(t.date).toLocaleDateString('zh-CN')} · ${cat.name}</div>
+          </div>
+          <div class="list-item-value ${t.type === 'income' ? 'positive' : 'negative'}">${t.type === 'income' ? '+' : '-'}¥${t.amount.toFixed(2)}</div>
+          <button class="btn btn-danger" style="padding:4px 8px;font-size:11px;margin-left:8px;" onclick="deleteTransaction('${t.id}')">删除</button>
+        </div>`;
+    }).join("");
+  }
+  
+  // 渲染图表
+  renderFinanceCharts(data, monthTx);
+}
+
+function renderFinanceCharts(data, monthTx) {
+  // 趋势图
+  const trendEl = $("finance-trend-chart");
+  if (trendEl && typeof echarts !== 'undefined') {
+    if (state.charts.financeTrend) state.charts.financeTrend.dispose();
+    const chart = echarts.init(trendEl);
+    const months = [];
+    const incomeData = [];
+    const expenseData = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+      const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      const tx = data.transactions.filter(t => {
+        const td = new Date(t.date);
+        return td >= monthStart && td <= monthEnd;
+      });
+      months.push((d.getMonth() + 1) + "月");
+      incomeData.push(tx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0));
+      expenseData.push(tx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0));
+    }
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      legend: { data: ['收入', '支出'], top: 0 },
+      grid: { left: 50, right: 20, top: 40, bottom: 30 },
+      xAxis: { type: 'category', data: months, axisLabel: { fontSize: 11 } },
+      yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
+      series: [
+        { name: '收入', type: 'bar', data: incomeData, itemStyle: { color: '#00B894', borderRadius: [6, 6, 0, 0] } },
+        { name: '支出', type: 'bar', data: expenseData, itemStyle: { color: '#FD79A8', borderRadius: [6, 6, 0, 0] } }
+      ]
+    });
+    state.charts.financeTrend = chart;
+  }
+  
+  // 分类饼图
+  const catEl = $("finance-category-chart");
+  if (catEl && typeof echarts !== 'undefined') {
+    if (state.charts.financeCat) state.charts.financeCat.dispose();
+    const chart = echarts.init(catEl);
+    const expense = monthTx.filter(t => t.type === 'expense');
+    const catData = EXPENSE_CATEGORIES.map(c => ({
+      name: c.name,
+      value: expense.filter(t => t.category === c.id).reduce((s, t) => s + t.amount, 0),
+      itemStyle: { color: c.color }
+    })).filter(d => d.value > 0);
+    
+    chart.setOption({
+      tooltip: { trigger: 'item', formatter: '{b}: ¥{c} ({d}%)' },
+      series: [{ type: 'pie', radius: ['40%', '70%'], data: catData, label: { fontSize: 11 } }]
+    });
+    state.charts.financeCat = chart;
+  }
+}
+
+function setTxType(type) {
+  state.txType = type;
+  $("tx-type-expense").className = "btn " + (type === 'expense' ? 'btn-primary' : 'btn-ghost');
+  $("tx-type-income").className = "btn " + (type === 'income' ? 'btn-primary' : 'btn-ghost');
+  const cats = type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+  $("tx-category").innerHTML = cats.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join("");
+}
+
+function showAddTransaction() {
+  $("transaction-modal-title").textContent = "记一笔";
+  $("tx-amount").value = "";
+  $("tx-date").value = new Date().toISOString().split('T')[0];
+  $("tx-note").value = "";
+  setTxType("expense");
+  showModal("modal-add-transaction");
+}
+
+function saveTransaction() {
+  const amount = parseFloat($("tx-amount").value);
+  const date = $("tx-date").value;
+  const category = $("tx-category").value;
+  const note = $("tx-note").value.trim();
+  if (!amount || amount <= 0) { toast("请输入有效金额", "error"); return; }
+  if (!date) { toast("请选择日期", "error"); return; }
+  
+  const data = getProfileData(state.currentProfileId);
+  data.transactions.push({ id: uuid(), type: state.txType, amount, date, category, note, createdAt: Date.now() });
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-add-transaction");
+  renderFinance();
+  toast("记账成功", "success");
+}
+
+function deleteTransaction(id) {
+  if (!confirm("确定要删除这条记录吗？")) return;
+  const data = getProfileData(state.currentProfileId);
+  data.transactions = data.transactions.filter(t => t.id !== id);
+  saveProfileData(state.currentProfileId, data);
+  renderFinance();
+  toast("记录已删除", "success");
+}
+
+function filterTransactions(filter) {
+  renderFinance();
+}
+
+function exportFinanceCSV() {
+  const data = getProfileData(state.currentProfileId);
+  let csv = "日期,类型,分类,金额,备注\n";
+  data.transactions.forEach(t => {
+    const cats = t.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+    const cat = cats.find(c => c.id === t.category)?.name || t.category;
+    csv += `${t.date},${t.type === 'income' ? '收入' : '支出'},${cat},${t.amount},${t.note || ''}\n`;
+  });
+  const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "账单导出.csv";
+  link.click();
+  toast("导出成功", "success");
+}
+
+function showBudgetSetting() {
+  const data = getProfileData(state.currentProfileId);
+  const container = $("budget-settings-list");
+  container.innerHTML = EXPENSE_CATEGORIES.map(c => `
+    <div class="form-group">
+      <label class="form-label">${c.icon} ${c.name}</label>
+      <input type="number" class="form-input" id="budget-${c.id}" value="${data.budget[c.id] || ''}" placeholder="0" step="0.01">
+    </div>
+  `).join("");
+  showModal("modal-budget");
+}
+
+function saveBudget() {
+  const data = getProfileData(state.currentProfileId);
+  EXPENSE_CATEGORIES.forEach(c => {
+    const val = parseFloat($("budget-" + c.id).value);
+    if (val > 0) data.budget[c.id] = val;
+    else delete data.budget[c.id];
+  });
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-budget");
+  renderFinance();
+  toast("预算已保存", "success");
+}
+
+// ===== Plan / Schedule =====
+function renderPlan() {
+  const data = getProfileData(state.currentProfileId);
+  const today = new Date();
+  const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  
+  // 统计
+  const todayEvents = data.scheduleEvents.filter(e => {
+    if (e.repeat === 'daily') return true;
+    if (e.repeat === 'weekday') return dayOfWeek < 5;
+    if (e.repeat === 'weekend') return dayOfWeek >= 5;
+    if (e.repeat === 'custom') return e.days?.includes(dayOfWeek);
+    return e.day === dayOfWeek;
+  });
+  
+  const doneToday = todayEvents.filter(e => e.done).length;
+  const weekEvents = data.scheduleEvents.length;
+  const completionRate = todayEvents.length > 0 ? Math.round((doneToday / todayEvents.length) * 100) : 0;
+  
+  $("plan-today-count").textContent = todayEvents.length;
+  $("plan-done-count").textContent = doneToday;
+  $("plan-completion-rate").textContent = completionRate + "%";
+  
+  // 日期标签
+  $("plan-today-date-label").textContent = today.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+  
+  // 星期标签
+  const dayNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+  $("plan-day-tabs").innerHTML = dayNames.map((d, i) => `
+    <button class="btn ${i === state.selectedScheduleDay ? 'btn-primary' : 'btn-ghost'}" style="padding:6px 12px;font-size:12px;" onclick="switchScheduleDay(${i})">${d}</button>
+  `).join("");
+  
+  // 作息列表
+  const dayEvents = data.scheduleEvents.filter(e => {
+    if (e.repeat === 'daily') return true;
+    if (e.repeat === 'weekday') return state.selectedScheduleDay < 5;
+    if (e.repeat === 'weekend') return state.selectedScheduleDay >= 5;
+    if (e.repeat === 'custom') return e.days?.includes(state.selectedScheduleDay);
+    return e.day === state.selectedScheduleDay;
+  }).sort((a, b) => a.start.localeCompare(b.start));
+  
+  const listContainer = $("plan-schedule-list");
+  if (dayEvents.length === 0) {
+    listContainer.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg></div>
+        <div class="empty-state-title">暂无安排</div>
+        <div class="empty-state-desc">点击右上角添加作息安排</div>
+      </div>`;
+  } else {
+    listContainer.innerHTML = dayEvents.map(e => {
+      const cat = SCHEDULE_CATEGORIES.find(c => c.id === e.category) || SCHEDULE_CATEGORIES[5];
+      return `
+        <div class="list-item" style="${e.done ? 'opacity:0.6;' : ''}">
+          <div style="width:60px;text-align:center;margin-right:12px;">
+            <div style="font-size:14px;font-weight:700;color:${cat.color};">${e.start}</div>
+            <div style="font-size:11px;color:var(--text-3);">${e.end}</div>
+          </div>
+          <div class="list-item-avatar" style="background:${cat.color}20;color:${cat.color};">
+            <span class="tag" style="background:${cat.color}20;color:${cat.color};">${cat.name}</span>
+          </div>
+          <div class="list-item-content">
+            <div class="list-item-title" style="${e.done ? 'text-decoration:line-through;' : ''}">${e.title}</div>
+            <div class="list-item-subtitle">${e.repeat === 'daily' ? '每天' : e.repeat === 'weekday' ? '工作日' : e.repeat === 'weekend' ? '周末' : e.repeat === 'custom' ? '自定义' : '单次'}</div>
+          </div>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="toggleScheduleDone('${e.id}')">${e.done ? '恢复' : '完成'}</button>
+            <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="editScheduleEvent('${e.id}')">编辑</button>
+            <button class="btn btn-danger" style="padding:4px 8px;font-size:11px;" onclick="deleteScheduleEvent('${e.id}')">删除</button>
+          </div>
+        </div>`;
+    }).join("");
+  }
+  
+  // 今日时间线
+  const timelineContainer = $("plan-today-timeline");
+  if (todayEvents.length === 0) {
+    timelineContainer.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:20px;font-size:13px;">今日暂无安排</div>';
+  } else {
+    timelineContainer.innerHTML = todayEvents.sort((a, b) => a.start.localeCompare(b.start)).map(e => {
+      const cat = SCHEDULE_CATEGORIES.find(c => c.id === e.category) || SCHEDULE_CATEGORIES[5];
+      return `
+        <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);${e.done ? 'opacity:0.5;' : ''}">
+          <div style="width:50px;text-align:right;font-size:12px;font-weight:600;color:${cat.color};">${e.start}</div>
+          <div style="width:3px;background:${cat.color};border-radius:2px;"></div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">${e.title}</div>
+            <div style="font-size:11px;color:var(--text-3);">${e.end} 结束</div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+  
+  // 习惯打卡
+  renderHabits(data);
+  
+  // 健康记录
+  renderHealth(data);
+  
+  // 周统计图表
+  renderPlanChart(data);
+}
+
+function renderHabits(data) {
+  const container = $("plan-habits-list");
+  const today = new Date().toDateString();
+  container.innerHTML = data.habits.map(h => {
+    const completed = h.completed[today] || 0;
+    const progress = Math.min(100, (completed / h.target) * 100);
+    return `
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;">${h.icon} ${h.name}</span>
+          <span style="font-size:12px;color:var(--text-3);">${completed}/${h.target} ${h.unit}</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:8px;">
+          <div class="progress-fill" style="width:${progress}%;background:linear-gradient(90deg,var(--green),var(--teal));"></div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;flex:1;" onclick="toggleHabit('${h.id}', 1)">+1 ${h.unit}</button>
+          <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px;" onclick="toggleHabit('${h.id}', -1)">-1</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function toggleHabit(habitId, delta) {
+  const data = getProfileData(state.currentProfileId);
+  const habit = data.habits.find(h => h.id === habitId);
+  if (!habit) return;
+  const today = new Date().toDateString();
+  habit.completed[today] = Math.max(0, (habit.completed[today] || 0) + delta);
+  saveProfileData(state.currentProfileId, data);
+  renderPlan();
+}
+
+function renderHealth(data) {
+  const container = $("plan-health-list");
+  const recent = data.health.slice(-5).reverse();
+  if (recent.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:16px;font-size:13px;">暂无健康记录</div>';
+    return;
+  }
+  container.innerHTML = recent.map(h => `
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="color:var(--text-3);">${new Date(h.date).toLocaleDateString('zh-CN')}</span>
+      <span>体重:${h.weight}kg 睡眠:${h.sleep}h 水:${h.water}ml</span>
+    </div>
+  `).join("");
+}
+
+function showHealthRecord() {
+  $("health-weight").value = "";
+  $("health-sleep").value = "";
+  $("health-water").value = "";
+  $("health-exercise").value = "";
+  $("health-mood").value = "good";
+  showModal("modal-health-record");
+}
+
+function saveHealthRecord() {
+  const data = getProfileData(state.currentProfileId);
+  data.health.push({
+    id: uuid(),
+    date: new Date().toISOString().split('T')[0],
+    weight: parseFloat($("health-weight").value) || 0,
+    sleep: parseFloat($("health-sleep").value) || 0,
+    water: parseInt($("health-water").value) || 0,
+    exercise: parseInt($("health-exercise").value) || 0,
+    mood: $("health-mood").value
+  });
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-health-record");
+  renderPlan();
+  toast("健康记录已保存", "success");
+}
+
+function renderPlanChart(data) {
+  const chartEl = $("plan-weekly-chart");
+  if (chartEl && typeof echarts !== 'undefined') {
+    if (state.charts.planWeekly) state.charts.planWeekly.dispose();
+    const chart = echarts.init(chartEl);
+    const dayNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    const counts = dayNames.map((_, i) => {
+      return data.scheduleEvents.filter(e => {
+        if (e.repeat === 'daily') return true;
+        if (e.repeat === 'weekday') return i < 5;
+        if (e.repeat === 'weekend') return i >= 5;
+        if (e.repeat === 'custom') return e.days?.includes(i);
+        return e.day === i;
+      }).length;
+    });
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: 40, right: 20, top: 20, bottom: 30 },
+      xAxis: { type: 'category', data: dayNames, axisLabel: { fontSize: 11 } },
+      yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
+      series: [{ type: 'bar', data: counts, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#6C5CE7' }, { offset: 1, color: '#A29BFE' }]), borderRadius: [6, 6, 0, 0] }, barWidth: '50%' }]
+    });
+    state.charts.planWeekly = chart;
+  }
+}
+
+function switchScheduleDay(day) {
+  state.selectedScheduleDay = day;
+  renderPlan();
+}
+
+function showAddScheduleEvent() {
+  state.editingScheduleId = null;
+  $("schedule-modal-title").textContent = "添加安排";
+  $("schedule-title").value = "";
+  $("schedule-start").value = "08:00";
+  $("schedule-end").value = "09:00";
+  $("schedule-repeat").value = "daily";
+  $("schedule-days-group").style.display = "none";
+  state.selectedScheduleCategory = "study";
+  renderScheduleCategories();
+  renderScheduleDays();
+  showModal("modal-schedule-event");
+}
+
+function editScheduleEvent(id) {
+  const data = getProfileData(state.currentProfileId);
+  const e = data.scheduleEvents.find(x => x.id === id);
+  if (!e) return;
+  state.editingScheduleId = id;
+  $("schedule-modal-title").textContent = "编辑安排";
+  $("schedule-title").value = e.title;
+  $("schedule-start").value = e.start;
+  $("schedule-end").value = e.end;
+  $("schedule-repeat").value = e.repeat;
+  $("schedule-days-group").style.display = e.repeat === 'custom' ? 'block' : 'none';
+  state.selectedScheduleCategory = e.category;
+  renderScheduleCategories();
+  renderScheduleDays(e.days || []);
+  showModal("modal-schedule-event");
+}
+
+function renderScheduleCategories() {
+  const container = $("schedule-category-list");
+  container.innerHTML = SCHEDULE_CATEGORIES.map(c => `
+    <button class="btn ${state.selectedScheduleCategory === c.id ? 'btn-primary' : 'btn-ghost'}" style="padding:6px 12px;font-size:12px;" onclick="selectScheduleCategory('${c.id}')">${c.name}</button>
+  `).join("");
+}
+
+function selectScheduleCategory(cat) {
+  state.selectedScheduleCategory = cat;
+  renderScheduleCategories();
+}
+
+function renderScheduleDays(selected = []) {
+  const container = $("schedule-days-list");
+  const dayNames = ['一', '二', '三', '四', '五', '六', '日'];
+  container.innerHTML = dayNames.map((d, i) => `
+    <button class="btn ${selected.includes(i) ? 'btn-primary' : 'btn-ghost'}" style="padding:6px 10px;font-size:12px;flex:1;" onclick="this.classList.toggle('btn-primary');this.classList.toggle('btn-ghost');">周${d}</button>
+  `).join("");
+}
+
+function saveScheduleEvent() {
+  const title = $("schedule-title").value.trim();
+  const start = $("schedule-start").value;
+  const end = $("schedule-end").value;
+  const repeat = $("schedule-repeat").value;
+  if (!title) { toast("请输入标题", "error"); return; }
+  if (!start || !end) { toast("请选择时间", "error"); return; }
+  
+  let days = [];
+  if (repeat === 'custom') {
+    const btns = $("schedule-days-list").querySelectorAll("button");
+    btns.forEach((btn, i) => { if (btn.classList.contains('btn-primary')) days.push(i); });
+  }
+  
+  const data = getProfileData(state.currentProfileId);
+  if (state.editingScheduleId) {
+    const idx = data.scheduleEvents.findIndex(e => e.id === state.editingScheduleId);
+    if (idx >= 0) data.scheduleEvents[idx] = { ...data.scheduleEvents[idx], title, start, end, repeat, days, category: state.selectedScheduleCategory };
+  } else {
+    data.scheduleEvents.push({ id: uuid(), title, start, end, repeat, days, category: state.selectedScheduleCategory, day: state.selectedScheduleDay, done: false, createdAt: Date.now() });
+  }
+  saveProfileData(state.currentProfileId, data);
+  closeModal("modal-schedule-event");
+  renderPlan();
+  toast(state.editingScheduleId ? "安排已更新" : "安排已添加", "success");
+}
+
+function toggleScheduleDone(id) {
+  const data = getProfileData(state.currentProfileId);
+  const e = data.scheduleEvents.find(x => x.id === id);
+  if (e) {
+    e.done = !e.done;
+    saveProfileData(state.currentProfileId, data);
+    renderPlan();
+  }
+}
+
+function deleteScheduleEvent(id) {
+  if (!confirm("确定要删除这个安排吗？")) return;
+  const data = getProfileData(state.currentProfileId);
+  data.scheduleEvents = data.scheduleEvents.filter(e => e.id !== id);
+  saveProfileData(state.currentProfileId, data);
+  renderPlan();
+  toast("安排已删除", "success");
+}
+
+// ===== Dashboard =====
+function renderDashboard() {
+  const data = getProfileData(state.currentProfileId);
+  const now = Date.now();
+  
+  // GPA
+  const gpa = calculateGPA(data.courses, data.gpaAlgorithm);
+  $("dashboard-gpa").textContent = gpa;
+  $("dashboard-gpa-desc").textContent = data.courses.length > 0 ? `共${data.courses.length}门课程` : "暂无课程数据";
+  
+  // 倒计时
+  const active = data.countdowns.filter(c => !c.done && new Date(c.date).getTime() >= now);
+  const urgent = active.filter(c => (new Date(c.date).getTime() - now) < 7 * 24 * 60 * 60 * 1000);
+  if (urgent.length > 0) {
+    const nearest = urgent.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+    const days = Math.ceil((new Date(nearest.date).getTime() - now) / (1000 * 60 * 60 * 24));
+    $("dashboard-countdown").textContent = days + "天";
+    $("dashboard-countdown-desc").textContent = nearest.name;
+  } else if (active.length > 0) {
+    $("dashboard-countdown").textContent = active.length + "个";
+    $("dashboard-countdown-desc").textContent = "进行中的倒计时";
+  } else {
+    $("dashboard-countdown").textContent = "--";
+    $("dashboard-countdown-desc").textContent = "暂无倒计时";
+  }
+  
+  // 财务
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const monthTx = data.transactions.filter(t => new Date(t.date) >= monthStart);
+  const income = monthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+  const expense = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+  $("dashboard-finance").textContent = "¥" + (income - expense).toFixed(0);
+  $("dashboard-finance-desc").textContent = `收入¥${income.toFixed(0)} / 支出¥${expense.toFixed(0)}`;
+  
+  // 统计
+  $("stat-courses").textContent = data.courses.length;
+  $("stat-exams").textContent = active.length;
+  $("stat-transactions").textContent = data.transactions.length;
+  $("stat-schedules").textContent = data.scheduleEvents.length;
+  
+  // 近期倒计时列表
+  const listContainer = $("dashboard-countdown-list");
+  if (active.length === 0) {
+    listContainer.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:20px;font-size:13px;">暂无即将到来的考试</div>';
+  } else {
+    listContainer.innerHTML = active.slice(0, 5).map(c => {
+      const days = Math.ceil((new Date(c.date).getTime() - now) / (1000 * 60 * 60 * 24));
+      const isUrgent = days <= 3;
+      return `
+        <div class="list-item">
+          <div class="list-item-avatar" style="background:${isUrgent ? 'linear-gradient(135deg,#FD79A8,#db2777)' : 'linear-gradient(135deg,#FDCB6E,#d97706)'};">${isUrgent ? '!' : '📅'}</div>
+          <div class="list-item-content">
+            <div class="list-item-title">${c.name}</div>
+            <div class="list-item-subtitle">${new Date(c.date).toLocaleDateString('zh-CN')}</div>
+          </div>
+          <div class="list-item-value" style="color:${isUrgent ? '#c44a4a' : 'var(--text-1)'};">${days}天</div>
+        </div>`;
+    }).join("");
+  }
+  
+  // 今日安排
+  const today = new Date();
+  const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  const todayEvents = data.scheduleEvents.filter(e => {
+    if (e.repeat === 'daily') return true;
+    if (e.repeat === 'weekday') return dayOfWeek < 5;
+    if (e.repeat === 'weekend') return dayOfWeek >= 5;
+    if (e.repeat === 'custom') return e.days?.includes(dayOfWeek);
+    return e.day === dayOfWeek;
+  }).sort((a, b) => a.start.localeCompare(b.start));
+  
+  const todayContainer = $("dashboard-today-list");
+  $("dashboard-today-date").textContent = today.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+  if (todayEvents.length === 0) {
+    todayContainer.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:16px;font-size:13px;">今日暂无安排</div>';
+  } else {
+    todayContainer.innerHTML = todayEvents.slice(0, 4).map(e => {
+      const cat = SCHEDULE_CATEGORIES.find(c => c.id === e.category) || SCHEDULE_CATEGORIES[5];
+      return `
+        <div class="list-item" style="${e.done ? 'opacity:0.6;' : ''}">
+          <div style="width:45px;text-align:center;margin-right:10px;">
+            <div style="font-size:12px;font-weight:700;color:${cat.color};">${e.start}</div>
+          </div>
+          <div class="list-item-content">
+            <div class="list-item-title" style="font-size:13px;${e.done ? 'text-decoration:line-through;' : ''}">${e.title}</div>
+          </div>
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;" onclick="toggleScheduleDone('${e.id}');renderDashboard();">${e.done ? '恢复' : '完成'}</button>
+        </div>`;
+    }).join("");
+  }
+  
+  // 图表
+  renderDashboardCharts(data);
+}
+
+function renderDashboardCharts(data) {
+  // GPA趋势
+  const gpaEl = $("dashboard-gpa-chart");
+  if (gpaEl && typeof echarts !== 'undefined') {
+    if (state.charts.dashGpa) state.charts.dashGpa.dispose();
+    const chart = echarts.init(gpaEl);
+    const semData = data.semesters.map(s => {
+      const courses = data.courses.filter(c => c.semesterId === s.id);
+      return { name: s.name.substring(0, 8), gpa: parseFloat(calculateGPA(courses, data.gpaAlgorithm)) || 0 };
+    });
+    chart.setOption({
+      tooltip: { trigger: 'axis' },
+      grid: { left: 40, right: 15, top: 15, bottom: 30 },
+      xAxis: { type: 'category', data: semData.map(d => d.name), axisLabel: { fontSize: 10 } },
+      yAxis: { type: 'value', max: 4.3, axisLabel: { fontSize: 10 } },
+      series: [{ type: 'line', data: semData.map(d => d.gpa), smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#6C5CE7' }, itemStyle: { color: '#6C5CE7' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(108,92,231,0.2)' }, { offset: 1, color: 'rgba(108,92,231,0)' }]) } }]
+    });
+    state.charts.dashGpa = chart;
+  }
+  
+  // 财务饼图
+  const finEl = $("dashboard-finance-chart");
+  if (finEl && typeof echarts !== 'undefined') {
+    if (state.charts.dashFin) state.charts.dashFin.dispose();
+    const chart = echarts.init(finEl);
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const monthTx = data.transactions.filter(t => new Date(t.date) >= monthStart && t.type === 'expense');
+    const catData = EXPENSE_CATEGORIES.map(c => ({
+      name: c.name,
+      value: monthTx.filter(t => t.category === c.id).reduce((s, t) => s + t.amount, 0),
+      itemStyle: { color: c.color }
+    })).filter(d => d.value > 0);
+    
+    chart.setOption({
+      tooltip: { trigger: 'item', formatter: '{b}: ¥{c}' },
+      series: [{ type: 'pie', radius: ['45%', '75%'], data: catData, label: { fontSize: 10, formatter: '{b}' } }]
+    });
+    state.charts.dashFin = chart;
+  }
+}
+
+// ===== Data Management =====
+function showDataManager() {
+  showModal("modal-data-manager");
+}
+
+function exportData() {
+  const data = {
+    profiles: state.profiles,
+    currentProfileId: state.currentProfileId,
+    exportDate: new Date().toISOString()
+  };
+  state.profiles.forEach(p => {
+    data["data_" + p.id] = getProfileData(p.id);
+  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "DanDanTable备份_" + new Date().toISOString().split('T')[0] + ".json";
+  link.click();
+  toast("数据导出成功", "success");
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.profiles) {
+        state.profiles = data.profiles;
+        storageSet("profiles", state.profiles);
+        data.profiles.forEach(p => {
+          if (data["data_" + p.id]) {
+            saveProfileData(p.id, data["data_" + p.id]);
+          }
+        });
+        toast("数据导入成功", "success");
+        closeModal("modal-data-manager");
+        if (state.currentProfileId) {
+          enterProfile(state.currentProfileId);
+        } else {
+          renderWelcomeProfiles();
+          $("welcome-screen").style.display = "flex";
+          $("app").style.display = "none";
+        }
+      } else {
+        toast("无效的备份文件", "error");
+      }
+    } catch(err) {
+      toast("导入失败：文件格式错误", "error");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData() {
+  if (!confirm("确定要清除所有数据吗？此操作不可恢复！")) return;
+  if (!confirm("再次确认：所有档案和数据都将被删除！")) return;
+  localStorage.clear();
+  state.profiles = [];
+  state.currentProfileId = null;
+  closeModal("modal-data-manager");
+  renderWelcomeProfiles();
+  $("welcome-screen").style.display = "flex";
+  $("app").style.display = "none";
+  toast("所有数据已清除", "success");
+}
+
+// ===== Initialize =====
+function init() {
+  loadProfiles();
+  
+  if (state.currentProfileId && state.profiles.find(p => p.id === state.currentProfileId)) {
+    enterProfile(state.currentProfileId);
+  } else {
+    renderWelcomeProfiles();
+  }
+  
+  // 每分钟更新倒计时
+  setInterval(() => {
+    if (state.currentProfileId && state.currentView === 'countdown') {
+      renderCountdown();
+    }
+  }, 60000);
+  
+  // 窗口大小变化时重绘图表
+  window.addEventListener('resize', () => {
+    Object.values(state.charts).forEach(chart => {
+      if (chart && chart.resize) chart.resize();
+    });
+  });
+}
+
+// ===== Expose Functions to Global =====
+window.$ = $;
+window.uuid = uuid;
+window.toast = toast;
+window.showModal = showModal;
+window.closeModal = closeModal;
+window.toggleSidebar = toggleSidebar;
+window.switchView = switchView;
+window.loadProfiles = loadProfiles;
+window.renderWelcomeProfiles = renderWelcomeProfiles;
+window.renderAvatarColors = renderAvatarColors;
+window.selectAvatarColor = selectAvatarColor;
+window.showCreateProfile = showCreateProfile;
+window.createProfile = createProfile;
+window.enterProfile = enterProfile;
+window.logout = logout;
+window.showProfileManager = showProfileManager;
+window.deleteProfile = deleteProfile;
+window.calculateGPA = calculateGPA;
+window.renderGPA = renderGPA;
+window.setGPAAlgorithm = setGPAAlgorithm;
+window.selectSemester = selectSemester;
+window.addSemester = addSemester;
+window.showAddCourse = showAddCourse;
+window.editCourse = editCourse;
+window.saveCourse = saveCourse;
+window.deleteCourse = deleteCourse;
+window.showCustomGPASettings = showCustomGPASettings;
+window.addCustomGPARange = addCustomGPARange;
+window.removeCustomGPARange = removeCustomGPARange;
+window.closeCustomGPAModal = closeCustomGPAModal;
+window.saveCustomGPASettings = saveCustomGPASettings;
+window.renderCountdown = renderCountdown;
+window.toggleCountdownFilter = toggleCountdownFilter;
+window.showAddCountdown = showAddCountdown;
+window.editCountdown = editCountdown;
+window.saveCountdown = saveCountdown;
+window.toggleCountdownDone = toggleCountdownDone;
+window.deleteCountdown = deleteCountdown;
+window.renderFinance = renderFinance;
+window.setTxType = setTxType;
+window.showAddTransaction = showAddTransaction;
+window.saveTransaction = saveTransaction;
+window.deleteTransaction = deleteTransaction;
+window.filterTransactions = filterTransactions;
+window.exportFinanceCSV = exportFinanceCSV;
+window.showBudgetSetting = showBudgetSetting;
+window.saveBudget = saveBudget;
+window.renderPlan = renderPlan;
+window.switchScheduleDay = switchScheduleDay;
+window.showAddScheduleEvent = showAddScheduleEvent;
+window.editScheduleEvent = editScheduleEvent;
+window.selectScheduleCategory = selectScheduleCategory;
+window.saveScheduleEvent = saveScheduleEvent;
+window.toggleScheduleDone = toggleScheduleDone;
+window.deleteScheduleEvent = deleteScheduleEvent;
+window.toggleHabit = toggleHabit;
+window.showHealthRecord = showHealthRecord;
+window.saveHealthRecord = saveHealthRecord;
+window.renderDashboard = renderDashboard;
+window.showDataManager = showDataManager;
+window.exportData = exportData;
+window.importData = importData;
+window.clearAllData = clearAllData;
+window.init = init;
+
+// Start
+init();
+</script>
+</body>
+</html>

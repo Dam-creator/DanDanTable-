@@ -1,0 +1,22 @@
+<div class="modal-overlay" id="modal-create-profile">
+  <div class="modal">
+    <h2 class="modal-title">创建新档案</h2>
+    <p class="modal-desc">每个档案拥有独立的数据，适合多人共用一台设备</p>
+    <div class="form-group">
+      <label class="form-label">用户名</label>
+      <input type="text" class="form-input" id="new-profile-username" maxlength="20" placeholder="输入你的用户名（唯一标识）">
+    </div>
+    <div class="form-group">
+      <label class="form-label">昵称</label>
+      <input type="text" class="form-input" id="new-profile-name" maxlength="12" placeholder="输入你的昵称">
+    </div>
+    <div class="form-group">
+      <label class="form-label">选择头像颜色</label>
+      <div class="avatar-colors" id="avatar-colors"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create-profile')">取消</button>
+      <button class="btn btn-primary" onclick="createProfile()">创建并进入</button>
+    </div>
+  </div>
+</div>
