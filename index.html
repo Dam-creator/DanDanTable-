@@ -1724,6 +1724,12 @@ body {
   .stress-mini-info { display: none; }
 }
 
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 </style>
 </head>
 <body>
@@ -1800,7 +1806,7 @@ body {
       
       
       <div class="nav-section">学习</div>
-      <button class="nav-item" data-view="schedule" onclick="switchView('schedule')">
+      <button class="nav-item" data-view="plan" onclick="switchView('plan')">
         <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
         规划中心
       </button>
@@ -3672,7 +3678,9 @@ function switchView(view) {
     gpa: ["GPA计算", "管理你的课程和成绩"],
     countdown: ["考试倒计时", "追踪重要考试和截止日期"],
     finance: ["记账本", "记录你的每一笔收支"],
-    plan: ["规划中心", "规划你的作息和生活"]
+    plan: ["规划中心", "课程表·作息·习惯·健康一站式管理"],
+    tasks: ["作业任务", "看板·列表·优先级矩阵，高效管理任务"],
+    goals: ["目标管理", "卡片·时间线·进度追踪，达成每一个目标"]
   };
   if (titles[view]) {
     $("page-title").textContent = titles[view][0];
@@ -3690,7 +3698,9 @@ function switchView(view) {
   else if (view === "gpa") renderGPA();
   else if (view === "countdown") renderCountdown();
   else if (view === "finance") renderFinance();
-  else if (view === "plan") renderPlan();
+  else if (view === "plan") { if (typeof renderPlan === 'function') renderPlan(); if (typeof renderPlannerTimeline === 'function') renderPlannerTimeline(); }
+  else if (view === "tasks") { if (typeof renderTasksView === 'function') renderTasksView(); }
+  else if (view === "goals") { if (typeof renderGoalsView === 'function') renderGoalsView(); }
   
   document.querySelector(".main").scrollTop = 0;
 }
@@ -6293,194 +6303,99 @@ function generateSmartAnalysis() {
   
   const now = new Date();
   const today = now.toISOString().split('T')[0];
-  const weekAgo = new Date(now.getTime() - 7*86400000);
   
-  // 显示加载动画
-  container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="display:inline-block;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:16px;color:var(--text-secondary);">正在深度分析你的数据...</div></div>';
+  // 显示加载
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="display:inline-block;width:40px;height:40px;border:3px solid #e5e7eb;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:16px;color:#6b7280;">正在深度分析你的数据...</div></div>';
   
-  setTimeout(() => {
-    // ===== 数据收集 =====
-    
-    // 学习情况
-    const courses = data.courses || [];
+  try {
+    // 数据收集
     const semesters = data.semesters || [];
-    const currentGPA = semesters.length > 0 ? semesters[semesters.length-1].gpa : null;
-    const gpaTrend = semesters.length >= 2 ? (semesters[semesters.length-1].gpa || 0) - (semesters[semesters.length-2].gpa || 0) : 0;
-    
-    // 任务情况
+    const currentGPA = semesters.length > 0 ? (semesters[semesters.length-1].gpa || 0) : null;
     const tasks = data.tasksData || [];
     const pendingTasks = tasks.filter(t => !t.completed);
     const completedTasks = tasks.filter(t => t.completed);
-    const taskCompletionRate = tasks.length > 0 ? Math.round(completedTasks.length / tasks.length * 100) : 0;
-    const highPriorityPending = pendingTasks.filter(t => t.priority === 'high');
-    const overdueTasks = pendingTasks.filter(t => t.dueDate && new Date(t.dueDate) < now);
-    
-    // 支出情况
+    const taskRate = tasks.length > 0 ? Math.round(completedTasks.length / tasks.length * 100) : 0;
     const transactions = data.transactions || [];
-    const month = today.slice(0,7);
-    const monthTx = transactions.filter(t => t.date && t.date.startsWith(month));
+    const monthTx = transactions.filter(t => t.date && t.date.startsWith(today.slice(0,7)));
     const monthExpense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + Number(t.amount), 0);
     const monthIncome = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + Number(t.amount), 0);
-    const todayDay = now.getDate();
-    const avgDailyExpense = todayDay > 0 ? monthExpense / todayDay : 0;
-    const budgets = data.budgets || [];
-    const budget = budgets.find(b => b.month === month);
-    
-    // 作息情况
-    const scheduleCourses = data.scheduleCourses || [];
-    const todayDayNum = now.getDay() === 0 ? 7 : now.getDay();
-    const todayCourses = scheduleCourses.filter(c => c.dayOfWeek === todayDayNum);
-    const healthRecords = data.healthRecords || [];
-    const recentHealth = healthRecords.filter(r => r.date >= weekAgo.toISOString().split('T')[0]);
-    const avgSleep = recentHealth.length > 0 ? recentHealth.reduce((s,r) => s + (r.sleepHours || 0), 0) / recentHealth.length : null;
-    
-    // 目标情况
+    const balance = monthIncome - monthExpense;
     const goals = data.goals || [];
-    const activeGoals = goals.filter(g => g.status !== 'completed' && (g.progress || 0) < 100);
-    const completedGoals = goals.filter(g => g.status === 'completed' || (g.progress || 0) >= 100);
-    const avgGoalProgress = activeGoals.length > 0 ? Math.round(activeGoals.reduce((s,g) => s + (g.progress || 0), 0) / activeGoals.length) : 0;
-    
-    // 压力情况
+    const activeGoals = goals.filter(g => (g.progress || 0) < 100);
     const stressHistory = data.stressHistory || [];
     const todayStress = stressHistory.find(h => h.date === today);
-    const weekStress = stressHistory.filter(h => h.date >= weekAgo.toISOString().split('T')[0]);
-    const avgStress = weekStress.length > 0 ? Math.round(weekStress.reduce((s,h) => s + h.score, 0) / weekStress.length) : null;
     
-    // ===== 生成分析和建议 =====
+    // 生成建议
     const encouragements = [];
     const suggestions = [];
     const warnings = [];
     
-    // 学习分析
     if (currentGPA !== null) {
-      if (currentGPA >= 3.8) {
-        encouragements.push({icon:'🏆', title:'学业表现优异', detail:'当前GPA ' + currentGPA.toFixed(2) + '，属于顶尖水平！你的学习方法很有效，继续保持。'});
-      } else if (currentGPA >= 3.5) {
-        encouragements.push({icon:'👍', title:'学业表现良好', detail:'当前GPA ' + currentGPA.toFixed(2) + '，表现不错。如果能在薄弱科目上多花些时间，还有提升空间。'});
-      } else if (currentGPA >= 3.0) {
-        suggestions.push({icon:'📚', title:'学业有提升空间', detail:'当前GPA ' + currentGPA.toFixed(2) + '，建议分析一下哪些科目拉低了分数，制定针对性的学习计划。'});
-      } else {
-        warnings.push({icon:'⚠️', title:'学业需要重视', detail:'当前GPA ' + currentGPA.toFixed(2) + '，偏低。建议立即调整学习状态，必要时寻求老师或同学的帮助。'});
-      }
-      if (gpaTrend > 0.1) {
-        encouragements.push({icon:'📈', title:'GPA持续上升', detail:'相比上学期提升了 ' + gpaTrend.toFixed(2) + '，你的努力正在见效！'});
-      } else if (gpaTrend < -0.1) {
-        warnings.push({icon:'📉', title:'GPA有所下降', detail:'相比上学期下降了 ' + Math.abs(gpaTrend).toFixed(2) + '，需要注意是不是学习方法出了问题。'});
-      }
+      if (currentGPA >= 3.5) encouragements.push({icon:'🏆', title:'学业表现优秀', detail:'当前GPA ' + currentGPA.toFixed(2) + '，继续保持！'});
+      else if (currentGPA < 3.0) warnings.push({icon:'⚠️', title:'学业需要加强', detail:'当前GPA ' + currentGPA.toFixed(2) + '，建议增加学习时间。'});
+      else suggestions.push({icon:'📚', title:'学业有提升空间', detail:'当前GPA ' + currentGPA.toFixed(2) + '，薄弱科目多花时间。'});
     }
     
-    // 任务分析
     if (tasks.length > 0) {
-      if (taskCompletionRate >= 80) {
-        encouragements.push({icon:'⭐', title:'任务执行力很强', detail:'任务完成率 ' + taskCompletionRate + '%，你是一个行动派！'});
-      } else if (taskCompletionRate < 50) {
-        warnings.push({icon:'⏰', title:'任务完成率偏低', detail:'任务完成率仅 ' + taskCompletionRate + '%，建议减少任务数量，优先保证重要任务的完成。'});
-      }
-      if (overdueTasks.length > 0) {
-        warnings.push({icon:'🚨', title:'有任务已过期', detail:'有 ' + overdueTasks.length + ' 项任务已超过截止日期，建议尽快处理或调整截止日期。'});
-      }
-      if (highPriorityPending.length >= 3) {
-        suggestions.push({icon:'🎯', title:'高优先级任务较多', detail:'有 ' + highPriorityPending.length + ' 项高优先级任务待完成，建议今天集中精力先处理这些。'});
-      }
+      if (taskRate >= 80) encouragements.push({icon:'⭐', title:'任务执行力强', detail:'完成率 ' + taskRate + '%，非常棒！'});
+      if (pendingTasks.length >= 5) suggestions.push({icon:'📝', title:'待办任务较多', detail:'有 ' + pendingTasks.length + ' 项待办，建议优先处理高优先级。'});
     }
     
-    // 支出分析
-    if (monthIncome > 0 || monthExpense > 0) {
-      const balance = monthIncome - monthExpense;
-      if (balance > 0) {
-        const savingsRate = Math.round(balance / monthIncome * 100);
-        if (savingsRate >= 30) {
-          encouragements.push({icon:'💰', title:'理财习惯很好', detail:'本月结余率 ' + savingsRate + '%，继续保持，可以考虑做一些稳健投资。'});
-        } else {
-          suggestions.push({icon:'💡', title:'可以增加储蓄', detail:'本月结余率 ' + savingsRate + '%，如果能控制一些非必要支出，结余会更多。'});
-        }
-      } else if (balance < 0) {
-        warnings.push({icon:'💸', title:'本月入不敷出', detail:'本月支出比收入多 ' + Math.abs(balance).toFixed(1) + ' 元，建议立即控制支出，避免透支。'});
-      }
-      if (budget && budget.totalBudget > 0) {
-        const budgetUsage = Math.round(monthExpense / budget.totalBudget * 100);
-        if (budgetUsage > 100) {
-          warnings.push({icon:'📊', title:'已超出预算', detail:'本月预算使用 ' + budgetUsage + '%，已超出预算 ' + (budgetUsage - 100) + '%。'});
-        } else if (budgetUsage > 80) {
-          suggestions.push({icon:'📊', title:'预算使用较快', detail:'本月预算已使用 ' + budgetUsage + '%，剩下的日子需要注意控制支出。'});
-        }
-      }
-      if (avgDailyExpense > 0) {
-        suggestions.push({icon:'📅', title:'日均支出参考', detail:'本月日均支出 ' + avgDailyExpense.toFixed(1) + ' 元，可以作为后续预算的参考。'});
-      }
+    if (monthIncome > 0) {
+      if (balance > 0) encouragements.push({icon:'💰', title:'财务状况良好', detail:'本月结余 ' + balance.toFixed(1) + ' 元。'});
+      else warnings.push({icon:'💸', title:'本月入不敷出', detail:'超支 ' + Math.abs(balance).toFixed(1) + ' 元，注意控制支出。'});
     }
     
-    // 作息分析
-    if (avgSleep !== null) {
-      if (avgSleep >= 7 && avgSleep <= 9) {
-        encouragements.push({icon:'😴', title:'睡眠习惯良好', detail:'近7天平均睡眠 ' + avgSleep.toFixed(1) + ' 小时，睡眠充足，继续保持！'});
-      } else if (avgSleep < 7) {
-        warnings.push({icon:'🌙', title:'睡眠不足', detail:'近7天平均睡眠仅 ' + avgSleep.toFixed(1) + ' 小时，长期睡眠不足会影响学习效率和健康，建议早点休息。'});
-      }
-    }
-    if (todayCourses.length >= 5) {
-      suggestions.push({icon:'📖', title:'今天课程较多', detail:'今天有 ' + todayCourses.length + ' 门课，建议提前做好准备，课间注意休息。'});
+    if (activeGoals.length > 0) {
+      suggestions.push({icon:'🎯', title:'目标进行中', detail:'有 ' + activeGoals.length + ' 个目标正在进行，坚持就是胜利！'});
     }
     
-    // 目标分析
-    if (goals.length > 0) {
-      if (completedGoals.length > 0) {
-        encouragements.push({icon:'🎊', title:'已完成 ' + completedGoals.length + ' 个目标', detail:'你已经达成了 ' + completedGoals.length + ' 个目标，非常有成就感！继续向新目标前进。'});
-      }
-      if (activeGoals.length > 0) {
-        if (avgGoalProgress >= 70) {
-          encouragements.push({icon:'🚀', title:'目标进展顺利', detail:'进行中目标平均进度 ' + avgGoalProgress + '%，胜利在望！'});
-        } else if (avgGoalProgress < 30) {
-          suggestions.push({icon:'🎯', title:'目标进展较慢', detail:'进行中目标平均进度仅 ' + avgGoalProgress + '%，建议把大目标拆解成小任务，逐步推进。'});
-        }
-      }
-    }
-    
-    // 压力分析
     if (todayStress) {
-      if (todayStress.score <= 40) {
-        encouragements.push({icon:'😊', title:'当前状态轻松', detail:'压力指数 ' + todayStress.score + '，状态很好，适合挑战一些有难度的任务。'});
-      } else if (todayStress.score >= 75) {
-        warnings.push({icon:'🧘', title:'当前压力较大', detail:'压力指数 ' + todayStress.score + '，建议今天适当减少任务量，保证充足休息。'});
-      }
+      if (todayStress.score >= 70) warnings.push({icon:'🧘', title:'压力较大', detail:'压力指数 ' + todayStress.score + '，建议今天早点休息。'});
+      else if (todayStress.score <= 30) encouragements.push({icon:'😊', title:'状态轻松', detail:'压力指数 ' + todayStress.score + '，适合挑战难题！'});
     }
     
-    // 通用鼓励
     if (encouragements.length === 0) {
-      encouragements.push({icon:'💪', title:'每一天都在进步', detail:'即使数据还不够完美，你坚持记录和管理本身就是一种进步。继续加油！'});
+      encouragements.push({icon:'💪', title:'每天都在进步', detail:'坚持记录和管理本身就是一种进步，继续加油！'});
     }
     
-    // ===== 生成HTML =====
+    // 综合评分
+    const score = Math.round(
+      (currentGPA ? (currentGPA / 4) * 25 : 12.5) +
+      (tasks.length > 0 ? (taskRate / 100) * 25 : 12.5) +
+      (monthIncome > 0 ? (balance >= 0 ? 25 : Math.max(0, 12.5 + balance / monthIncome * 12.5)) : 12.5) +
+      12.5
+    );
+    
+    // 生成HTML
     let html = '';
     
     // 概览卡片
     html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">';
-    html += '<div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#1e40af;">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:10px;color:#6b7280;">当前GPA</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#92400e;">' + pendingTasks.length + '</div><div style="font-size:10px;color:#6b7280;">待办任务</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#065f46;">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:10px;color:#6b7280;">本月支出</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:22px;font-weight:800;color:#9d174d;">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:10px;color:#6b7280;">压力指数</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#1e40af;">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">当前GPA</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#92400e;">' + pendingTasks.length + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">待办任务</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#065f46;">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">本月支出</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#9d174d;">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">压力指数</div></div>';
     html += '</div>';
     
     // 鼓励区
-    if (encouragements.length > 0) {
-      html += '<div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #10b981;">';
-      html += '<div style="font-weight:700;margin-bottom:12px;color:#065f46;font-size:15px;">✨ 做得好的地方</div>';
-      encouragements.forEach(e => {
-        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
-        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + e.icon + ' ' + e.title + '</div>';
-        html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + e.detail + '</div>';
-        html += '</div>';
-      });
+    html += '<div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #10b981;">';
+    html += '<div style="font-weight:700;margin-bottom:12px;color:#065f46;font-size:15px;">✨ 做得好的地方</div>';
+    encouragements.forEach(e => {
+      html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
+      html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + e.icon + ' ' + e.title + '</div>';
+      html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + e.detail + '</div>';
       html += '</div>';
-    }
+    });
+    html += '</div>';
     
     // 建议区
     if (suggestions.length > 0) {
-      html += '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #f59e0b;">';
+      html += '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #f59e0b;">';
       html += '<div style="font-weight:700;margin-bottom:12px;color:#92400e;font-size:15px;">💡 改进建议</div>';
       suggestions.forEach(s => {
-        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
-        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + s.icon + ' ' + s.title + '</div>';
+        html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + s.icon + ' ' + s.title + '</div>';
         html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + s.detail + '</div>';
         html += '</div>';
       });
@@ -6489,11 +6404,11 @@ function generateSmartAnalysis() {
     
     // 警告区
     if (warnings.length > 0) {
-      html += '<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #ef4444;">';
+      html += '<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #ef4444;">';
       html += '<div style="font-weight:700;margin-bottom:12px;color:#991b1b;font-size:15px;">⚠️ 需要注意</div>';
       warnings.forEach(w => {
-        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.6);border-radius:8px;">';
-        html += '<div style="font-weight:600;font-size:13px;margin-bottom:2px;">' + w.icon + ' ' + w.title + '</div>';
+        html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + w.icon + ' ' + w.title + '</div>';
         html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + w.detail + '</div>';
         html += '</div>';
       });
@@ -6501,21 +6416,17 @@ function generateSmartAnalysis() {
     }
     
     // 综合评分
-    const totalScore = Math.round(
-      (currentGPA ? (currentGPA / 4) * 25 : 12.5) +
-      (tasks.length > 0 ? (taskCompletionRate / 100) * 25 : 12.5) +
-      (monthIncome > 0 ? (balance >= 0 ? 25 : Math.max(0, 25 + balance / monthIncome * 25)) : 12.5) +
-      (avgSleep !== null ? (avgSleep >= 7 && avgSleep <= 9 ? 25 : Math.max(0, 25 - Math.abs(avgSleep - 8) * 5)) : 12.5)
-    );
-    
-    html += '<div style="text-align:center;padding:16px;background:var(--bg-secondary);border-radius:12px;">';
-    html += '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">综合生活管理评分</div>';
-    html += '<div style="font-size:48px;font-weight:800;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">' + totalScore + '</div>';
-    html += '<div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">' + (totalScore >= 85 ? '非常优秀！继续保持' : totalScore >= 70 ? '表现不错，还有提升空间' : totalScore >= 50 ? '还需要努力，加油！' : '需要立即调整状态') + '</div>';
+    html += '<div style="text-align:center;padding:20px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;border:2px solid #c4b5fd;">';
+    html += '<div style="font-size:13px;color:#6b7280;margin-bottom:6px;">综合生活管理评分</div>';
+    html += '<div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">' + score + '</div>';
+    html += '<div style="font-size:14px;color:#6b7280;margin-top:8px;font-weight:500;">' + (score >= 85 ? '非常优秀！继续保持' : score >= 70 ? '表现不错，还有提升空间' : score >= 50 ? '还需要努力，加油！' : '需要立即调整状态') + '</div>';
     html += '</div>';
     
     container.innerHTML = html;
-  }, 800);
+  } catch (err) {
+    console.error('智能分析出错:', err);
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;"><div style="font-size:32px;margin-bottom:12px;">😢</div><div>分析出错了，请刷新页面重试</div><div style="font-size:12px;margin-top:8px;color:#9ca3af;">' + err.message + '</div></div>';
+  }
 }
 window.generateSmartAnalysis = generateSmartAnalysis;
 
