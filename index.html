@@ -1562,6 +1562,114 @@ body {
 /* Tag */
 .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 
+
+/* ===== 云端同步样式 ===== */
+.cloud-sync-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  color: #fff;
+}
+.cloud-sync-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.cloud-sync-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cloud-sync-icon svg { width: 24px; height: 24px; fill: #fff; }
+.cloud-sync-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.cloud-sync-status { font-size: 13px; opacity: 0.9; }
+.cloud-sync-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.cloud-sync-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #fff;
+}
+.cloud-sync-btn svg { width: 18px; height: 18px; fill: currentColor; }
+.cloud-sync-btn.upload { background: rgba(255,255,255,0.25); }
+.cloud-sync-btn.upload:hover:not(:disabled) { background: rgba(255,255,255,0.35); }
+.cloud-sync-btn.download { background: rgba(255,255,255,0.15); }
+.cloud-sync-btn.download:hover:not(:disabled) { background: rgba(255,255,255,0.25); }
+.cloud-sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.cloud-login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.cloud-login-section {
+  text-align: center;
+  margin-top: 8px;
+}
+.cloud-login-section .btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.cloud-login-section .btn:hover { background: rgba(255,255,255,0.3); }
+
+/* 云端登录模态框 */
+.cloud-login-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  padding: 4px;
+}
+.cloud-login-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.cloud-login-tab.active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.cloud-login-info {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
 </style>
 </head>
 <body>
@@ -1658,7 +1766,8 @@ body {
       <button class="nav-item" data-view="goals" onclick="switchView('goals')">
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
         目标管理
-      </button>nclick="showDataManager()">
+      </button>
+      <button class="nav-item" onclick="showDataManager()">
         <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         数据管理
       </button>
@@ -2573,6 +2682,35 @@ body {
     <h2 class="modal-title">数据管理</h2>
     <p class="modal-desc">导出、导入或清除你的数据</p>
     
+
+    <!-- 云端同步区域 -->
+    <div class="cloud-sync-section">
+      <div class="cloud-sync-header">
+        <div class="cloud-sync-icon">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        </div>
+        <div>
+          <div class="cloud-sync-title">云端同步</div>
+          <div class="cloud-sync-status" id="cloud-sync-status">未登录云端账号</div>
+        </div>
+      </div>
+      <div class="cloud-sync-buttons">
+        <button class="cloud-sync-btn upload" id="cloud-upload-btn" onclick="cloudUpload()" disabled>
+          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          上传到云端
+        </button>
+        <button class="cloud-sync-btn download" id="cloud-download-btn" onclick="cloudDownload()" disabled>
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          从云端下载
+        </button>
+      </div>
+      <div class="cloud-login-section">
+        <button class="btn btn-sm" onclick="showCloudLogin()" id="cloud-login-btn">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;vertical-align:middle;margin-right:4px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          登录/注册云端账号
+        </button>
+      </div>
+    </div>
     <!-- 使用声明按钮 -->
     <div class="data-notice-banner" onclick="showDataUsageNotice()">
       <div class="data-notice-icon">
@@ -2603,6 +2741,48 @@ body {
     </div>
   </div>
 </div>
+<!-- 云端登录/注册 -->
+<div class="modal-overlay" id="modal-cloud-login">
+  <div class="modal" style="max-width:420px;">
+    <h2 class="modal-title">云端账号</h2>
+    <p class="modal-desc">登录后可在多设备间同步数据</p>
+    
+    <div class="cloud-login-tabs">
+      <button class="cloud-login-tab active" id="cloud-tab-login" onclick="switchCloudTab('login')">登录</button>
+      <button class="cloud-login-tab" id="cloud-tab-register" onclick="switchCloudTab('register')">注册</button>
+    </div>
+    
+    <form id="cloud-login-form" onsubmit="event.preventDefault(); cloudLoginSubmit();">
+      <div class="form-group" id="cloud-nickname-group" style="display:none;">
+        <label class="form-label">昵称</label>
+        <input type="text" class="form-input" id="cloud-login-nickname" placeholder="显示名称（可选）">
+      </div>
+      <div class="form-group">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-input" id="cloud-login-username" placeholder="至少3个字符" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-input" id="cloud-login-password" placeholder="至少6个字符" required>
+      </div>
+      <div id="cloud-login-error" style="color:#ef4444;font-size:13px;margin-bottom:12px;display:none;"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;" id="cloud-login-submit-btn">登录</button>
+    </form>
+    
+    <div class="cloud-login-info">
+      <strong>数据安全说明：</strong><br>
+      • 您的数据加密存储在云端服务器<br>
+      • 密码使用bcrypt加密，服务方无法查看<br>
+      • 可随时在数据管理中导出数据备份<br>
+      • 云端同步为可选功能，不启用时数据仅存本地
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cloud-login')">取消</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- 档案管理 -->
 <div class="modal-overlay" id="modal-profile-manager">
@@ -4289,6 +4469,9 @@ function renderDashboard() {
   
   // 图表
   renderDashboardCharts(data);
+  
+  // 压力指数
+  try { renderStressIndex(); } catch(e) { console.error('渲染压力指数失败:', e); }
 }
 
 function renderDashboardCharts(data) {
