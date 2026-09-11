@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -13,260 +13,6 @@ function showDataUsageNotice() {
   }, 200);
 }
 window.showDataUsageNotice = showDataUsageNotice;
-
-
-// ===== Cloud Sync Functions =====
-const CLOUD_API_BASE = 'https://dandantable.onrender.com/api';
-let cloudToken = localStorage.getItem('cloud_token') || null;
-let cloudUser = JSON.parse(localStorage.getItem('cloud_user') || 'null');
-
-// 显示云端登录窗口
-function showCloudLogin() {
-  showModal('modal-cloud-login');
-  switchCloudTab('login');
-}
-window.showCloudLogin = showCloudLogin;
-
-// 切换登录/注册标签
-function switchCloudTab(tab) {
-  const loginForm = $('cloud-login-form');
-  const registerForm = $('cloud-register-form');
-  const loginTab = $('cloud-tab-login');
-  const registerTab = $('cloud-tab-register');
-  
-  if (tab === 'login') {
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-    loginTab.style.background = 'var(--accent-blue)';
-    loginTab.style.color = '#fff';
-    registerTab.style.background = '';
-    registerTab.style.color = '';
-  } else {
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-    registerTab.style.background = 'var(--accent-blue)';
-    registerTab.style.color = '#fff';
-    loginTab.style.background = '';
-    loginTab.style.color = '';
-  }
-}
-window.switchCloudTab = switchCloudTab;
-
-// 云端登录
-async function cloudDoLogin() {
-  const username = $('cloud-login-username').value.trim();
-  const password = $('cloud-login-password').value;
-  
-  if (!username || !password) {
-    showToast('请输入用户名和密码', 'error');
-    return;
-  }
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      cloudToken = result.data.token;
-      cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
-      updateCloudSyncUI();
-      closeModal('modal-cloud-login');
-      showToast('登录成功，欢迎 ' + cloudUser.nickname, 'success');
-    } else {
-      showToast(result.message || '登录失败', 'error');
-    }
-  } catch (err) {
-    showToast('无法连接云端服务器，请确认后端已启动', 'error');
-    console.error('Cloud login error:', err);
-  }
-}
-window.cloudDoLogin = cloudDoLogin;
-
-// 云端注册
-async function cloudDoRegister() {
-  const username = $('cloud-register-username').value.trim();
-  const nickname = $('cloud-register-nickname').value.trim();
-  const password = $('cloud-register-password').value;
-  
-  if (!username || username.length < 3) {
-    showToast('用户名至少3个字符', 'error');
-    return;
-  }
-  if (!password || password.length < 6) {
-    showToast('密码至少6个字符', 'error');
-    return;
-  }
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, nickname })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      cloudToken = result.data.token;
-      cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
-      updateCloudSyncUI();
-      closeModal('modal-cloud-login');
-      showToast('注册成功，已自动登录', 'success');
-    } else {
-      showToast(result.message || '注册失败', 'error');
-    }
-  } catch (err) {
-    showToast('无法连接云端服务器，请确认后端已启动', 'error');
-    console.error('Cloud register error:', err);
-  }
-}
-window.cloudDoRegister = cloudDoRegister;
-
-// 云端登出
-function cloudLogout() {
-  cloudToken = null;
-  cloudUser = null;
-  localStorage.removeItem('cloud_token');
-  localStorage.removeItem('cloud_user');
-  updateCloudSyncUI();
-  showToast('已退出云端账号', 'success');
-}
-window.cloudLogout = cloudLogout;
-
-// 上传数据到云端
-async function cloudUpload() {
-  if (!cloudToken) {
-    showToast('请先登录云端账号', 'error');
-    return;
-  }
-  
-  const btn = $('cloud-upload-btn');
-  btn.disabled = true;
-  btn.textContent = '上传中...';
-  
-  try {
-    // 收集所有localStorage数据（当前用户的）
-    const allData = {};
-    const prefix = 'campus_toolbox_';
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(prefix) && !key.includes('cloud_')) {
-        allData[key] = localStorage.getItem(key);
-      }
-    }
-    
-    const response = await fetch(CLOUD_API_BASE + '/sync/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + cloudToken
-      },
-      body: JSON.stringify({ data: allData })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      showToast('数据已上传到云端', 'success');
-      updateCloudSyncUI();
-    } else {
-      showToast(result.message || '上传失败', 'error');
-    }
-  } catch (err) {
-    showToast('上传失败，请检查网络连接', 'error');
-    console.error('Cloud upload error:', err);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传到云端';
-  }
-}
-window.cloudUpload = cloudUpload;
-
-// 从云端下载数据
-async function cloudDownload() {
-  if (!cloudToken) {
-    showToast('请先登录云端账号', 'error');
-    return;
-  }
-  
-  if (!confirm('从云端下载数据将覆盖当前本地数据，确定继续吗？')) {
-    return;
-  }
-  
-  const btn = $('cloud-download-btn');
-  btn.disabled = true;
-  btn.textContent = '下载中...';
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/sync/download', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + cloudToken
-      }
-    });
-    const result = await response.json();
-    
-    if (result.success && result.data) {
-      // 恢复数据到localStorage
-      Object.keys(result.data).forEach(key => {
-        localStorage.setItem(key, result.data[key]);
-      });
-      showToast('数据已从云端恢复，页面即将刷新', 'success');
-      setTimeout(() => location.reload(), 1500);
-    } else {
-      showToast('云端暂无数据', 'info');
-    }
-  } catch (err) {
-    showToast('下载失败，请检查网络连接', 'error');
-    console.error('Cloud download error:', err);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>从云端下载';
-  }
-}
-window.cloudDownload = cloudDownload;
-
-// 更新云端同步UI状态
-function updateCloudSyncUI() {
-  const statusEl = $('cloud-sync-status');
-  const uploadBtn = $('cloud-upload-btn');
-  const downloadBtn = $('cloud-download-btn');
-  const loginBtn = $('cloud-login-btn');
-  
-  if (cloudToken && cloudUser) {
-    if (statusEl) {
-      statusEl.innerHTML = '<span class="cloud-login-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>已登录: ' + cloudUser.nickname + '</span>';
-    }
-    if (uploadBtn) uploadBtn.disabled = false;
-    if (downloadBtn) downloadBtn.disabled = false;
-    if (loginBtn) {
-      loginBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>退出登录';
-      loginBtn.onclick = cloudLogout;
-    }
-  } else {
-    if (statusEl) statusEl.textContent = '未登录云端账号';
-    if (uploadBtn) uploadBtn.disabled = true;
-    if (downloadBtn) downloadBtn.disabled = true;
-    if (loginBtn) {
-      loginBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>登录/注册云端账号';
-      loginBtn.onclick = showCloudLogin;
-    }
-  }
-}
-window.updateCloudSyncUI = updateCloudSyncUI;
-
-// 页面加载时更新云端同步UI
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(updateCloudSyncUI, 500);
-});
-
-console.log('Cloud sync functions loaded');
 
 </script>
 <style>
@@ -1701,115 +1447,120 @@ body {
 }
 
 
-/* ===== Cloud Sync Styles ===== */
-.cloud-sync-section {
-  background: linear-gradient(135deg, var(--accent-blue-light), var(--accent-purple-light));
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 16px;
-  border: 1px solid rgba(107, 143, 197, 0.15);
-}
+/* ===== New Module Styles ===== */
 
-.cloud-sync-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
+/* Schedule Table */
+.schedule-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.schedule-week-selector { display: flex; align-items: center; gap: 8px; }
+.schedule-week-selector button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.week-label { font-weight: 600; font-size: 16px; min-width: 60px; text-align: center; }
+.schedule-table { width: 100%; border-collapse: collapse; }
+.schedule-head { display: flex; background: var(--bg-sidebar); border-radius: 8px 8px 0 0; }
+.schedule-time-col { width: 60px; padding: 8px; font-weight: 600; font-size: 13px; text-align: center; border-right: 1px solid var(--border); flex-shrink: 0; }
+.schedule-day-col { flex: 1; padding: 8px; font-weight: 600; font-size: 13px; text-align: center; border-right: 1px solid var(--border); }
+.schedule-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; }
+.schedule-row { display: flex; border-bottom: 1px solid var(--border); min-height: 40px; }
+.schedule-time-cell { width: 60px; padding: 4px; font-size: 11px; color: var(--text-secondary); text-align: center; border-right: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: flex-start; justify-content: center; }
+.schedule-cell { flex: 1; padding: 2px; border-right: 1px solid var(--border); cursor: pointer; position: relative; min-height: 40px; }
+.schedule-cell:hover { background: rgba(79,70,229,0.05); }
+.schedule-course-block { border-radius: 4px; padding: 2px 4px; margin: 1px 0; color: #fff; font-size: 11px; cursor: pointer; overflow: hidden; }
+.schedule-course-block:hover { opacity: 0.9; transform: scale(1.02); }
+.scb-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scb-location { font-size: 10px; opacity: 0.85; }
+.scb-time { font-size: 10px; opacity: 0.8; }
+.color-dot { width: 24px; height: 24px; border-radius: 50%; display: inline-block; cursor: pointer; margin-right: 6px; border: 2px solid transparent; transition: all 0.2s; }
+.color-dot:hover { transform: scale(1.2); }
 
-.cloud-sync-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
+/* Task Cards */
+.tasks-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.task-filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.task-filter-tab { padding: 6px 14px; border-radius: 20px; border: none; background: var(--bg-card); cursor: pointer; font-size: 13px; color: var(--text-secondary); transition: all 0.2s; }
+.task-filter-tab.active { background: var(--accent-blue); color: #fff; }
+.task-card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 8px; background: var(--bg-card); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+.task-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.task-card.completed { opacity: 0.7; }
+.task-card.overdue { border-left-color: var(--danger) !important; background: #fef2f2; }
+.task-card.urgent { border-left-color: var(--danger) !important; }
+.task-check { flex-shrink: 0; cursor: pointer; }
+.task-content { min-width: 0; }
+.task-title { font-weight: 600; margin-bottom: 4px; }
+.task-desc { font-size: 13px; color: var(--text-secondary); }
+.task-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.task-course-tag { background: var(--accent-blue); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 11px; }
+.task-right { flex-shrink: 0; }
+.badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--bg-sidebar); color: var(--text-secondary); }
+.badge-danger { background: #fef2f2; color: var(--danger); }
+.badge-warning { background: #fffbeb; color: #d97706; }
 
-.cloud-sync-icon svg {
-  width: 18px;
-  height: 18px;
-  fill: #fff;
-}
+/* Focus Timer */
+.focus-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.focus-timer-circle { position: relative; width: 260px; height: 260px; }
+.focus-timer-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.focus-timer-bg { fill: none; stroke: var(--bg-sidebar); stroke-width: 8; }
+.focus-timer-progress { fill: none; stroke: var(--accent-blue); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+.focus-timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.focus-timer-text .time { font-size: 48px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.focus-timer-text .status { font-size: 14px; color: var(--text-secondary); }
+.focus-tomato-count { font-size: 14px; margin-top: 4px; }
+.focus-controls { display: flex; gap: 16px; align-items: center; }
+.focus-btn { width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.focus-btn.start { width: 64px; height: 64px; background: var(--accent-blue); color: #fff; }
+.focus-btn.start:hover { transform: scale(1.05); }
+.focus-btn.start.paused { background: var(--danger); }
+.focus-btn.secondary { background: var(--bg-card); color: var(--text-secondary); }
+.focus-btn.secondary:hover { background: var(--bg-sidebar); }
+.focus-stats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.focus-heatmap { overflow-x: auto; }
 
-.cloud-sync-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent-blue-dark);
-}
+/* Goal Cards */
+.goal-card { padding: 16px; cursor: pointer; transition: all 0.2s; }
+.goal-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.goal-card.completed { opacity: 0.8; background: #f0fdf4; }
+.goal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.goal-icon { font-size: 28px; }
+.goal-title { font-weight: 600; }
+.goal-meta { font-size: 12px; color: var(--text-secondary); }
+.goal-progress-bar { width: 100%; height: 8px; background: var(--bg-sidebar); border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+.goal-progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+.goal-progress-text { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+.goal-milestones { margin-top: 8px; }
+.goal-milestone { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; font-size: 13px; }
+.goal-milestone.done span { text-decoration: line-through; color: var(--text-secondary); }
 
-.cloud-sync-status {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 2px;
-}
+/* Stress Gauge */
+.stress-gauge { text-align: center; }
+.stress-value { font-size: 48px; font-weight: 800; line-height: 1; }
+.stress-label { font-size: 18px; font-weight: 600; margin-top: 4px; }
+.stress-advice { padding: 8px 0; }
+.stress-advice-item { padding: 6px 0; font-size: 14px; color: var(--text-secondary); }
 
-.cloud-sync-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+/* Insight Cards */
+.insight-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.insight-card { padding: 16px; background: var(--bg-card); border-radius: 12px; text-align: center; }
+.insight-card .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.insight-card .value { font-size: 24px; font-weight: 700; }
 
-.cloud-sync-btn {
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
+/* Progress Bar */
+.progress-bar { width: 100%; height: 6px; background: var(--bg-sidebar); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
 
-.cloud-sync-btn svg {
-  width: 14px;
-  height: 14px;
-  fill: currentColor;
-}
+/* Form */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+.input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--bg-card); color: var(--text); box-sizing: border-box; }
+.input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.color-picker { display: flex; gap: 8px; padding: 4px 0; }
 
-.cloud-sync-btn.upload {
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-  color: #fff;
-}
+/* Empty State */
+.empty-state { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
 
-.cloud-sync-btn.download {
-  background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
-  color: #fff;
-}
+/* Modal Fix */
+.modal-overlay.active { display: flex !important; }
 
-.cloud-sync-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.cloud-sync-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.cloud-login-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: var(--accent-green-light);
-  color: var(--accent-green-dark);
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.cloud-login-badge svg {
-  width: 12px;
-  height: 12px;
-  fill: currentColor;
-}
+/* Tag */
+.tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 
 </style>
 </head>
@@ -1838,9 +1589,7 @@ body {
       <div class="privacy-content">
         <div class="privacy-title">隐私保护声明</div>
         <div class="privacy-text">
-          <strong>本地存储模式（默认）：</strong>您的所有数据（课程、成绩、账单、作息等）均<strong>仅存储在您当前使用的浏览器本地</strong>（localStorage），<strong>不会上传到任何服务器</strong>。服务提供方<strong>无法查看、收集或访问</strong>您的任何个人数据。<br><br>
-          <strong>云端同步模式（可选）：</strong>您可选择注册云端账号并启用数据同步，数据将<strong>加密存储在您自行部署的后端服务器</strong>中，仅用于跨设备同步。服务提供方<strong>不托管、不访问</strong>您的云端数据，数据安全由您自行负责。<br><br>
-          清除浏览器数据或更换设备将导致本地数据丢失，请定期使用「数据管理」中的导出功能或云端同步进行备份。
+          您的所有数据（课程、成绩、账单、作息等）均<strong>仅存储在您当前使用的浏览器本地</strong>（localStorage），<strong>不会上传到任何服务器</strong>。服务提供方<strong>无法查看、收集或访问</strong>您的任何个人数据。清除浏览器数据或更换设备将导致数据丢失，请定期使用「数据管理」中的导出功能进行备份。
         </div>
       </div>
     </div>
@@ -1891,8 +1640,25 @@ body {
         规划中心
       </button>
       
-      <div class="nav-section">工具</div>
-      <button class="nav-item" onclick="showDataManager()">
+      
+      <div class="nav-section">学习</div>
+      <button class="nav-item" data-view="schedule" onclick="switchView('schedule')">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        课程表
+      </button>
+      <button class="nav-item" data-view="tasks" onclick="switchView('tasks')">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        作业任务
+        <span class="nav-badge" id="tasks-badge" style="display:none;">0</span>
+      </button>
+      <button class="nav-item" data-view="focus" onclick="switchView('focus')">
+        <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+        专注计时
+      </button>
+      <button class="nav-item" data-view="goals" onclick="switchView('goals')">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        目标管理
+      </button>nclick="showDataManager()">
         <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         数据管理
       </button>
@@ -2075,7 +1841,13 @@ body {
       </div>
     </div>
     
-    <!-- ===== View: GPA ===== -->
+    
+      <!-- Stress Index -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">🧘 压力指数</div>
+        <div id="stress-gauge-container" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:20px;padding:16px 0;"></div>
+      </div>
+<!-- ===== View: GPA ===== -->
     <div class="view" id="view-gpa">
       <div class="stats-grid">
         <div class="stat-card green">
@@ -2115,7 +1887,7 @@ body {
                   <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;margin-left:8px;" onclick="addSemester()">+ 学期</button>
                 </div>
               </div>
-              <button class="btn btn-primary" onclick="showAddCourse()">
+              <button class="btn btn-primary" onclick="showScheduleCourseModal()">
                 <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                 添加课程
               </button>
@@ -2147,7 +1919,13 @@ body {
             <div class="chart-container small" id="gpa-distribution-chart"></div>
           </div>
         </div>
+      
+      <!-- Today Schedule -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">📅 今日课程</div>
+        <div id="dash-schedule-list" style="padding:4px 0;"></div>
       </div>
+</div>
     </div>
     
     <!-- ===== View: Countdown ===== -->
@@ -2360,6 +2138,101 @@ body {
         </div>
       </div>
     </div>
+  
+    <!-- ===== View: Schedule 课程表 ===== -->
+    <div class="view" id="view-schedule">
+      <div class="schedule-header">
+        <div class="schedule-week-selector">
+          <button onclick="schedulePrevWeek()">◀</button>
+          <span class="week-label" id="schedule-week-label">第1周</span>
+          <button onclick="scheduleNextWeek()">▶</button>
+        </div>
+        <button class="btn btn-primary" onclick="showScheduleCourseModal()">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          添加课程
+        </button>
+      </div>
+      <div class="card" style="overflow-x:auto;">
+        <div class="schedule-grid" id="schedule-grid"></div>
+      </div>
+      <div style="margin-top:16px;text-align:center;">
+        <button class="btn btn-ghost" onclick="scheduleToggleView()" id="schedule-view-toggle">切换列表视图</button>
+      </div>
+      <div id="schedule-list-view" style="display:none;"></div>
+    </div>
+
+    <!-- ===== View: Tasks 作业任务 ===== -->
+    <div class="view" id="view-tasks">
+      <div class="tasks-header">
+        <div class="task-filter-tabs" id="task-filter-tabs">
+          <button class="task-filter-tab active" onclick="setTaskFilter('all', this)">全部</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('pending', this)">待办</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('completed', this)">已完成</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('today', this)">今日截止</button>
+          <button class="task-filter-tab" onclick="setTaskFilter('week', this)">本周截止</button>
+        </div>
+        <button class="btn btn-primary" onclick="showAddTask()">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          添加任务
+        </button>
+      </div>
+      <div class="insight-cards" id="task-stats-cards"></div>
+      <div id="tasks-list"></div>
+    </div>
+
+    <!-- ===== View: Focus 专注计时 ===== -->
+    <div class="view" id="view-focus">
+      <div class="focus-container">
+        <div class="focus-timer-circle" id="focus-timer-circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="focus-timer-bg" cx="50" cy="50" r="45"/>
+            <circle class="focus-timer-progress" id="focus-progress-ring" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="0"/>
+          </svg>
+          <div class="focus-timer-text">
+            <div class="time" id="focus-time-display">25:00</div>
+            <div class="status" id="focus-status-text">准备开始</div>
+            <div class="focus-tomato-count" id="focus-tomato-count"></div>
+          </div>
+        </div>
+        <div class="focus-controls">
+          <button class="focus-btn secondary" onclick="focusReset()" title="重置">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          </button>
+          <button class="focus-btn start" id="focus-start-btn" onclick="focusToggle()">
+            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="focus-btn secondary" onclick="focusSkip()" title="跳过">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+          </button>
+        </div>
+        <div class="focus-stats" id="focus-stats"></div>
+        <div class="card" style="width:100%;max-width:500px;">
+          <div class="card-title" style="margin-bottom:12px;">专注热力图（近12周）</div>
+          <div class="focus-heatmap" id="focus-heatmap"></div>
+        </div>
+        <div class="card" style="width:100%;max-width:500px;">
+          <div class="card-title" style="margin-bottom:12px;">近7天专注时长</div>
+          <div id="focus-weekly-chart" style="height:200px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== View: Goals 目标管理 ===== -->
+    <div class="view" id="view-goals">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+        <div class="task-filter-tabs" id="goal-filter-tabs">
+          <button class="task-filter-tab active" onclick="setGoalFilter('all', this)">全部</button>
+          <button class="task-filter-tab" onclick="setGoalFilter('active', this)">进行中</button>
+          <button class="task-filter-tab" onclick="setGoalFilter('completed', this)">已完成</button>
+        </div>
+        <button class="btn btn-primary" onclick="showAddGoal()">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          创建目标
+        </button>
+      </div>
+      <div class="insight-cards" id="goal-stats-cards"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;" id="goals-grid"></div>
+    </div>
   </main>
 </div>
 
@@ -2385,70 +2258,27 @@ body {
     <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
     规划
   </button>
+  <button class="bottom-nav-item" data-view="schedule" onclick="switchView('schedule')">
+    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+    课表
+  </button>
+  <button class="bottom-nav-item" data-view="tasks" onclick="switchView('tasks')">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+    任务
+  </button>
+  <button class="bottom-nav-item" data-view="focus" onclick="switchView('focus')">
+    <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+    专注
+  </button>
+  <button class="bottom-nav-item" data-view="goals" onclick="switchView('goals')">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+    目标
+  </button>
+
 </div>
 
 <!-- ===== Toast Container ===== -->
 <div class="toast-container" id="toast-container"></div>
-
-
-<!-- ===== 云端登录/注册模态框 ===== -->
-<div class="modal-overlay" id="modal-cloud-login" style="z-index:1100;">
-  <div class="modal" style="max-width:420px;">
-    <div class="modal-header-with-icon">
-      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));">
-        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-      </div>
-      <div>
-        <h2 class="modal-title">云端账号</h2>
-        <p class="modal-desc">登录后可跨设备同步你的数据</p>
-      </div>
-    </div>
-    
-    <!-- 登录/注册切换 -->
-    <div style="display:flex;gap:8px;margin-bottom:20px;">
-      <button class="btn btn-sm" id="cloud-tab-login" style="flex:1;background:var(--accent-blue);color:#fff;" onclick="switchCloudTab('login')">登录</button>
-      <button class="btn btn-sm btn-secondary" id="cloud-tab-register" style="flex:1;" onclick="switchCloudTab('register')">注册</button>
-    </div>
-    
-    <!-- 登录表单 -->
-    <div id="cloud-login-form">
-      <div class="form-group">
-        <label class="form-label">用户名</label>
-        <input type="text" class="form-input" id="cloud-login-username" placeholder="请输入用户名">
-      </div>
-      <div class="form-group">
-        <label class="form-label">密码</label>
-        <input type="password" class="form-input" id="cloud-login-password" placeholder="请输入密码">
-      </div>
-      <button class="btn btn-primary btn-block" onclick="cloudDoLogin()">登录</button>
-    </div>
-    
-    <!-- 注册表单 -->
-    <div id="cloud-register-form" style="display:none;">
-      <div class="form-group">
-        <label class="form-label">用户名</label>
-        <input type="text" class="form-input" id="cloud-register-username" placeholder="至少3个字符">
-      </div>
-      <div class="form-group">
-        <label class="form-label">昵称（可选）</label>
-        <input type="text" class="form-input" id="cloud-register-nickname" placeholder="显示用的昵称">
-      </div>
-      <div class="form-group">
-        <label class="form-label">密码</label>
-        <input type="password" class="form-input" id="cloud-register-password" placeholder="至少6个字符">
-      </div>
-      <button class="btn btn-primary btn-block" onclick="cloudDoRegister()">注册并登录</button>
-    </div>
-    
-    <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text-3);">
-      数据将加密存储在云端服务器，仅你本人可访问
-    </div>
-    
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('modal-cloud-login')">取消</button>
-    </div>
-  </div>
-</div>
 
 <!-- ===== 数据使用声明弹窗 ===== -->
 <div class="modal-overlay" id="modal-data-usage-notice" style="z-index:1100;">
@@ -2469,8 +2299,7 @@ body {
         数据存储位置
       </div>
       <div class="usage-notice-text">
-        <strong>本地存储（默认）：</strong>您在DanDanTable中创建的所有数据（包括但不限于课程成绩、考试倒计时、收支记录、作息安排、习惯打卡、健康记录等）<strong>全部存储在您当前使用的浏览器本地存储（localStorage）中</strong>。数据<strong>不会上传到任何服务器</strong>，也<strong>不会在多设备间自动同步</strong>。<br><br>
-        <strong>云端存储（可选）：</strong>如您自行部署后端服务并注册云端账号，可选择将数据同步到您自己的服务器。云端数据<strong>仅用于跨设备同步</strong>，采用JWT认证保护，您需要自行确保服务器安全。
+        您在DanDanTable中创建的所有数据（包括但不限于课程成绩、考试倒计时、收支记录、作息安排、习惯打卡、健康记录等）<strong>全部存储在您当前使用的浏览器本地存储（localStorage）中</strong>。数据<strong>不会上传到任何服务器</strong>，也<strong>不会在多设备间自动同步</strong>。
       </div>
     </div>
     
@@ -2511,31 +2340,14 @@ body {
     <div class="usage-notice-section">
       <div class="usage-notice-section-title">
         <span class="usage-notice-number">5</span>
-        云端同步功能（可选）
-      </div>
-      <div class="usage-notice-text">
-        <strong>功能说明：</strong>DanDanTable提供可选的云端同步功能，需要您自行部署后端服务（Node.js + JSON文件存储）。启用后可实现多设备间的数据同步。<br>
-        <strong>使用方法：</strong>在「数据管理」窗口中点击「登录/注册云端账号」，注册并登录后，可使用「上传到云端」和「从云端下载」按钮同步数据。<br>
-        <strong>注意事项：</strong><br>
-        • 云端同步为可选功能，不启用时数据仅存本地<br>
-        • 从云端下载会覆盖当前本地数据，请谨慎操作<br>
-        • 后端服务默认运行在 http://localhost:3001<br>
-        • 您需要自行负责服务器的安全和维护
-      </div>
-    </div>
-    
-    <div class="usage-notice-section">
-      <div class="usage-notice-section-title">
-        <span class="usage-notice-number">6</span>
         数据安全与隐私
       </div>
       <div class="usage-notice-text">
         服务提供方<strong>无法查看、收集、存储或传输</strong>您的任何个人数据。您的数据完全由您自己掌控。但请注意：<br>
         • 清除浏览器缓存/数据将导致数据丢失<br>
         • 使用隐私模式/无痕模式关闭后数据不会保存<br>
-        • 更换浏览器或设备需要先导出再导入，或使用云端同步<br>
-        • 建议定期导出备份到安全位置<br>
-        • 启用云端同步时，请确保您的后端服务安全可靠
+        • 更换浏览器或设备需要先导出再导入<br>
+        • 建议定期导出备份到安全位置
       </div>
     </div>
     
@@ -2761,35 +2573,6 @@ body {
     <h2 class="modal-title">数据管理</h2>
     <p class="modal-desc">导出、导入或清除你的数据</p>
     
-    <!-- 云端同步区域 -->
-    <div class="cloud-sync-section">
-      <div class="cloud-sync-header">
-        <div class="cloud-sync-icon">
-          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-        </div>
-        <div>
-          <div class="cloud-sync-title">云端同步</div>
-          <div class="cloud-sync-status" id="cloud-sync-status">未登录云端账号</div>
-        </div>
-      </div>
-      <div class="cloud-sync-buttons">
-        <button class="cloud-sync-btn upload" id="cloud-upload-btn" onclick="cloudUpload()" disabled>
-          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
-          上传到云端
-        </button>
-        <button class="cloud-sync-btn download" id="cloud-download-btn" onclick="cloudDownload()" disabled>
-          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-          从云端下载
-        </button>
-      </div>
-      <div style="text-align:center;margin-top:10px;">
-        <button class="btn btn-sm btn-secondary" onclick="showCloudLogin()" id="cloud-login-btn">
-          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-          登录/注册云端账号
-        </button>
-      </div>
-    </div>
-    
     <!-- 使用声明按钮 -->
     <div class="data-notice-banner" onclick="showDataUsageNotice()">
       <div class="data-notice-icon">
@@ -2890,6 +2673,152 @@ body {
 </div>
 
 <script>
+
+// ===== Cloud Sync Functions =====
+const CLOUD_API_BASE = 'https://dandantable.onrender.com/api';
+let cloudToken = localStorage.getItem('cloud_token') || null;
+let cloudUser = JSON.parse(localStorage.getItem('cloud_user') || 'null');
+
+function showCloudLogin() {
+  showModal('modal-cloud-login');
+  switchCloudTab('login');
+}
+window.showCloudLogin = showCloudLogin;
+
+function switchCloudTab(tab) {
+  const loginForm = document.getElementById('cloud-login-form');
+  const registerForm = document.getElementById('cloud-register-form');
+  const loginTab = document.getElementById('cloud-tab-login');
+  const registerTab = document.getElementById('cloud-tab-register');
+  if (!loginForm || !registerForm || !loginTab || !registerTab) return;
+  if (tab === 'login') {
+    loginForm.style.display = 'block'; registerForm.style.display = 'none';
+    loginTab.style.background = 'var(--accent-blue)'; loginTab.style.color = '#fff';
+    registerTab.style.background = ''; registerTab.style.color = '';
+  } else {
+    loginForm.style.display = 'none'; registerForm.style.display = 'block';
+    registerTab.style.background = 'var(--accent-blue)'; registerTab.style.color = '#fff';
+    loginTab.style.background = ''; loginTab.style.color = '';
+  }
+}
+window.switchCloudTab = switchCloudTab;
+
+async function cloudDoLogin() {
+  const username = document.getElementById('cloud-login-username');
+  const password = document.getElementById('cloud-login-password');
+  if (!username || !password) { toast('请输入用户名和密码', 'error'); return; }
+  try {
+    const response = await fetch(CLOUD_API_BASE + '/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username.value.trim(), password: password.value })
+    });
+    const result = await response.json();
+    if (result.success) {
+      cloudToken = result.data.token; cloudUser = result.data.user;
+      localStorage.setItem('cloud_token', cloudToken);
+      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
+      updateCloudSyncUI(); closeModal('modal-cloud-login');
+      toast('登录成功，欢迎 ' + cloudUser.nickname, 'success');
+    } else { toast(result.message || '登录失败', 'error'); }
+  } catch (err) { toast('无法连接云端服务器', 'error'); }
+}
+window.cloudDoLogin = cloudDoLogin;
+
+async function cloudDoRegister() {
+  const username = document.getElementById('cloud-register-username');
+  const nickname = document.getElementById('cloud-register-nickname');
+  const password = document.getElementById('cloud-register-password');
+  if (!username || !password) { toast('请输入用户名和密码', 'error'); return; }
+  if (username.value.trim().length < 3) { toast('用户名至少3个字符', 'error'); return; }
+  if (password.value.length < 6) { toast('密码至少6个字符', 'error'); return; }
+  try {
+    const response = await fetch(CLOUD_API_BASE + '/register', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username.value.trim(), password: password.value, nickname: nickname ? nickname.value.trim() : undefined })
+    });
+    const result = await response.json();
+    if (result.success) {
+      cloudToken = result.data.token; cloudUser = result.data.user;
+      localStorage.setItem('cloud_token', cloudToken);
+      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
+      updateCloudSyncUI(); closeModal('modal-cloud-login');
+      toast('注册成功，已自动登录', 'success');
+    } else { toast(result.message || '注册失败', 'error'); }
+  } catch (err) { toast('无法连接云端服务器', 'error'); }
+}
+window.cloudDoRegister = cloudDoRegister;
+
+function cloudLogout() {
+  cloudToken = null; cloudUser = null;
+  localStorage.removeItem('cloud_token'); localStorage.removeItem('cloud_user');
+  updateCloudSyncUI(); toast('已退出云端账号', 'success');
+}
+window.cloudLogout = cloudLogout;
+
+async function cloudUpload() {
+  if (!cloudToken) { toast('请先登录云端账号', 'error'); return; }
+  const btn = document.getElementById('cloud-upload-btn'); if (!btn) return;
+  btn.disabled = true; btn.textContent = '上传中...';
+  try {
+    const allData = {};
+    const prefix = 'campus_toolbox_';
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(prefix) && !key.includes('cloud_')) { allData[key] = localStorage.getItem(key); }
+    }
+    const response = await fetch(CLOUD_API_BASE + '/sync/upload', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cloudToken },
+      body: JSON.stringify({ data: allData })
+    });
+    const result = await response.json();
+    if (result.success) { toast('数据已上传到云端', 'success'); updateCloudSyncUI(); }
+    else { toast(result.message || '上传失败', 'error'); }
+  } catch (err) { toast('上传失败，请检查网络连接', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传到云端'; }
+}
+window.cloudUpload = cloudUpload;
+
+async function cloudDownload() {
+  if (!cloudToken) { toast('请先登录云端账号', 'error'); return; }
+  if (!confirm('从云端下载数据将覆盖当前本地数据，确定继续吗？')) return;
+  const btn = document.getElementById('cloud-download-btn'); if (!btn) return;
+  btn.disabled = true; btn.textContent = '下载中...';
+  try {
+    const response = await fetch(CLOUD_API_BASE + '/sync/download', {
+      method: 'GET', headers: { 'Authorization': 'Bearer ' + cloudToken }
+    });
+    const result = await response.json();
+    if (result.success && result.data) {
+      Object.keys(result.data).forEach(key => { localStorage.setItem(key, result.data[key]); });
+      toast('数据已从云端恢复，页面即将刷新', 'success');
+      setTimeout(() => location.reload(), 1500);
+    } else { toast('云端暂无数据', 'info'); }
+  } catch (err) { toast('下载失败，请检查网络连接', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>从云端下载'; }
+}
+window.cloudDownload = cloudDownload;
+
+function updateCloudSyncUI() {
+  const statusEl = document.getElementById('cloud-sync-status');
+  const uploadBtn = document.getElementById('cloud-upload-btn');
+  const downloadBtn = document.getElementById('cloud-download-btn');
+  const loginBtn = document.getElementById('cloud-login-btn');
+  if (cloudToken && cloudUser) {
+    if (statusEl) statusEl.innerHTML = '<span class="cloud-login-badge"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>已登录: ' + cloudUser.nickname + '</span>';
+    if (uploadBtn) uploadBtn.disabled = false;
+    if (downloadBtn) downloadBtn.disabled = false;
+    if (loginBtn) { loginBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>退出登录'; loginBtn.onclick = cloudLogout; }
+  } else {
+    if (statusEl) statusEl.textContent = '未登录云端账号';
+    if (uploadBtn) uploadBtn.disabled = true;
+    if (downloadBtn) downloadBtn.disabled = true;
+    if (loginBtn) { loginBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>登录/注册云端账号'; loginBtn.onclick = showCloudLogin; }
+  }
+}
+window.updateCloudSyncUI = updateCloudSyncUI;
+
+setTimeout(updateCloudSyncUI, 500);
+
 
 // ===== Performance Optimization =====
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -4518,6 +4447,650 @@ function init() {
   }, 200));
 }
 
+// ===== Schedule View (Course Schedule) =====
+let scheduleWeek = 1;
+let scheduleViewMode = 'grid';
+
+function renderScheduleView() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const courses = data.scheduleCourses || [];
+  scheduleWeek = scheduleWeek || 1;
+  document.getElementById('schedule-week-label').textContent = '第' + scheduleWeek + '周';
+  
+  const weekCourses = courses.filter(c => c.weekStart <= scheduleWeek && c.weekEnd >= scheduleWeek);
+  const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+  const timeSlots = [];
+  for (let h = 7; h <= 21; h++) { timeSlots.push(h + ':00'); timeSlots.push(h + ':30'); }
+  
+  if (scheduleViewMode === 'grid') {
+    let html = '<div class="schedule-table"><div class="schedule-head"><div class="schedule-time-col">时间</div>';
+    days.forEach(d => { html += '<div class="schedule-day-col">' + d + '</div>'; });
+    html += '</div><div class="schedule-body">';
+    timeSlots.forEach(ts => {
+      html += '<div class="schedule-row"><div class="schedule-time-cell">' + ts + '</div>';
+      for (let d = 1; d <= 7; d++) {
+        const cellCourses = weekCourses.filter(c => {
+          if (c.dayOfWeek !== d) return false;
+          return c.startTime <= ts && c.endTime > ts;
+        });
+        html += '<div class="schedule-cell" data-day="' + d + '" data-time="' + ts + '" onclick="scheduleCellClick(' + d + ',\'' + ts + '\')">';
+        cellCourses.forEach(c => {
+          if (c.startTime === ts || (ts.endsWith(':00') && c.startTime <= ts)) {
+            const sh = parseInt(c.startTime); const sm = parseInt(c.startTime.split(':')[1]);
+            const eh = parseInt(c.endTime); const em = parseInt(c.endTime.split(':')[1]);
+            const dur = (eh - sh) + (em - sm) / 60;
+            html += '<div class="schedule-course-block" style="background:' + (c.color || '#4F46E5') + ';min-height:' + (dur * 2) + 'em;" onclick="event.stopPropagation();scheduleEditCourse(\'' + c.id + '\')"><div class="scb-name">' + escapeHtml(c.name) + '</div><div class="scb-location">' + escapeHtml(c.location || '') + '</div><div class="scb-time">' + c.startTime + '-' + c.endTime + '</div></div>';
+          }
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div></div>';
+    document.getElementById('schedule-grid').innerHTML = html;
+    document.getElementById('schedule-grid').style.display = 'block';
+    document.getElementById('schedule-list-view').style.display = 'none';
+  } else {
+    let html = '';
+    days.forEach((day, di) => {
+      const dayCourses = weekCourses.filter(c => c.dayOfWeek === (di + 1));
+      html += '<div class="card" style="margin-bottom:12px;"><div class="card-title">' + day + '</div>';
+      if (dayCourses.length === 0) {
+        html += '<div style="color:var(--text-secondary);padding:16px;text-align:center;">暂无课程</div>';
+      } else {
+        dayCourses.sort((a, b) => a.startTime.localeCompare(b.startTime));
+        dayCourses.forEach(c => {
+          html += '<div class="schedule-list-item" style="border-left:4px solid ' + (c.color || '#4F46E5') + ';padding:12px;margin:8px 0;background:var(--bg-card);border-radius:8px;cursor:pointer;" onclick="scheduleEditCourse(\'' + c.id + '\')"><div style="font-weight:600;">' + escapeHtml(c.name) + '</div><div style="color:var(--text-secondary);font-size:13px;">' + escapeHtml(c.teacher ? c.teacher + ' | ' : '') + (c.location || '') + ' | ' + c.startTime + '-' + c.endTime + '</div></div>';
+        });
+      }
+      html += '</div>';
+    });
+    document.getElementById('schedule-list-view').innerHTML = html;
+    document.getElementById('schedule-list-view').style.display = 'block';
+    document.getElementById('schedule-grid').style.display = 'none';
+  }
+  updateDashSchedule();
+}
+
+function scheduleCellClick(day, time) { showScheduleCourseModal(null, day, time); }
+
+function showScheduleCourseModal(course, day, time) {
+  const isEdit = !!course;
+  const days = ['周一','周二','周三','周四','周五','周六','周日'];
+  const colors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'];
+  let html = '<div class="modal-overlay active" id="modal-schedule-course" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>' + (isEdit ? '编辑课程' : '添加课程') + '</h3><button class="modal-close" onclick="closeModal(\'modal-schedule-course\')">&times;</button></div><div class="modal-body">';
+  html += '<div class="form-group"><label>课程名称 *</label><input id="sc-name" class="input" value="' + (course ? escapeAttr(course.name) : '') + '"></div>';
+  html += '<div class="form-group"><label>授课老师</label><input id="sc-teacher" class="input" value="' + (course ? escapeAttr(course.teacher || '') : '') + '"></div>';
+  html += '<div class="form-group"><label>上课教室</label><input id="sc-location" class="input" value="' + (course ? escapeAttr(course.location || '') : '') + '"></div>';
+  html += '<div class="form-row"><div class="form-group"><label>星期</label><select id="sc-day" class="input">';
+  days.forEach((d, i) => { html += '<option value="' + (i+1) + '"' + ((course ? course.dayOfWeek === i+1 : day === i+1) ? ' selected' : '') + '>' + d + '</option>'; });
+  html += '</select></div></div>';
+  html += '<div class="form-row"><div class="form-group"><label>开始时间</label><input id="sc-start" class="input" type="time" value="' + (course ? course.startTime : (time || '08:00')) + '"></div><div class="form-group"><label>结束时间</label><input id="sc-end" class="input" type="time" value="' + (course ? course.endTime : '09:40') + '"></div></div>';
+  html += '<div class="form-row"><div class="form-group"><label>起始周</label><input id="sc-weekstart" class="input" type="number" min="1" max="20" value="' + (course ? course.weekStart : 1) + '"></div><div class="form-group"><label>结束周</label><input id="sc-weekend" class="input" type="number" min="1" max="20" value="' + (course ? course.weekEnd : 16) + '"></div></div>';
+  html += '<div class="form-group"><label>课程颜色</label><div class="color-picker">';
+  colors.forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'sc-color\').value=\'' + clr + '\';var dots=this.parentNode.querySelectorAll(\'.color-dot\');dots.forEach(d=>d.style.boxShadow=\'\');this.style.boxShadow=\'0 0 0 3px rgba(0,0,0,0.2)\';"></span>'; });
+  html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#4F46E5') + '"></div>';
+  html += '<div class="form-group"><label>备注</label><input id="sc-note" class="input" value="' + (course ? escapeAttr(course.note || '') : '') + '"></div>';
+  if (isEdit) { html += '<input type="hidden" id="sc-id" value="' + course.id + '">'; }
+  html += '</div><div class="modal-footer">';
+  if (isEdit) { html += '<button class="btn btn-danger" onclick="scheduleDeleteCourse(\'' + course.id + '\')">删除</button>'; }
+  html += '<button class="btn btn-ghost" onclick="closeModal(\'modal-schedule-course\')">取消</button>';
+  html += '<button class="btn btn-primary" onclick="scheduleSaveCourse()">保存</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function scheduleSaveCourse() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  if (!data.scheduleCourses) data.scheduleCourses = [];
+  const idEl = document.getElementById('sc-id');
+  const course = {
+    id: idEl ? idEl.value : 'sc_' + Date.now(),
+    name: document.getElementById('sc-name').value.trim(),
+    teacher: document.getElementById('sc-teacher').value.trim(),
+    location: document.getElementById('sc-location').value.trim(),
+    dayOfWeek: parseInt(document.getElementById('sc-day').value),
+    startTime: document.getElementById('sc-start').value,
+    endTime: document.getElementById('sc-end').value,
+    weekStart: parseInt(document.getElementById('sc-weekstart').value),
+    weekEnd: parseInt(document.getElementById('sc-weekend').value),
+    color: document.getElementById('sc-color').value,
+    note: document.getElementById('sc-note').value.trim(),
+    createdAt: new Date().toISOString()
+  };
+  if (!course.name) { toast('请输入课程名称', 'error'); return; }
+  const idx = data.scheduleCourses.findIndex(c => c.id === course.id);
+  if (idx >= 0) data.scheduleCourses[idx] = course; else data.scheduleCourses.push(course);
+  saveProfileDataCached(state.currentProfileId, data);
+  closeModal('modal-schedule-course');
+  renderScheduleView();
+  toast('课程已保存', 'success');
+}
+
+function scheduleEditCourse(courseId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const course = (data.scheduleCourses || []).find(c => c.id === courseId);
+  if (course) showScheduleCourseModal(course);
+}
+
+function scheduleDeleteCourse(courseId) {
+  if (!confirm('确定删除这门课程吗？')) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  data.scheduleCourses = (data.scheduleCourses || []).filter(c => c.id !== courseId);
+  saveProfileDataCached(state.currentProfileId, data);
+  closeModal('modal-schedule-course');
+  renderScheduleView();
+  toast('课程已删除', 'success');
+}
+
+function schedulePrevWeek() { if (scheduleWeek > 1) { scheduleWeek--; renderScheduleView(); } }
+function scheduleNextWeek() { if (scheduleWeek < 20) { scheduleWeek++; renderScheduleView(); } }
+function scheduleToggleView() {
+  scheduleViewMode = scheduleViewMode === 'grid' ? 'list' : 'grid';
+  document.getElementById('schedule-view-toggle').textContent = scheduleViewMode === 'grid' ? '切换列表视图' : '切换网格视图';
+  renderScheduleView();
+}
+
+function updateDashSchedule() {
+  const el = document.getElementById('dash-schedule-list');
+  if (!el) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const courses = data.scheduleCourses || [];
+  const today = new Date().getDay();
+  const dayOfWeek = today === 0 ? 7 : today;
+  const todayCourses = courses.filter(c => c.dayOfWeek === dayOfWeek && c.weekStart <= scheduleWeek && c.weekEnd >= scheduleWeek).sort((a, b) => a.startTime.localeCompare(b.startTime));
+  if (todayCourses.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-secondary);padding:16px;text-align:center;">今日暂无课程</div>';
+  } else {
+    el.innerHTML = todayCourses.map(c => '<div class="dash-schedule-item" style="border-left:3px solid ' + (c.color||'#4F46E5') + ';padding:8px 12px;margin:4px 0;border-radius:0 8px 8px 0;background:var(--bg-main);"><strong>' + escapeHtml(c.name) + '</strong> <span style="color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + '</span> <span style="color:var(--text-secondary);font-size:12px;">' + escapeHtml(c.location||'') + '</span></div>').join('');
+  }
+}
+
+// ===== Tasks View (Assignment Management) =====
+let taskFilter = 'all';
+
+function renderTasksView() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const tasks = data.tasksData || [];
+  const now = new Date();
+  const today = now.toISOString().split('T')[0];
+  
+  let filtered = tasks;
+  if (taskFilter === 'pending') filtered = tasks.filter(t => !t.completed);
+  else if (taskFilter === 'completed') filtered = tasks.filter(t => t.completed);
+  else if (taskFilter === 'today') filtered = tasks.filter(t => !t.completed && t.dueDate && t.dueDate.split('T')[0] === today);
+  else if (taskFilter === 'week') {
+    const weekEnd = new Date(now.getTime() + 7 * 86400000).toISOString().split('T')[0];
+    filtered = tasks.filter(t => !t.completed && t.dueDate && t.dueDate >= today && t.dueDate <= weekEnd);
+  }
+  filtered.sort((a, b) => {
+    if (a.completed !== b.completed) return a.completed ? 1 : -1;
+    if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+  
+  const pending = tasks.filter(t => !t.completed);
+  const completed = tasks.filter(t => t.completed);
+  const todayDue = pending.filter(t => t.dueDate && t.dueDate.split('T')[0] === today);
+  const total = tasks.length;
+  const rate = total ? Math.round(completed.length / total * 100) : 0;
+  
+  document.getElementById('task-stats-cards').innerHTML = 
+    '<div class="insight-card"><div class="label">待办</div><div class="value">' + pending.length + '</div></div>' +
+    '<div class="insight-card"><div class="label">今日截止</div><div class="value" style="color:' + (todayDue.length > 0 ? 'var(--danger)' : '') + '">' + todayDue.length + '</div></div>' +
+    '<div class="insight-card"><div class="label">已完成</div><div class="value">' + completed.length + '</div></div>' +
+    '<div class="insight-card"><div class="label">完成率</div><div class="value">' + rate + '%</div></div>';
+  
+  if (filtered.length === 0) {
+    document.getElementById('tasks-list').innerHTML = '<div class="empty-state"><div style="font-size:48px;margin-bottom:12px;">📝</div><div>暂无任务，去添加一个吧！</div></div>';
+    updateDashTaskBadge();
+    return;
+  }
+  
+  document.getElementById('tasks-list').innerHTML = filtered.map(t => {
+    const isOverdue = !t.completed && t.dueDate && t.dueDate < today;
+    const priorityColors = { high: '#EF4444', medium: '#F59E0B', low: '#10B981' };
+    const dueDateStr = t.dueDate ? new Date(t.dueDate).toLocaleDateString('zh-CN') : '';
+    const daysLeft = t.dueDate ? Math.ceil((new Date(t.dueDate) - now) / 86400000) : null;
+    let daysLeftStr = '';
+    if (daysLeft !== null && !t.completed) {
+      if (daysLeft < 0) daysLeftStr = '<span class="badge badge-danger">已过期</span>';
+      else if (daysLeft === 0) daysLeftStr = '<span class="badge badge-danger">今日截止</span>';
+      else if (daysLeft <= 2) daysLeftStr = '<span class="badge badge-warning">剩' + daysLeft + '天</span>';
+      else daysLeftStr = '<span class="badge">剩' + daysLeft + '天</span>';
+    }
+    return '<div class="task-card' + (t.completed ? ' completed' : '') + (isOverdue ? ' overdue' : '') + '" onclick="taskEdit(\'' + t.id + '\')" style="border-left:4px solid ' + (priorityColors[t.priority] || '#ccc') + ';"><div class="task-check" onclick="event.stopPropagation();taskToggleComplete(\'' + t.id + '\')"><svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:' + (t.completed ? 'var(--green)' : 'none') + ';stroke:' + (t.completed ? 'var(--green)' : 'var(--text-secondary)') + ';stroke-width:2;"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" style="' + (t.completed ? '' : 'display:none;') + '"/></svg></div><div class="task-content" style="flex:1;"><div class="task-title" style="' + (t.completed ? 'text-decoration:line-through;color:var(--text-secondary);' : '') + '">' + escapeHtml(t.title) + '</div>' + (t.description ? '<div class="task-desc">' + escapeHtml(t.description) + '</div>' : '') + '<div class="task-meta">' + (t.courseName ? '<span class="task-course-tag">' + escapeHtml(t.courseName) + '</span>' : '') + '<span class="task-priority">优先级:' + ({high:'高',medium:'中',low:'低'})[t.priority] + '</span>' + (dueDateStr ? '<span>截止: ' + dueDateStr + '</span>' : '') + '</div></div><div class="task-right">' + daysLeftStr + '</div></div>';
+  }).join('');
+  updateDashTaskBadge();
+}
+
+function setTaskFilter(filter, btn) {
+  taskFilter = filter;
+  document.querySelectorAll('.task-filter-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderTasksView();
+}
+
+function showAddTask() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const courses = data.scheduleCourses || [];
+  let html = '<div class="modal-overlay active" id="modal-task-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>添加任务</h3><button class="modal-close" onclick="closeModal(\'modal-task-form\')">&times;</button></div><div class="modal-body">';
+  html += '<div class="form-group"><label>任务标题 *</label><input id="task-title" class="input"></div>';
+  html += '<div class="form-group"><label>详细描述</label><textarea id="task-desc" class="input" rows="2"></textarea></div>';
+  html += '<div class="form-group"><label>关联课程</label><select id="task-course" class="input"><option value="">无</option>';
+  courses.forEach(c => { html += '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>'; });
+  html += '</select></div>';
+  html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;"><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'high\';this.style.borderColor=\'#EF4444\';return false;" style="border:2px solid #EF4444;color:#EF4444;">高</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'medium\';return false;" style="border:2px solid #F59E0B;color:#F59E0B;">中</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'low\';return false;" style="border:2px solid #10B981;color:#10B981;">低</button></div><input type="hidden" id="task-priority" value="medium"></div>';
+  html += '<div class="form-group"><label>截止日期</label><input id="task-due" class="input" type="datetime-local"></div>';
+  html += '<input type="hidden" id="task-edit-id" value="">';
+  html += '</div><div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function taskEdit(taskId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const task = (data.tasksData || []).find(t => t.id === taskId);
+  if (!task) return;
+  const courses = data.scheduleCourses || [];
+  let html = '<div class="modal-overlay active" id="modal-task-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>编辑任务</h3><button class="modal-close" onclick="closeModal(\'modal-task-form\')">&times;</button></div><div class="modal-body">';
+  html += '<div class="form-group"><label>任务标题 *</label><input id="task-title" class="input" value="' + escapeAttr(task.title) + '"></div>';
+  html += '<div class="form-group"><label>详细描述</label><textarea id="task-desc" class="input" rows="2">' + escapeHtml(task.description || '') + '</textarea></div>';
+  html += '<div class="form-group"><label>关联课程</label><select id="task-course" class="input"><option value="">无</option>';
+  courses.forEach(c => { html += '<option value="' + c.id + '"' + (task.courseId === c.id ? ' selected' : '') + '>' + escapeHtml(c.name) + '</option>'; });
+  html += '</select></div>';
+  html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;">';
+  ['high','medium','low'].forEach(p => {
+    const clrs = {high:'#EF4444',medium:'#F59E0B',low:'#10B981'};
+    html += '<button class="btn ' + (task.priority === p ? 'btn-primary' : 'btn-ghost') + '" type="button" onclick="document.getElementById(\'task-priority\').value=\'' + p + '\';return false;" style="border:2px solid ' + clrs[p] + ';color:' + clrs[p] + ';">' + ({high:'高',medium:'中',low:'低'})[p] + '</button>';
+  });
+  html += '</div><input type="hidden" id="task-priority" value="' + task.priority + '"></div>';
+  html += '<div class="form-group"><label>截止日期</label><input id="task-due" class="input" type="datetime-local" value="' + (task.dueDate ? task.dueDate.slice(0,16) : '') + '"></div>';
+  html += '<input type="hidden" id="task-edit-id" value="' + task.id + '">';
+  html += '</div><div class="modal-footer"><button class="btn btn-danger" onclick="taskDelete(\'' + task.id + '\')">删除</button><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function taskSave() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  if (!data.tasksData) data.tasksData = [];
+  const editId = document.getElementById('task-edit-id').value;
+  const existing = editId ? data.tasksData.find(t => t.id === editId) : null;
+  const task = {
+    id: editId || 'task_' + Date.now(),
+    title: document.getElementById('task-title').value.trim(),
+    description: document.getElementById('task-desc').value.trim(),
+    courseId: document.getElementById('task-course').value,
+    courseName: document.getElementById('task-course').selectedOptions[0] ? document.getElementById('task-course').selectedOptions[0].text : '',
+    priority: document.getElementById('task-priority').value,
+    dueDate: document.getElementById('task-due').value ? new Date(document.getElementById('task-due').value).toISOString() : null,
+    completed: existing ? existing.completed : false,
+    completedAt: existing ? existing.completedAt : null,
+    createdAt: existing ? existing.createdAt : new Date().toISOString()
+  };
+  if (!task.title) { toast('请输入任务标题', 'error'); return; }
+  const idx = data.tasksData.findIndex(t => t.id === task.id);
+  if (idx >= 0) data.tasksData[idx] = task; else data.tasksData.push(task);
+  saveProfileDataCached(state.currentProfileId, data);
+  closeModal('modal-task-form');
+  renderTasksView();
+  toast('任务已保存', 'success');
+}
+
+function taskToggleComplete(taskId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const task = (data.tasksData || []).find(t => t.id === taskId);
+  if (!task) return;
+  task.completed = !task.completed;
+  task.completedAt = task.completed ? new Date().toISOString() : null;
+  saveProfileDataCached(state.currentProfileId, data);
+  renderTasksView();
+  if (task.completed) toast(getRandomEncouragement(), 'success');
+}
+
+function taskDelete(taskId) {
+  if (!confirm('确定删除这个任务吗？')) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  data.tasksData = (data.tasksData || []).filter(t => t.id !== taskId);
+  saveProfileDataCached(state.currentProfileId, data);
+  closeModal('modal-task-form');
+  renderTasksView();
+  toast('任务已删除', 'success');
+}
+
+function updateDashTaskBadge() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const tasks = data.tasksData || [];
+  const pending = tasks.filter(t => !t.completed);
+  const badge = document.getElementById('tasks-badge');
+  if (badge) {
+    if (pending.length > 0) { badge.style.display = 'inline'; badge.textContent = pending.length; }
+    else { badge.style.display = 'none'; }
+  }
+}
+
+// ===== Focus Timer =====
+let focusState = { running: false, mode: 'focus', timeLeft: 25 * 60, totalTime: 25 * 60 };
+let focusInterval = null;
+let focusSettings = { focusDuration: 25, breakDuration: 5, longBreakDuration: 15, autoStartBreak: true, autoStartFocus: false, soundEnabled: true };
+
+function renderFocusView() {
+  const s = getProfileDataCached(state.currentProfileId) || {};
+  if (s.focusPrefs) focusSettings = { ...focusSettings, ...s.focusPrefs };
+  if (focusState.mode === 'focus') { focusState.totalTime = focusSettings.focusDuration * 60; } else { focusState.totalTime = focusSettings.breakDuration * 60; }
+  if (!focusState.running) focusState.timeLeft = focusState.totalTime;
+  updateFocusDisplay();
+  updateFocusStats();
+  renderFocusHeatmap();
+  renderFocusChart();
+}
+
+function updateFocusDisplay() {
+  const mins = Math.floor(focusState.timeLeft / 60);
+  const secs = focusState.timeLeft % 60;
+  document.getElementById('focus-time-display').textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+  const statusMap = { focus: '专注中', break: '休息中', longBreak: '长休息中' };
+  document.getElementById('focus-status-text').textContent = focusState.running ? statusMap[focusState.mode] : '准备开始';
+  const progress = focusState.totalTime > 0 ? focusState.timeLeft / focusState.totalTime : 1;
+  const circumference = 282.7;
+  document.getElementById('focus-progress-ring').setAttribute('stroke-dashoffset', circumference * (1 - progress));
+  const btn = document.getElementById('focus-start-btn');
+  if (focusState.running) {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:currentColor;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    btn.classList.add('paused');
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>';
+    btn.classList.remove('paused');
+  }
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const sessions = data.focusSessions || [];
+  const today = new Date().toISOString().split('T')[0];
+  const todayPoms = sessions.filter(s => s.type === 'focus' && s.completed && s.startTime && s.startTime.split('T')[0] === today);
+  document.getElementById('focus-tomato-count').textContent = '🍅 x ' + todayPoms.length;
+}
+
+function focusToggle() {
+  if (focusState.running) { focusState.running = false; clearInterval(focusInterval); }
+  else { focusState.running = true; focusInterval = setInterval(focusTick, 1000); }
+  updateFocusDisplay();
+}
+
+function focusTick() {
+  focusState.timeLeft--;
+  updateFocusDisplay();
+  if (focusState.timeLeft <= 0) focusComplete();
+}
+
+function focusComplete() {
+  clearInterval(focusInterval);
+  focusState.running = false;
+  if (focusSettings.soundEnabled) {
+    try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.frequency.value = focusState.mode === 'focus' ? 880 : 440; osc.type = 'sine'; gain.gain.value = 0.3; osc.start(); osc.stop(ctx.currentTime + 0.3); } catch(e) {}
+  }
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  if (!data.focusSessions) data.focusSessions = [];
+  if (focusState.mode === 'focus') {
+    data.focusSessions.push({ id: 'focus_' + Date.now(), startTime: new Date(Date.now() - focusState.totalTime * 1000).toISOString(), endTime: new Date().toISOString(), duration: focusState.totalTime / 60, type: 'focus', completed: true, createdAt: new Date().toISOString() });
+    toast('🍅 专注' + (focusState.totalTime/60) + '分钟，干得漂亮！', 'success');
+    focusState.mode = 'break'; focusState.totalTime = focusSettings.breakDuration * 60;
+    if (focusSettings.autoStartBreak) { focusState.running = true; focusInterval = setInterval(focusTick, 1000); }
+  } else {
+    focusState.mode = 'focus'; focusState.totalTime = focusSettings.focusDuration * 60;
+    if (focusSettings.autoStartFocus) { focusState.running = true; focusInterval = setInterval(focusTick, 1000); }
+  }
+  focusState.timeLeft = focusState.totalTime;
+  saveProfileDataCached(state.currentProfileId, data);
+  updateFocusDisplay(); updateFocusStats();
+}
+
+function focusReset() { clearInterval(focusInterval); focusState.running = false; focusState.mode = 'focus'; focusState.totalTime = focusSettings.focusDuration * 60; focusState.timeLeft = focusState.totalTime; updateFocusDisplay(); }
+function focusSkip() { clearInterval(focusInterval); focusState.running = false; if (focusState.mode === 'focus') { focusState.mode = 'break'; focusState.totalTime = focusSettings.breakDuration * 60; } else { focusState.mode = 'focus'; focusState.totalTime = focusSettings.focusDuration * 60; } focusState.timeLeft = focusState.totalTime; updateFocusDisplay(); }
+
+function updateFocusStats() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const sessions = (data.focusSessions || []).filter(s => s.type === 'focus' && s.completed);
+  const today = new Date().toISOString().split('T')[0];
+  const todayMins = sessions.filter(s => s.startTime && s.startTime.split('T')[0] === today).reduce((s,ss) => s + ss.duration, 0);
+  const weekAgo = new Date(Date.now() - 7*86400000).toISOString();
+  const weekMins = sessions.filter(s => s.startTime >= weekAgo).reduce((s,ss) => s + ss.duration, 0);
+  const totalMins = sessions.reduce((s,ss) => s + ss.duration, 0);
+  let streak = 0; const d = new Date();
+  while (true) { const ds = d.toISOString().split('T')[0]; if (sessions.some(s => s.startTime && s.startTime.split('T')[0] === ds)) { streak++; d.setDate(d.getDate()-1); } else break; }
+  document.getElementById('focus-stats').innerHTML =
+    '<div class="insight-card"><div class="label">今日专注</div><div class="value">' + Math.floor(todayMins/60) + 'h ' + (todayMins%60) + 'm</div></div>' +
+    '<div class="insight-card"><div class="label">本周专注</div><div class="value">' + Math.floor(weekMins/60) + 'h ' + (weekMins%60) + 'm</div></div>' +
+    '<div class="insight-card"><div class="label">连续天数</div><div class="value">' + streak + '天</div></div>' +
+    '<div class="insight-card"><div class="label">累计专注</div><div class="value">' + Math.floor(totalMins/60) + 'h</div></div>';
+}
+
+function renderFocusHeatmap() {
+  const el = document.getElementById('focus-heatmap'); if (!el) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const sessions = (data.focusSessions || []).filter(s => s.type === 'focus' && s.completed);
+  const now = new Date(); let html = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">';
+  for (let i = 83; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000); const ds = d.toISOString().split('T')[0];
+    const mins = sessions.filter(s => s.startTime && s.startTime.split('T')[0] === ds).reduce((s,ss) => s + ss.duration, 0);
+    let color = '#ebedf0'; if (mins > 0 && mins <= 30) color = '#9be9a8'; else if (mins <= 60) color = '#40c463'; else if (mins <= 120) color = '#30a14e'; else if (mins > 120) color = '#216e39';
+    html += '<div style="aspect-ratio:1;background:' + color + ';border-radius:3px;" title="' + ds + ': ' + mins + '分钟"></div>';
+  }
+  html += '</div>'; el.innerHTML = html;
+}
+
+function renderFocusChart() {
+  const el = document.getElementById('focus-weekly-chart'); if (!el || typeof echarts === 'undefined') return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const sessions = (data.focusSessions || []).filter(s => s.type === 'focus' && s.completed);
+  const days = []; const values = [];
+  for (let i = 6; i >= 0; i--) { const d = new Date(Date.now() - i * 86400000); const ds = d.toISOString().split('T')[0]; days.push((d.getMonth()+1) + '/' + d.getDate()); values.push(sessions.filter(s => s.startTime && s.startTime.split('T')[0] === ds).reduce((s,ss) => s + ss.duration, 0)); }
+  if (state.charts['focusWeekly']) { try { state.charts['focusWeekly'].dispose(); } catch(e) {} }
+  const chart = echarts.init(el); state.charts['focusWeekly'] = chart;
+  chart.setOption({ tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: days }, yAxis: { type: 'value', name: '分钟' }, series: [{ data: values, type: 'bar', itemStyle: { color: '#4F46E5', borderRadius: [4,4,0,0] }, barWidth: '60%' }], grid: { left: 40, right: 10, top: 10, bottom: 20 } });
+}
+
+// ===== Goals View =====
+let goalFilter = 'all';
+
+function renderGoalsView() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const goals = data.goalsData || [];
+  let filtered = goals;
+  if (goalFilter === 'active') filtered = goals.filter(g => g.status === 'active');
+  else if (goalFilter === 'completed') filtered = goals.filter(g => g.status === 'completed');
+  const active = goals.filter(g => g.status === 'active');
+  const completed = goals.filter(g => g.status === 'completed');
+  const rate = goals.length ? Math.round(completed.length / goals.length * 100) : 0;
+  document.getElementById('goal-stats-cards').innerHTML =
+    '<div class="insight-card"><div class="label">进行中</div><div class="value">' + active.length + '</div></div>' +
+    '<div class="insight-card"><div class="label">已完成</div><div class="value">' + completed.length + '</div></div>' +
+    '<div class="insight-card"><div class="label">完成率</div><div class="value">' + rate + '%</div></div>' +
+    '<div class="insight-card"><div class="label">总目标</div><div class="value">' + goals.length + '</div></div>';
+  if (filtered.length === 0) { document.getElementById('goals-grid').innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div style="font-size:48px;margin-bottom:12px;">🎯</div><div>还没有目标，去创建一个吧！</div></div>'; return; }
+  filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  document.getElementById('goals-grid').innerHTML = filtered.map(g => {
+    const catIcons = { academic: '📚', health: '💪', finance: '💰', skill: '🔧', other: '⭐' };
+    const catLabels = { academic: '学业', health: '健康', finance: '财务', skill: '技能', other: '其他' };
+    const progress = g.progress || 0;
+    const mc = (g.milestones || []).length;
+    const md = (g.milestones || []).filter(m => m.completed).length;
+    return '<div class="goal-card card' + (g.status === 'completed' ? ' completed' : '') + '" onclick="goalEdit(\'' + g.id + '\')"><div class="goal-header"><span class="goal-icon">' + (g.icon || catIcons[g.category] || '🎯') + '</span><div><div class="goal-title">' + escapeHtml(g.title) + '</div><div class="goal-meta">' + (catLabels[g.category] || '') + ' · ' + (g.targetDate || '') + '</div></div></div><div class="goal-progress-bar"><div class="goal-progress-fill" style="width:' + progress + '%;background:' + (g.color || '#4F46E5') + ';"></div></div><div class="goal-progress-text">' + progress + '% (' + md + '/' + mc + ' 子任务)</div><div class="goal-milestones">' + (g.milestones || []).map(m => '<div class="goal-milestone' + (m.completed ? ' done' : '') + '" onclick="event.stopPropagation();goalToggleMilestone(\'' + g.id + '\',\'' + m.id + '\')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:' + (m.completed ? 'var(--green)' : 'none') + ';stroke:' + (m.completed ? 'var(--green)' : 'var(--text-secondary)') + ';stroke-width:2;"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg><span>' + escapeHtml(m.title) + '</span></div>').join('') + '</div>' + (g.status === 'completed' ? '<div style="text-align:center;font-size:24px;margin-top:8px;">🎉 目标达成</div>' : '') + '</div>';
+  }).join('');
+}
+
+function setGoalFilter(filter, btn) { goalFilter = filter; document.querySelectorAll('#goal-filter-tabs .task-filter-tab').forEach(b => b.classList.remove('active')); if (btn) btn.classList.add('active'); renderGoalsView(); }
+
+function showAddGoal() {
+  let html = '<div class="modal-overlay active" id="modal-goal-form" style="display:flex;"><div class="modal" style="max-width:480px;"><div class="modal-header"><h3>创建目标</h3><button class="modal-close" onclick="closeModal(\'modal-goal-form\')">&times;</button></div><div class="modal-body">';
+  html += '<div class="form-group"><label>目标标题 *</label><input id="goal-title" class="input"></div>';
+  html += '<div class="form-group"><label>详细描述</label><textarea id="goal-desc" class="input" rows="2"></textarea></div>';
+  html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input"><option value="academic">📚 学业</option><option value="health">💪 健康</option><option value="finance">💰 财务</option><option value="skill">🔧 技能</option><option value="other">⭐ 其他</option></select></div>';
+  html += '<div class="form-group"><label>主题色</label><div class="color-picker">';
+  ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="#4F46E5"></div>';
+  html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date"></div>';
+  html += '<input type="hidden" id="goal-edit-id" value=""></div><div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">创建</button></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function goalEdit(goalId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const goal = (data.goalsData || []).find(g => g.id === goalId); if (!goal) return;
+  const cats = [{v:'academic',l:'📚 学业'},{v:'health',l:'💪 健康'},{v:'finance',l:'💰 财务'},{v:'skill',l:'🔧 技能'},{v:'other',l:'⭐ 其他'}];
+  let html = '<div class="modal-overlay active" id="modal-goal-form" style="display:flex;"><div class="modal" style="max-width:520px;"><div class="modal-header"><h3>编辑目标</h3><button class="modal-close" onclick="closeModal(\'modal-goal-form\')">&times;</button></div><div class="modal-body">';
+  html += '<div class="form-group"><label>目标标题</label><input id="goal-title" class="input" value="' + escapeAttr(goal.title) + '"></div>';
+  html += '<div class="form-group"><label>描述</label><textarea id="goal-desc" class="input" rows="2">' + escapeHtml(goal.description||'') + '</textarea></div>';
+  html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input">';
+  cats.forEach(c => { html += '<option value="' + c.v + '"' + (goal.category===c.v?' selected':'') + '>' + c.l + '</option>'; });
+  html += '</select></div><div class="form-group"><label>主题色</label><div class="color-picker">';
+  ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="' + (goal.color||'#4F46E5') + '"></div>';
+  html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date" value="' + (goal.targetDate||'') + '"></div>';
+  html += '<div class="form-group"><label>子任务</label><div id="goal-milestones-list">';
+  (goal.milestones||[]).forEach(m => { html += '<div style="display:flex;gap:8px;margin-bottom:4px;"><input class="input" value="' + escapeAttr(m.title) + '" data-mid="' + m.id + '" style="flex:1;"><button class="btn btn-ghost" onclick="this.parentElement.remove();" style="padding:4px 8px;">✕</button></div>'; });
+  html += '</div><button class="btn btn-ghost" onclick="goalAddMilestoneField()" style="margin-top:4px;">+ 添加子任务</button></div>';
+  html += '<div class="form-group"><label>状态</label><select id="goal-status" class="input"><option value="active"' + (goal.status==='active'?' selected':'') + '>进行中</option><option value="completed"' + (goal.status==='completed'?' selected':'') + '>已完成</option><option value="abandoned"' + (goal.status==='abandoned'?' selected':'') + '>已放弃</option></select></div>';
+  html += '<input type="hidden" id="goal-edit-id" value="' + goal.id + '"></div><div class="modal-footer"><button class="btn btn-danger" onclick="goalDelete(\'' + goal.id + '\')">删除目标</button><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">保存</button></div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function goalAddMilestoneField() {
+  const list = document.getElementById('goal-milestones-list'); if (!list) return;
+  const div = document.createElement('div'); div.style.cssText = 'display:flex;gap:8px;margin-bottom:4px;';
+  div.innerHTML = '<input class="input" placeholder="子任务名称" style="flex:1;"><button class="btn btn-ghost" onclick="this.parentElement.remove();" style="padding:4px 8px;">✕</button>';
+  list.appendChild(div);
+}
+
+function goalSave() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  if (!data.goalsData) data.goalsData = [];
+  const editId = document.getElementById('goal-edit-id').value;
+  const milestones = [];
+  const list = document.getElementById('goal-milestones-list');
+  if (list) { list.querySelectorAll('input').forEach(inp => { const t = inp.value.trim(); if (t) { const mid = inp.dataset.mid || 'ms_' + Date.now() + '_' + Math.random().toString(36).substr(2,5); milestones.push({ id: mid, title: t, completed: false, completedAt: null, dueDate: null }); } }); }
+  const total = milestones.length; const done = milestones.filter(m => m.completed).length;
+  const status = document.getElementById('goal-status') ? document.getElementById('goal-status').value : 'active';
+  const goal = { id: editId || 'goal_' + Date.now(), title: document.getElementById('goal-title').value.trim(), description: document.getElementById('goal-desc').value.trim(), category: document.getElementById('goal-cat').value, color: document.getElementById('goal-color').value, targetDate: document.getElementById('goal-date').value, progress: total ? Math.round(done/total*100) : 0, progressType: 'auto', status: status, milestones: milestones, createdAt: editId ? (data.goalsData.find(g=>g.id===editId)?.createdAt||new Date().toISOString()) : new Date().toISOString(), completedAt: status==='completed' ? new Date().toISOString() : null };
+  if (!goal.title) { toast('请输入目标标题', 'error'); return; }
+  const idx = data.goalsData.findIndex(g => g.id === goal.id);
+  if (idx >= 0) data.goalsData[idx] = goal; else data.goalsData.push(goal);
+  saveProfileDataCached(state.currentProfileId, data); closeModal('modal-goal-form'); renderGoalsView();
+  toast(goal.status==='completed'?'🎉 目标达成！太棒了！':'目标已保存', 'success');
+}
+
+function goalToggleMilestone(goalId, milestoneId) {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const goal = (data.goalsData||[]).find(g=>g.id===goalId); if(!goal) return;
+  const ms = (goal.milestones||[]).find(m=>m.id===milestoneId); if(!ms) return;
+  ms.completed = !ms.completed; ms.completedAt = ms.completed ? new Date().toISOString() : null;
+  const total = goal.milestones.length; const done = goal.milestones.filter(m=>m.completed).length;
+  goal.progress = total ? Math.round(done/total*100) : 0;
+  if (goal.progress >= 100 && goal.status === 'active') { goal.status = 'completed'; goal.completedAt = new Date().toISOString(); }
+  saveProfileDataCached(state.currentProfileId, data); renderGoalsView();
+  if (ms.completed) toast(getRandomEncouragement(), 'success');
+}
+
+function goalDelete(goalId) {
+  if (!confirm('确定删除这个目标吗？')) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  data.goalsData = (data.goalsData||[]).filter(g=>g.id!==goalId);
+  saveProfileDataCached(state.currentProfileId, data); closeModal('modal-goal-form'); renderGoalsView();
+  toast('目标已删除', 'success');
+}
+
+// ===== Stress Index & Finance Insight =====
+function renderStressIndex() {
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const tasks = data.tasksData || [];
+  const sessions = data.focusSessions || [];
+  const now = new Date(); const today = now.toISOString().split('T')[0]; const weekAgo = new Date(now.getTime() - 7*86400000).toISOString();
+  const pendingTasks = tasks.filter(t => !t.completed);
+  const highPriority = pendingTasks.filter(t => t.priority === 'high').length;
+  const todayDue = pendingTasks.filter(t => t.dueDate && t.dueDate.split('T')[0] === today).length;
+  const taskScore = Math.min(100, pendingTasks.length * 8 + highPriority * 10 + todayDue * 15);
+  const weekFocus = (sessions||[]).filter(s => s.type==='focus'&&s.completed&&s.startTime>=weekAgo);
+  const weekMins = weekFocus.reduce((s,ss)=>s+(ss.duration||0),0); const avgDaily = weekMins/7;
+  const focusScore = Math.min(100, avgDaily>360?Math.round((avgDaily-360)/3):0);
+  const sleepScore = 30; const moodScore = 20; const examScore = 0;
+  const score = Math.round(examScore*0.30+taskScore*0.25+sleepScore*0.20+moodScore*0.15+focusScore*0.10);
+  let level, levelLabel, color, advice;
+  if (score<=30){level='relaxed';levelLabel='轻松';color='#10B981';advice=['状态不错，继续保持','今天适合做些运动放松一下'];}
+  else if(score<=50){level='moderate';levelLabel='适中';color='#F59E0B';advice=['有点忙，注意劳逸结合','记得按时吃饭和休息'];}
+  else if(score<=70){level='elevated';levelLabel='偏高';color='#F97316';advice=['最近有点累，记得给自己放松时间','要不要试试番茄钟提高效率？'];}
+  else{level='high';levelLabel='高压';color='#EF4444';advice=['你最近压力太大了，请务必注意休息','建议减少一些非必要的任务'];}
+  if (!data.stressHistory) data.stressHistory = [];
+  const ei = data.stressHistory.findIndex(h=>h.date===today);
+  const entry = {date:today,score,level,color,advice};
+  if(ei>=0)data.stressHistory[ei]=entry;else data.stressHistory.push(entry);
+  if(data.stressHistory.length>90)data.stressHistory=data.stressHistory.slice(-90);
+  saveProfileDataCached(state.currentProfileId, data);
+  const container = document.getElementById('stress-gauge-container'); if(!container) return;
+  const angle = (score/100)*180-90; const rad = angle*Math.PI/180; const cx=100,cy=90,r=70;
+  const x=cx+r*Math.cos(-rad); const y=cy-r*Math.sin(-rad);
+  container.innerHTML =
+    '<div class="stress-gauge"><svg viewBox="0 0 200 140" style="width:100%;max-width:280px;"><path d="M 30 95 A 70 70 0 0 1 170 95" fill="none" stroke="#e5e7eb" stroke-width="12" stroke-linecap="round"/><path d="M 30 95 A 70 70 0 0 1 '+x.toFixed(1)+' '+y.toFixed(1)+'" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round" style="transition:all 0.6s ease;"/><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="'+color+'"/></svg><div class="stress-value" style="color:'+color+';">'+score+'</div><div class="stress-label" style="color:'+color+';">'+levelLabel+'</div></div><div class="stress-advice">'+advice.map(a=>'<div class="stress-advice-item">💬 '+a+'</div>').join('')+'</div>';
+}
+
+function renderFinanceInsight() {
+  const finView = document.getElementById('view-finance');
+  if (!finView) return;
+  const data = getProfileDataCached(state.currentProfileId) || {};
+  const transactions = data.transactions || [];
+  const month = new Date().toISOString().slice(0,7);
+  const monthTx = transactions.filter(tx => tx.date && tx.date.startsWith(month));
+  const expenses = monthTx.filter(tx => tx.type === 'expense');
+  const incomes = monthTx.filter(tx => tx.type === 'income');
+  const totalExpense = expenses.reduce((s,tx)=>s+Number(tx.amount),0);
+  const totalIncome = incomes.reduce((s,tx)=>s+Number(tx.amount),0);
+  const balance = totalIncome - totalExpense;
+  const catMap = {}; expenses.forEach(tx=>{const c=tx.category||'其他';catMap[c]=(catMap[c]||0)+Number(tx.amount);});
+  const catBreakdown = Object.entries(catMap).map(([cat,amt])=>({category:cat,amount:amt,percentage:totalExpense?Math.round(amt/totalExpense*1000)/10:0})).sort((a,b)=>b.amount-a.amount);
+  const todayDay = new Date().getDate();
+  const avgDaily = Math.round(totalExpense/todayDay*10)/10;
+  const budgets = data.budgets || [];
+  const budget = budgets.find(b => b.month === month);
+  const insights = [];
+  if (budget && budget.totalBudget > 0 && totalExpense > budget.totalBudget) {
+    insights.push({type:'warning',icon:'⚠️',title:'总支出超预算',detail:'本月已支出'+totalExpense.toFixed(1)+'元，超出总预算'+(totalExpense-budget.totalBudget).toFixed(1)+'元',suggestion:'可以看看哪些分类可以适当控制一下'});
+  }
+  catBreakdown.forEach(c => {
+    if (budget && budget.categoryBudgets && budget.categoryBudgets[c.category] && c.amount > budget.categoryBudgets[c.category]) {
+      insights.push({type:'warning',icon:'⚠️',title:c.category+'支出超预算',detail:'本月'+c.category+'支出'+c.amount.toFixed(1)+'元，超出预算'+(c.amount-budget.categoryBudgets[c.category]).toFixed(1)+'元',suggestion:'要不要挑战下周减少'+c.category+'支出？'});
+    }
+  });
+  if (catBreakdown.length > 0 && catBreakdown[0].percentage > 50) {
+    insights.push({type:'tip',icon:'💡',title:'主要支出在'+catBreakdown[0].category,detail:catBreakdown[0].category+'占总支出的'+catBreakdown[0].percentage+'%',suggestion:'要不要分析一下'+catBreakdown[0].category+'的具体构成？'});
+  }
+  if (budget && budget.totalBudget > 0 && totalExpense < budget.totalBudget * 0.8) {
+    insights.push({type:'positive',icon:'👍',title:'消费控制得不错',detail:'本月支出'+totalExpense.toFixed(1)+'元，低于预算20%以上',suggestion:'省下的钱可以存起来实现小目标！'});
+  }
+  const tags = [];
+  if (totalExpense > 0 && totalExpense > totalIncome) tags.push('超支警戒');
+  if (budget && budget.totalBudget > 0 && totalExpense < budget.totalBudget * 0.7) tags.push('省钱小能手');
+  
+  let oldSection = finView.querySelector('.finance-insight-section');
+  if (oldSection) oldSection.remove();
+  const section = document.createElement('div'); section.className = 'finance-insight-section';
+  let h = '<div class="card" style="margin-bottom:16px;"><div class="card-title">📊 消费洞察 ('+month+')</div><div class="insight-cards"><div class="insight-card"><div class="label">本月支出</div><div class="value">¥'+totalExpense.toFixed(1)+'</div></div><div class="insight-card"><div class="label">本月收入</div><div class="value">¥'+totalIncome.toFixed(1)+'</div></div><div class="insight-card"><div class="label">结余</div><div class="value" style="color:'+(balance>=0?'var(--green)':'var(--danger)')+';">¥'+balance.toFixed(1)+'</div></div><div class="insight-card"><div class="label">日均支出</div><div class="value">¥'+avgDaily.toFixed(1)+'</div></div></div>';
+  if (budget && budget.totalBudget > 0) {
+    const pct = Math.round(totalExpense/budget.totalBudget*100);
+    h += '<div style="margin-top:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>预算执行</span><span style="color:'+(pct>100?'var(--danger)':'')+';">¥'+totalExpense.toFixed(1)+' / ¥'+budget.totalBudget+' ('+pct+'%)</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+Math.min(100,pct)+'%;background:'+(pct>100?'var(--danger)':'var(--accent-blue)')+';"></div></div></div>';
+  }
+  if (catBreakdown.length > 0) {
+    h += '<div style="margin-top:16px;"><div style="font-weight:600;margin-bottom:8px;">分类占比</div>'+catBreakdown.slice(0,5).map(c=>'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="width:60px;font-size:13px;">'+c.category+'</span><div class="progress-bar" style="flex:1;"><div class="progress-fill" style="width:'+c.percentage+'%;background:var(--accent-purple);"></div></div><span style="width:60px;text-align:right;font-size:13px;">'+c.percentage+'%</span></div>').join('')+'</div>';
+  }
+  if (insights.length > 0) {
+    h += '<div style="margin-top:16px;"><div style="font-weight:600;margin-bottom:8px;">智能洞察</div>'+insights.map(i=>'<div class="insight-item" style="padding:10px 12px;margin-bottom:8px;border-radius:8px;background:'+(i.type==='warning'?'#fef2f2':i.type==='tip'?'#eff6ff':'#f0fdf4')+';"><div style="font-weight:600;">'+i.icon+' '+i.title+'</div><div style="font-size:13px;color:var(--text-secondary);">'+i.detail+'</div><div style="font-size:13px;color:var(--accent-blue);margin-top:4px;">'+i.suggestion+'</div></div>').join('')+'</div>';
+  }
+  if (tags.length > 0) { h += '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">'+tags.map(t=>'<span class="tag" style="padding:4px 12px;border-radius:20px;font-size:12px;background:var(--accent-blue);color:#fff;">'+t+'</span>').join('')+'</div>'; }
+  h += '</div>'; section.innerHTML = h;
+  finView.appendChild(section);
+}
+
+// ===== Helpers =====
+const encouragements = ['太棒了！又完成一项！','加油！你正在越来越好！','干得漂亮！继续保持！','你真的很努力，为自己骄傲吧！','今天也是充实的一天！','你正在变得更好！','轻松拿下，真厉害！','又向目标迈进了一步！'];
+function getRandomEncouragement() { return encouragements[Math.floor(Math.random()*encouragements.length)]; }
+function escapeHtml(str) { if(!str)return''; return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escapeAttr(str) { if(!str)return''; return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
 // ===== Expose Functions to Global =====
 window.$ = $;
 window.uuid = uuid;
@@ -4582,6 +5155,42 @@ window.showDataManager = showDataManager;
 window.exportData = exportData;
 window.importData = importData;
 window.clearAllData = clearAllData;
+window.renderScheduleView = renderScheduleView;
+window.renderTasksView = renderTasksView;
+window.renderFocusView = renderFocusView;
+window.renderGoalsView = renderGoalsView;
+window.schedulePrevWeek = schedulePrevWeek;
+window.scheduleNextWeek = scheduleNextWeek;
+window.scheduleToggleView = scheduleToggleView;
+window.scheduleCellClick = scheduleCellClick;
+window.showScheduleCourseModal = showScheduleCourseModal;
+window.scheduleSaveCourse = scheduleSaveCourse;
+window.scheduleEditCourse = scheduleEditCourse;
+window.scheduleDeleteCourse = scheduleDeleteCourse;
+window.updateDashSchedule = updateDashSchedule;
+window.setTaskFilter = setTaskFilter;
+window.showAddTask = showAddTask;
+window.taskSave = taskSave;
+window.taskEdit = taskEdit;
+window.taskToggleComplete = taskToggleComplete;
+window.taskDelete = taskDelete;
+window.updateDashTaskBadge = updateDashTaskBadge;
+window.focusToggle = focusToggle;
+window.focusReset = focusReset;
+window.focusSkip = focusSkip;
+window.setGoalFilter = setGoalFilter;
+window.showAddGoal = showAddGoal;
+window.goalSave = goalSave;
+window.goalEdit = goalEdit;
+window.goalToggleMilestone = goalToggleMilestone;
+window.goalDelete = goalDelete;
+window.goalAddMilestoneField = goalAddMilestoneField;
+window.renderStressIndex = renderStressIndex;
+window.renderFinanceInsight = renderFinanceInsight;
+window.getRandomEncouragement = getRandomEncouragement;
+window.escapeHtml = escapeHtml;
+window.escapeAttr = escapeAttr;
+
 window.init = init;
 
 // Start
@@ -4595,260 +5204,6 @@ function showDataUsageNotice() {
   }, 200);
 }
 window.showDataUsageNotice = showDataUsageNotice;
-
-
-// ===== Cloud Sync Functions =====
-const CLOUD_API_BASE = 'https://dandantable.onrender.com/api';
-let cloudToken = localStorage.getItem('cloud_token') || null;
-let cloudUser = JSON.parse(localStorage.getItem('cloud_user') || 'null');
-
-// 显示云端登录窗口
-function showCloudLogin() {
-  showModal('modal-cloud-login');
-  switchCloudTab('login');
-}
-window.showCloudLogin = showCloudLogin;
-
-// 切换登录/注册标签
-function switchCloudTab(tab) {
-  const loginForm = $('cloud-login-form');
-  const registerForm = $('cloud-register-form');
-  const loginTab = $('cloud-tab-login');
-  const registerTab = $('cloud-tab-register');
-  
-  if (tab === 'login') {
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-    loginTab.style.background = 'var(--accent-blue)';
-    loginTab.style.color = '#fff';
-    registerTab.style.background = '';
-    registerTab.style.color = '';
-  } else {
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-    registerTab.style.background = 'var(--accent-blue)';
-    registerTab.style.color = '#fff';
-    loginTab.style.background = '';
-    loginTab.style.color = '';
-  }
-}
-window.switchCloudTab = switchCloudTab;
-
-// 云端登录
-async function cloudDoLogin() {
-  const username = $('cloud-login-username').value.trim();
-  const password = $('cloud-login-password').value;
-  
-  if (!username || !password) {
-    showToast('请输入用户名和密码', 'error');
-    return;
-  }
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      cloudToken = result.data.token;
-      cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
-      updateCloudSyncUI();
-      closeModal('modal-cloud-login');
-      showToast('登录成功，欢迎 ' + cloudUser.nickname, 'success');
-    } else {
-      showToast(result.message || '登录失败', 'error');
-    }
-  } catch (err) {
-    showToast('无法连接云端服务器，请确认后端已启动', 'error');
-    console.error('Cloud login error:', err);
-  }
-}
-window.cloudDoLogin = cloudDoLogin;
-
-// 云端注册
-async function cloudDoRegister() {
-  const username = $('cloud-register-username').value.trim();
-  const nickname = $('cloud-register-nickname').value.trim();
-  const password = $('cloud-register-password').value;
-  
-  if (!username || username.length < 3) {
-    showToast('用户名至少3个字符', 'error');
-    return;
-  }
-  if (!password || password.length < 6) {
-    showToast('密码至少6个字符', 'error');
-    return;
-  }
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, nickname })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      cloudToken = result.data.token;
-      cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
-      updateCloudSyncUI();
-      closeModal('modal-cloud-login');
-      showToast('注册成功，已自动登录', 'success');
-    } else {
-      showToast(result.message || '注册失败', 'error');
-    }
-  } catch (err) {
-    showToast('无法连接云端服务器，请确认后端已启动', 'error');
-    console.error('Cloud register error:', err);
-  }
-}
-window.cloudDoRegister = cloudDoRegister;
-
-// 云端登出
-function cloudLogout() {
-  cloudToken = null;
-  cloudUser = null;
-  localStorage.removeItem('cloud_token');
-  localStorage.removeItem('cloud_user');
-  updateCloudSyncUI();
-  showToast('已退出云端账号', 'success');
-}
-window.cloudLogout = cloudLogout;
-
-// 上传数据到云端
-async function cloudUpload() {
-  if (!cloudToken) {
-    showToast('请先登录云端账号', 'error');
-    return;
-  }
-  
-  const btn = $('cloud-upload-btn');
-  btn.disabled = true;
-  btn.textContent = '上传中...';
-  
-  try {
-    // 收集所有localStorage数据（当前用户的）
-    const allData = {};
-    const prefix = 'campus_toolbox_';
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(prefix) && !key.includes('cloud_')) {
-        allData[key] = localStorage.getItem(key);
-      }
-    }
-    
-    const response = await fetch(CLOUD_API_BASE + '/sync/upload', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + cloudToken
-      },
-      body: JSON.stringify({ data: allData })
-    });
-    const result = await response.json();
-    
-    if (result.success) {
-      showToast('数据已上传到云端', 'success');
-      updateCloudSyncUI();
-    } else {
-      showToast(result.message || '上传失败', 'error');
-    }
-  } catch (err) {
-    showToast('上传失败，请检查网络连接', 'error');
-    console.error('Cloud upload error:', err);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传到云端';
-  }
-}
-window.cloudUpload = cloudUpload;
-
-// 从云端下载数据
-async function cloudDownload() {
-  if (!cloudToken) {
-    showToast('请先登录云端账号', 'error');
-    return;
-  }
-  
-  if (!confirm('从云端下载数据将覆盖当前本地数据，确定继续吗？')) {
-    return;
-  }
-  
-  const btn = $('cloud-download-btn');
-  btn.disabled = true;
-  btn.textContent = '下载中...';
-  
-  try {
-    const response = await fetch(CLOUD_API_BASE + '/sync/download', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + cloudToken
-      }
-    });
-    const result = await response.json();
-    
-    if (result.success && result.data) {
-      // 恢复数据到localStorage
-      Object.keys(result.data).forEach(key => {
-        localStorage.setItem(key, result.data[key]);
-      });
-      showToast('数据已从云端恢复，页面即将刷新', 'success');
-      setTimeout(() => location.reload(), 1500);
-    } else {
-      showToast('云端暂无数据', 'info');
-    }
-  } catch (err) {
-    showToast('下载失败，请检查网络连接', 'error');
-    console.error('Cloud download error:', err);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>从云端下载';
-  }
-}
-window.cloudDownload = cloudDownload;
-
-// 更新云端同步UI状态
-function updateCloudSyncUI() {
-  const statusEl = $('cloud-sync-status');
-  const uploadBtn = $('cloud-upload-btn');
-  const downloadBtn = $('cloud-download-btn');
-  const loginBtn = $('cloud-login-btn');
-  
-  if (cloudToken && cloudUser) {
-    if (statusEl) {
-      statusEl.innerHTML = '<span class="cloud-login-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>已登录: ' + cloudUser.nickname + '</span>';
-    }
-    if (uploadBtn) uploadBtn.disabled = false;
-    if (downloadBtn) downloadBtn.disabled = false;
-    if (loginBtn) {
-      loginBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>退出登录';
-      loginBtn.onclick = cloudLogout;
-    }
-  } else {
-    if (statusEl) statusEl.textContent = '未登录云端账号';
-    if (uploadBtn) uploadBtn.disabled = true;
-    if (downloadBtn) downloadBtn.disabled = true;
-    if (loginBtn) {
-      loginBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>登录/注册云端账号';
-      loginBtn.onclick = showCloudLogin;
-    }
-  }
-}
-window.updateCloudSyncUI = updateCloudSyncUI;
-
-// 页面加载时更新云端同步UI
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(updateCloudSyncUI, 500);
-});
-
-console.log('Cloud sync functions loaded');
 
 </script>
 </body>
