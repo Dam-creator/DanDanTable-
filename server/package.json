@@ -1,7 +1,7 @@
 {
   "name": "dandantable-server",
-  "version": "1.0.0",
-  "description": "DanDanTable 后端API - 用户系统与数据云同步",
+  "version": "1.1.0",
+  "description": "DanDanTable 后端API - 用户系统与数据云同步（Neon Postgres 持久化）",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,7 +11,8 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "pg": "^8.13.1"
   },
   "engines": {
     "node": ">=16.0.0"

@@ -23,3 +23,7 @@ test_*.js
 # 临时文件
 *.tmp
 *.temp
+
+# 旧版备份
+_backup/
+
