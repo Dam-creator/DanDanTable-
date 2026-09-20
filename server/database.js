@@ -22,7 +22,7 @@ if (USE_PG) {
 // ============================================================
 async function pgInit() {
   await pool.query(`CREATE TABLE IF NOT EXISTS users (
-    id GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     nickname TEXT,
