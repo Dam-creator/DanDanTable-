@@ -2082,6 +2082,13 @@ html,body{overflow-x:hidden;}
 @keyframes studyFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 @media(max-width:768px){.study-section-btn{padding:9px 12px;font-size:13px;flex:0 0 auto;}.study-sections{margin-bottom:14px;}}
 
+<<<<<<< Updated upstream
+=======
+
+.cloud-sync-last{font-size:12px;color:var(--text-3);margin-top:3px;}
+.cloud-autosync-row input{flex-shrink:0;}
+
+>>>>>>> Stashed changes
 </style>
 </head>
 <body>
@@ -2109,7 +2116,7 @@ html,body{overflow-x:hidden;}
       <div class="privacy-content">
         <div class="privacy-title">隐私保护声明</div>
         <div class="privacy-text">
-          您的所有数据（课程、成绩、账单、作息等）均<strong>仅存储在您当前使用的浏览器本地</strong>（localStorage），<strong>不会上传到任何服务器</strong>。服务提供方<strong>无法查看、收集或访问</strong>您的任何个人数据。清除浏览器数据或更换设备将导致数据丢失，请定期使用「数据管理」中的导出功能进行备份。
+你的数据（课程、成绩、账单、作息等）<strong>默认仅存储在当前浏览器本地</strong>（localStorage），不登录云端时不会上传，服务方无法查看。你也可以在「数据管理」中<strong>免费注册云端账号</strong>，把数据经加密通道备份到云端，<strong>换设备登录同一账号即可恢复</strong>；云端数据按账号隔离，请勿在其中填写身份证号、各类密码、银行卡号等高度敏感信息。清除浏览器数据会丢失本地记录，建议定期使用「导出数据」备份。
         </div>
       </div>
     </div>
@@ -3035,54 +3042,68 @@ html,body{overflow-x:hidden;}
         数据存储位置
       </div>
       <div class="usage-notice-text">
-        您在DanDanTable中创建的所有数据（包括但不限于课程成绩、考试倒计时、收支记录、作息安排、习惯打卡、健康记录等）<strong>全部存储在您当前使用的浏览器本地存储（localStorage）中</strong>。数据<strong>不会上传到任何服务器</strong>，也<strong>不会在多设备间自动同步</strong>。
+        <strong>默认情况下</strong>，你在 DanDanTable 创建的所有数据（课程成绩、考试倒计时、收支记录、作息安排、习惯打卡、健康记录等）<strong>仅存储在当前浏览器本地（localStorage）</strong>，不会上传。<strong>只有当你主动注册/登录云端账号并点击“上传到云端”（或开启自动同步）时</strong>，数据才会备份到云端数据库，用于多设备同步。
       </div>
     </div>
-    
+
     <div class="usage-notice-section">
       <div class="usage-notice-section-title">
         <span class="usage-notice-number">2</span>
-        与账号登录的关系
+        本地档案与云端账号的区别
       </div>
       <div class="usage-notice-text">
-        本应用的「档案」功能<strong>仅用于在同一浏览器中区分不同用户的数据</strong>，并非真正的账号系统。档案信息同样存储在浏览器本地，<strong>与任何形式的账号登录无关</strong>。在其他设备或浏览器中无法通过「档案名」访问您的数据。
+        本应用有两套相互独立的身份：<br>
+        • <strong>本地档案</strong>：仅用于在同一浏览器区分不同使用者（如家人、同学），数据保存在本机，换设备无法通过档案名访问，也无需密码；<br>
+        • <strong>云端账号（可选）</strong>：在「数据管理」中用“用户名 + 密码”注册，登录后可把本机数据上传到云端，并在其他设备登录同一账号下载恢复。
       </div>
     </div>
-    
+
     <div class="usage-notice-section">
       <div class="usage-notice-section-title">
         <span class="usage-notice-number">3</span>
-        导出数据的用法与目的
+        云端同步（可选）的用法
       </div>
       <div class="usage-notice-text">
-        <strong>目的：</strong>将您当前档案的所有数据导出为JSON文件，用于<strong>数据备份</strong>和<strong>跨设备迁移</strong>。<br>
-        <strong>用法：</strong>点击「导出数据」按钮，浏览器会自动下载一个名为 <code>dandantable_backup_日期.json</code> 的文件。请妥善保存该文件，它包含您的全部数据。<br>
-        <strong>建议：</strong>定期导出备份，尤其是在清除浏览器数据、更换设备或更新浏览器之前。
+        <strong>上传到云端：</strong>把本机所有档案的数据备份到你的云端账号；开启「自动同步」后约每分钟自动上传一次，页面切到后台时也会触发。<br>
+        <strong>从云端下载：</strong>用云端数据覆盖并恢复到本机（登录时若检测到云端备份，会主动弹窗提示恢复）。<br>
+        <strong>换设备 / 换浏览器：</strong>在新设备打开网页 → 登录同一云端账号 → 按提示恢复即可。<br>
+        云端数据保存在云数据库（Neon Postgres，托管于 Render / Neon 云服务），通过 HTTPS 加密传输、按账号相互隔离，密码以 bcrypt 哈希存储。我们不会主动查看你的内容，但云端运维方在技术上具备访问可能，<strong>请勿在其中存放身份证号、各类密码、银行卡号等高度敏感信息</strong>。
       </div>
     </div>
-    
+
     <div class="usage-notice-section">
       <div class="usage-notice-section-title">
         <span class="usage-notice-number">4</span>
-        导入数据的用法与目的
+        导出数据的用法与目的
       </div>
       <div class="usage-notice-text">
-        <strong>目的：</strong>将之前导出的JSON备份文件恢复到当前档案中，用于<strong>数据恢复</strong>和<strong>设备迁移</strong>。<br>
-        <strong>用法：</strong>点击「导入数据」按钮，选择之前导出的JSON文件。导入后，<strong>当前档案的现有数据将被完全覆盖</strong>，请谨慎操作。<br>
-        <strong>注意：</strong>导入操作不可撤销，建议在导入前先导出当前数据作为备份。
+        <strong>目的：</strong>将你当前档案的所有数据导出为 JSON 文件，用于<strong>数据备份</strong>和<strong>跨设备迁移</strong>（不依赖云端）。<br>
+        <strong>用法：</strong>点击「导出数据」，浏览器会下载一个 <code>dandantable_backup_日期.json</code> 文件，请妥善保存。<br>
+        <strong>建议：</strong>在清除浏览器数据、更换设备或更新浏览器前先导出一份。
       </div>
     </div>
-    
+
     <div class="usage-notice-section">
       <div class="usage-notice-section-title">
         <span class="usage-notice-number">5</span>
+        导入数据的用法与目的
+      </div>
+      <div class="usage-notice-text">
+        <strong>目的：</strong>把之前导出的 JSON 备份恢复到当前档案，用于<strong>数据恢复</strong>和<strong>设备迁移</strong>。<br>
+        <strong>用法：</strong>点击「导入数据」选择备份文件。导入后<strong>当前档案现有数据将被完全覆盖</strong>，操作不可撤销，建议导入前先导出当前数据。
+      </div>
+    </div>
+
+    <div class="usage-notice-section">
+      <div class="usage-notice-section-title">
+        <span class="usage-notice-number">6</span>
         数据安全与隐私
       </div>
       <div class="usage-notice-text">
-        服务提供方<strong>无法查看、收集、存储或传输</strong>您的任何个人数据。您的数据完全由您自己掌控。但请注意：<br>
-        • 清除浏览器缓存/数据将导致数据丢失<br>
-        • 使用隐私模式/无痕模式关闭后数据不会保存<br>
-        • 更换浏览器或设备需要先导出再导入<br>
+        <strong>不登录云端时</strong>，服务提供方无法查看、收集或传输你的任何数据，数据完全由你掌控；<strong>启用云同步后</strong>，仅你账号下主动上传的数据会保存在云端（见第 3 节）。无论哪种模式都请注意：<br>
+        • 清除浏览器缓存/数据将导致本地数据丢失<br>
+        • 使用无痕/隐私模式关闭后本地数据不会保存<br>
+        • 更换设备可使用云端同步，或先导出再导入<br>
         • 建议定期导出备份到安全位置
       </div>
     </div>
@@ -3319,6 +3340,10 @@ html,body{overflow-x:hidden;}
         <div>
           <div class="cloud-sync-title">云端同步</div>
           <div class="cloud-sync-status" id="cloud-sync-status">未登录云端账号</div>
+<<<<<<< Updated upstream
+=======
+          <div class="cloud-sync-last" id="cloud-last-sync"></div>
+>>>>>>> Stashed changes
         </div>
       </div>
       <div class="cloud-sync-buttons">
@@ -3337,6 +3362,13 @@ html,body{overflow-x:hidden;}
           登录/注册云端账号
         </button>
       </div>
+<<<<<<< Updated upstream
+=======
+      <label class="cloud-autosync-row" id="cloud-autosync-row" style="display:none;margin-top:12px;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer;">
+        <input type="checkbox" id="cloud-autosync" style="width:16px;height:16px;accent-color:#667eea;cursor:pointer;" onchange="toggleCloudAutoSync()">
+        <span>自动同步：登录后约每分钟自动上传，换设备登录同一账号即可恢复</span>
+      </label>
+>>>>>>> Stashed changes
     </div>
     <!-- 使用声明按钮 -->
     <div class="data-notice-banner" onclick="showDataUsageNotice()">
@@ -3372,6 +3404,7 @@ html,body{overflow-x:hidden;}
 <div class="modal-overlay" id="modal-cloud-login">
   <div class="modal" style="max-width:420px;">
     <h2 class="modal-title">云端账号</h2>
+<<<<<<< Updated upstream
     <p class="modal-desc">登录后可在多设备间同步数据</p>
     
     <div class="cloud-login-tabs">
@@ -3406,6 +3439,54 @@ html,body{overflow-x:hidden;}
     
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('modal-cloud-login')">取消</button>
+=======
+    <p class="modal-desc">注册或登录后，可在多台设备间同步数据</p>
+
+    <div class="cloud-login-tabs">
+      <button type="button" class="cloud-login-tab active" id="cloud-tab-login" onclick="switchCloudTab('login')">登录</button>
+      <button type="button" class="cloud-login-tab" id="cloud-tab-register" onclick="switchCloudTab('register')">注册</button>
+    </div>
+
+    <form id="cloud-login-form" onsubmit="event.preventDefault(); cloudDoLogin();">
+      <div class="form-group">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-input" id="cloud-login-username" placeholder="至少3个字符" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-input" id="cloud-login-password" placeholder="至少6个字符" required autocomplete="current-password">
+      </div>
+      <div id="cloud-login-error" style="color:#ef4444;font-size:13px;margin-bottom:12px;display:none;"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">登录并连接云端</button>
+    </form>
+
+    <form id="cloud-register-form" style="display:none;" onsubmit="event.preventDefault(); cloudDoRegister();">
+      <div class="form-group">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-input" id="cloud-register-username" placeholder="至少3个字符" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">昵称（可选）</label>
+        <input type="text" class="form-input" id="cloud-register-nickname" placeholder="显示名称">
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-input" id="cloud-register-password" placeholder="至少6个字符" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">注册并自动登录</button>
+    </form>
+
+    <div class="cloud-login-info">
+      <strong>数据与隐私说明：</strong><br>
+      • 云同步为<strong>可选功能</strong>，不登录时所有数据仅保存在本机浏览器<br>
+      • 登录后上传的数据保存在云数据库，通过 HTTPS 加密传输，并按你的账号相互隔离<br>
+      • 密码使用 bcrypt 哈希存储；我们不会主动查看你的内容，但云端运维方在技术上具备访问可能，<strong>请勿在其中填写身份证号、银行卡密码等高度敏感信息</strong><br>
+      • 可随时在「数据管理」中上传、下载、导出或清除数据
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" onclick="closeModal('modal-cloud-login')">取消</button>
+>>>>>>> Stashed changes
     </div>
   </div>
 </div>
@@ -3504,10 +3585,27 @@ html,body{overflow-x:hidden;}
 const CLOUD_API_BASE = 'https://dandantable.onrender.com/api';
 let cloudToken = localStorage.getItem('cloud_token') || null;
 let cloudUser = JSON.parse(localStorage.getItem('cloud_user') || 'null');
+let cloudAutoSyncTimer = null;
+
+function cloudAuthHeaders() { return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cloudToken }; }
+function collectLocalData() {
+  const allData = {}; const prefix = 'campus_toolbox_';
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.indexOf(prefix) === 0 && key.indexOf('cloud_') === -1) allData[key] = localStorage.getItem(key);
+  }
+  return allData;
+}
+function cloudFmtTime(iso) {
+  try { const d = new Date(iso); if (isNaN(d)) return '';
+    return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  } catch (e) { return ''; }
+}
 
 function showCloudLogin() {
   showModal('modal-cloud-login');
   switchCloudTab('login');
+  setTimeout(function(){ var u = document.getElementById('cloud-login-username'); if (u) u.focus(); }, 120);
 }
 window.showCloudLogin = showCloudLogin;
 
@@ -3519,130 +3617,202 @@ function switchCloudTab(tab) {
   if (!loginForm || !registerForm || !loginTab || !registerTab) return;
   if (tab === 'login') {
     loginForm.style.display = 'block'; registerForm.style.display = 'none';
-    loginTab.style.background = 'var(--accent-blue)'; loginTab.style.color = '#fff';
-    registerTab.style.background = ''; registerTab.style.color = '';
+    loginTab.classList.add('active'); registerTab.classList.remove('active');
   } else {
     loginForm.style.display = 'none'; registerForm.style.display = 'block';
-    registerTab.style.background = 'var(--accent-blue)'; registerTab.style.color = '#fff';
-    loginTab.style.background = ''; loginTab.style.color = '';
+    registerTab.classList.add('active'); loginTab.classList.remove('active');
   }
 }
 window.switchCloudTab = switchCloudTab;
 
+function cloudSetSession(data) {
+  cloudToken = data.token; cloudUser = data.user;
+  localStorage.setItem('cloud_token', cloudToken);
+  localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
+}
+
 async function cloudDoLogin() {
-  const username = document.getElementById('cloud-login-username');
-  const password = document.getElementById('cloud-login-password');
-  if (!username || !password) { toast('请输入用户名和密码', 'error'); return; }
+  const usernameEl = document.getElementById('cloud-login-username');
+  const passwordEl = document.getElementById('cloud-login-password');
+  if (!usernameEl.value.trim() || !passwordEl.value) { toast('请输入用户名和密码', 'error'); return; }
+  const btn = document.querySelector('#cloud-login-form button[type=submit]');
+  if (btn) { btn.disabled = true; btn.textContent = '登录中...'; }
   try {
     const response = await fetch(CLOUD_API_BASE + '/login', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username.value.trim(), password: password.value })
+      body: JSON.stringify({ username: usernameEl.value.trim(), password: passwordEl.value })
     });
-    const result = await response.json();
+    const result = await response.json().catch(() => ({}));
     if (result.success) {
-      cloudToken = result.data.token; cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
+      cloudSetSession(result.data);
       updateCloudSyncUI(); closeModal('modal-cloud-login');
       toast('登录成功，欢迎 ' + cloudUser.nickname, 'success');
+      startCloudAutoSyncIfEnabled();
+      cloudPromptRestore();
     } else { toast(result.message || '登录失败', 'error'); }
-  } catch (err) { toast('无法连接云端服务器', 'error'); }
+  } catch (err) { toast('无法连接云端服务器（免费服务器可能正在冷启动，请约1分钟后重试）', 'error'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = '登录并连接云端'; } }
 }
 window.cloudDoLogin = cloudDoLogin;
 
 async function cloudDoRegister() {
-  const username = document.getElementById('cloud-register-username');
-  const nickname = document.getElementById('cloud-register-nickname');
-  const password = document.getElementById('cloud-register-password');
-  if (!username || !password) { toast('请输入用户名和密码', 'error'); return; }
-  if (username.value.trim().length < 3) { toast('用户名至少3个字符', 'error'); return; }
-  if (password.value.length < 6) { toast('密码至少6个字符', 'error'); return; }
+  const usernameEl = document.getElementById('cloud-register-username');
+  const nicknameEl = document.getElementById('cloud-register-nickname');
+  const passwordEl = document.getElementById('cloud-register-password');
+  if (!usernameEl.value.trim() || !passwordEl.value) { toast('请输入用户名和密码', 'error'); return; }
+  if (usernameEl.value.trim().length < 3) { toast('用户名至少3个字符', 'error'); return; }
+  if (passwordEl.value.length < 6) { toast('密码至少6个字符', 'error'); return; }
+  const btn = document.querySelector('#cloud-register-form button[type=submit]');
+  if (btn) { btn.disabled = true; btn.textContent = '注册中...'; }
   try {
     const response = await fetch(CLOUD_API_BASE + '/register', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username.value.trim(), password: password.value, nickname: nickname ? nickname.value.trim() : undefined })
+      body: JSON.stringify({ username: usernameEl.value.trim(), password: passwordEl.value, nickname: nicknameEl ? nicknameEl.value.trim() : '' })
     });
-    const result = await response.json();
+    const result = await response.json().catch(() => ({}));
     if (result.success) {
-      cloudToken = result.data.token; cloudUser = result.data.user;
-      localStorage.setItem('cloud_token', cloudToken);
-      localStorage.setItem('cloud_user', JSON.stringify(cloudUser));
+      cloudSetSession(result.data);
       updateCloudSyncUI(); closeModal('modal-cloud-login');
-      toast('注册成功，已自动登录', 'success');
+      toast('注册成功，已自动登录，正在备份本机数据...', 'success');
+      try { await cloudSilentUpload(); } catch (e) {}
+      startCloudAutoSyncIfEnabled();
     } else { toast(result.message || '注册失败', 'error'); }
-  } catch (err) { toast('无法连接云端服务器', 'error'); }
+  } catch (err) { toast('无法连接云端服务器（免费服务器可能正在冷启动，请约1分钟后重试）', 'error'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = '注册并自动登录'; } }
 }
 window.cloudDoRegister = cloudDoRegister;
 
 function cloudLogout() {
   cloudToken = null; cloudUser = null;
   localStorage.removeItem('cloud_token'); localStorage.removeItem('cloud_user');
+  stopCloudAutoSync();
   updateCloudSyncUI(); toast('已退出云端账号', 'success');
 }
 window.cloudLogout = cloudLogout;
 
+async function cloudSilentUpload() {
+  if (!cloudToken) return false;
+  const data = collectLocalData();
+  const response = await fetch(CLOUD_API_BASE + '/sync/upload', {
+    method: 'POST', headers: cloudAuthHeaders(), body: JSON.stringify({ data: data })
+  });
+  const result = await response.json().catch(() => ({}));
+  if (result.success) {
+    localStorage.setItem('cloud_lastSync', new Date().toISOString());
+    updateCloudSyncUI();
+    return true;
+  }
+  return false;
+}
+
 async function cloudUpload() {
   if (!cloudToken) { toast('请先登录云端账号', 'error'); return; }
-  const btn = document.getElementById('cloud-upload-btn'); if (!btn) return;
-  btn.disabled = true; btn.textContent = '上传中...';
+  const btn = document.getElementById('cloud-upload-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '上传中...'; }
   try {
-    const allData = {};
-    const prefix = 'campus_toolbox_';
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(prefix) && !key.includes('cloud_')) { allData[key] = localStorage.getItem(key); }
-    }
-    const response = await fetch(CLOUD_API_BASE + '/sync/upload', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cloudToken },
-      body: JSON.stringify({ data: allData })
-    });
-    const result = await response.json();
-    if (result.success) { toast('数据已上传到云端', 'success'); updateCloudSyncUI(); }
-    else { toast(result.message || '上传失败', 'error'); }
-  } catch (err) { toast('上传失败，请检查网络连接', 'error'); }
-  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传到云端'; }
+    const ok = await cloudSilentUpload();
+    if (ok) toast('数据已上传到云端', 'success');
+    else toast('上传失败，请重试', 'error');
+  } catch (err) { toast('上传失败：服务器可能正在冷启动，请约1分钟后重试', 'error'); }
+  finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>上传到云端'; }
+  }
 }
 window.cloudUpload = cloudUpload;
 
-async function cloudDownload() {
-  if (!cloudToken) { toast('请先登录云端账号', 'error'); return; }
-  if (!confirm('从云端下载数据将覆盖当前本地数据，确定继续吗？')) return;
-  const btn = document.getElementById('cloud-download-btn'); if (!btn) return;
-  btn.disabled = true; btn.textContent = '下载中...';
+async function cloudDownload(silent) {
+  if (!cloudToken) { if (!silent) toast('请先登录云端账号', 'error'); return false; }
+  if (!silent && !confirm('从云端下载数据将覆盖当前本机数据，确定继续吗？建议先“导出数据”备份本机。')) return false;
+  const btn = document.getElementById('cloud-download-btn');
+  if (btn && !silent) { btn.disabled = true; btn.textContent = '下载中...'; }
   try {
-    const response = await fetch(CLOUD_API_BASE + '/sync/download', {
-      method: 'GET', headers: { 'Authorization': 'Bearer ' + cloudToken }
-    });
-    const result = await response.json();
-    if (result.success && result.data) {
-      Object.keys(result.data).forEach(key => { localStorage.setItem(key, result.data[key]); });
-      toast('数据已从云端恢复，页面即将刷新', 'success');
-      setTimeout(() => location.reload(), 1500);
-    } else { toast('云端暂无数据', 'info'); }
-  } catch (err) { toast('下载失败，请检查网络连接', 'error'); }
-  finally { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>从云端下载'; }
+    const response = await fetch(CLOUD_API_BASE + '/sync/download', { headers: { 'Authorization': 'Bearer ' + cloudToken } });
+    const result = await response.json().catch(() => ({}));
+    if (result.success && result.data && Object.keys(result.data).length) {
+      Object.keys(result.data).forEach(function (key) { localStorage.setItem(key, result.data[key]); });
+      localStorage.setItem('cloud_lastSync', new Date().toISOString());
+      if (!silent) { toast('数据已从云端恢复，页面即将刷新', 'success'); setTimeout(function () { location.reload(); }, 1200); }
+      return true;
+    } else { if (!silent) toast('云端暂无数据', 'info'); return false; }
+  } catch (err) { if (!silent) toast('下载失败：服务器可能正在冷启动，请约1分钟后重试', 'error'); return false; }
+  finally { if (btn && !silent) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>从云端下载'; } }
 }
 window.cloudDownload = cloudDownload;
 
+// 登录后检测云端备份，引导“换设备恢复”
+async function cloudPromptRestore() {
+  try {
+    const response = await fetch(CLOUD_API_BASE + '/sync/status', { headers: { 'Authorization': 'Bearer ' + cloudToken } });
+    const result = await response.json().catch(() => ({}));
+    if (result.success && result.data && result.data.hasData) {
+      let localProfiles = [];
+      try { localProfiles = JSON.parse(localStorage.getItem('campus_toolbox_profiles') || '[]'); } catch (e) {}
+      const t = result.data.lastSync ? cloudFmtTime(result.data.lastSync) : '';
+      let msg = '云端检测到你之前备份的数据' + (t ? '（' + t + '）' : '') + '。\n\n';
+      msg += localProfiles.length ? '是否用云端数据覆盖本机？（不确定可先在“数据管理”导出本机备份）' : '是否立即把云端数据恢复到本机？';
+      if (confirm(msg)) { await cloudDownload(true); location.reload(); }
+    }
+  } catch (e) { /* 状态检测失败不阻塞使用 */ }
+}
+window.cloudPromptRestore = cloudPromptRestore;
+
+function cloudOnHidden() { if (document.visibilityState === 'hidden') { cloudSilentUpload().catch(function () {}); } }
+function stopCloudAutoSync() {
+  if (cloudAutoSyncTimer) { clearInterval(cloudAutoSyncTimer); cloudAutoSyncTimer = null; }
+  document.removeEventListener('visibilitychange', cloudOnHidden);
+}
+function startCloudAutoSyncIfEnabled() {
+  stopCloudAutoSync();
+  if (cloudToken && localStorage.getItem('cloud_autosync') === '1') {
+    cloudAutoSyncTimer = setInterval(function () { cloudSilentUpload().catch(function () {}); }, 60000);
+    document.addEventListener('visibilitychange', cloudOnHidden);
+  }
+}
+function toggleCloudAutoSync() {
+  const box = document.getElementById('cloud-autosync');
+  if (!box) return;
+  if (box.checked) {
+    localStorage.setItem('cloud_autosync', '1');
+    startCloudAutoSyncIfEnabled();
+    cloudSilentUpload();
+    toast('已开启自动同步，约每分钟备份一次', 'success');
+  } else {
+    localStorage.setItem('cloud_autosync', '0');
+    stopCloudAutoSync();
+    toast('已关闭自动同步，可手动上传', 'info');
+  }
+}
+window.toggleCloudAutoSync = toggleCloudAutoSync;
+
 function updateCloudSyncUI() {
   const statusEl = document.getElementById('cloud-sync-status');
+  const lastEl = document.getElementById('cloud-last-sync');
   const uploadBtn = document.getElementById('cloud-upload-btn');
   const downloadBtn = document.getElementById('cloud-download-btn');
   const loginBtn = document.getElementById('cloud-login-btn');
+  const autoRow = document.getElementById('cloud-autosync-row');
+  const autoBox = document.getElementById('cloud-autosync');
   if (cloudToken && cloudUser) {
-    if (statusEl) statusEl.innerHTML = '<span class="cloud-login-badge"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>已登录: ' + cloudUser.nickname + '</span>';
+    if (statusEl) statusEl.innerHTML = '<span class="cloud-login-badge"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>已登录：' + escapeHtml(cloudUser.nickname || cloudUser.username) + '</span>';
     if (uploadBtn) uploadBtn.disabled = false;
     if (downloadBtn) downloadBtn.disabled = false;
     if (loginBtn) { loginBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>退出登录'; loginBtn.onclick = cloudLogout; }
+    const ls = localStorage.getItem('cloud_lastSync');
+    if (lastEl) lastEl.textContent = ls ? '上次同步：' + cloudFmtTime(ls) : '尚未上传到云端';
+    if (autoRow) autoRow.style.display = 'flex';
+    if (autoBox) autoBox.checked = (localStorage.getItem('cloud_autosync') === '1');
   } else {
-    if (statusEl) statusEl.textContent = '未登录云端账号';
+    if (statusEl) statusEl.textContent = '未登录云端账号（数据仅保存在本机）';
     if (uploadBtn) uploadBtn.disabled = true;
     if (downloadBtn) downloadBtn.disabled = true;
+    if (lastEl) lastEl.textContent = '';
+    if (autoRow) autoRow.style.display = 'none';
     if (loginBtn) { loginBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>登录/注册云端账号'; loginBtn.onclick = showCloudLogin; }
   }
 }
 window.updateCloudSyncUI = updateCloudSyncUI;
 
+if (cloudToken && localStorage.getItem('cloud_autosync') === '1') { startCloudAutoSyncIfEnabled(); }
 setTimeout(updateCloudSyncUI, 500);
 
 
