@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DanDanTable - 大学生工具台</title>
+<link rel="icon" id="apple-favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23F2643D'/%3E%3Cpath d='M12 4L2 9l10 5 8-3.6V15h2V9L12 4z' fill='%23fff'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js">
 // 显示数据使用声明弹窗（先关闭数据管理窗口，避免被遮挡）
 function showDataUsageNotice() {
@@ -15,6 +16,7 @@ function showDataUsageNotice() {
 window.showDataUsageNotice = showDataUsageNotice;
 
 </script>
+<link rel="stylesheet" href="css/refined-skin.css">
 <style>
 /* ===== CSS Variables - Warm Tone Design ===== */
 :root {
@@ -1476,7 +1478,7 @@ body {
 .task-card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 8px; background: var(--bg-card); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
 .task-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 .task-card.completed { opacity: 0.7; }
-.task-card.overdue { border-left-color: var(--danger) !important; background: #fef2f2; }
+.task-card.overdue { border-left-color: var(--danger) !important; background: #FBEEED; }
 .task-card.urgent { border-left-color: var(--danger) !important; }
 .task-check { flex-shrink: 0; cursor: pointer; }
 .task-content { min-width: 0; }
@@ -1486,8 +1488,8 @@ body {
 .task-course-tag { background: var(--accent-blue); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 11px; }
 .task-right { flex-shrink: 0; }
 .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--bg-sidebar); color: var(--text-secondary); }
-.badge-danger { background: #fef2f2; color: var(--danger); }
-.badge-warning { background: #fffbeb; color: #d97706; }
+.badge-danger { background: #FBEEED; color: var(--danger); }
+.badge-warning { background: #FCF7EC; color: #865F1B; }
 
 /* Goal Cards */
 .goal-card { padding: 16px; cursor: pointer; transition: all 0.2s; }
@@ -1542,7 +1544,7 @@ body {
 
 /* ===== 云端同步样式 ===== */
 .cloud-sync-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF845C 0%, #F2552C 100%);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 16px;
@@ -1669,7 +1671,7 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: conic-gradient(#10B981 0deg, #e5e7eb 0deg);
+  background: conic-gradient(#57AB7E 0deg, #E5E5EA 0deg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1734,12 +1736,12 @@ body {
   margin-bottom: 12px; position: relative; z-index: 1;
 }
 .stat-card-v2 .stat-icon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.stat-card-v2.gradient-purple .stat-icon { background: rgba(118,100,220,.14); color: #6c5ce7; }
-.stat-card-v2.gradient-blue .stat-icon { background: rgba(59,130,246,.14); color: #3b82f6; }
-.stat-card-v2.gradient-green .stat-icon { background: rgba(16,185,129,.14); color: #10b981; }
-.stat-card-v2.gradient-orange .stat-icon { background: rgba(245,158,11,.16); color: #d97706; }
-.stat-card-v2.gradient-pink .stat-icon { background: rgba(236,72,153,.14); color: #ec4899; }
-.stat-card-v2.gradient-teal .stat-icon { background: rgba(6,182,212,.14); color: #06b6d4; }
+.stat-card-v2.gradient-purple .stat-icon { background: rgba(118,100,220,.14); color: #9279BC; }
+.stat-card-v2.gradient-blue .stat-icon { background: rgba(91, 141, 201,.14); color: #5B8DC9; }
+.stat-card-v2.gradient-green .stat-icon { background: rgba(52,197,89,.14); color: #57AB7E; }
+.stat-card-v2.gradient-orange .stat-icon { background: rgba(207, 153, 68,.16); color: #865F1B; }
+.stat-card-v2.gradient-pink .stat-icon { background: rgba(201, 116, 140,.14); color: #C9748C; }
+.stat-card-v2.gradient-teal .stat-icon { background: rgba(85, 175, 188,.14); color: #55AFBC; }
 .stat-card-v2 .stat-value-v2 {
   font-size: 28px; font-weight: 800; color: var(--text-1);
   line-height: 1.1; margin-bottom: 6px; position: relative; z-index: 1;
@@ -1748,7 +1750,7 @@ body {
 .stat-card-v2 .stat-desc-v2 { font-size: 11px; color: var(--text-3); margin-top: 3px; position: relative; z-index: 1; }
 
 /* 渐变色 */
-.gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.gradient-purple { background: linear-gradient(135deg, #FF845C 0%, #F2552C 100%); }
 .gradient-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 .gradient-green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
 .gradient-orange { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
@@ -1780,12 +1782,12 @@ body {
 }
 .tab-v2-item:hover {
   color: var(--text-1);
-  background: rgba(102, 126, 234, 0.08);
+  background: rgba(242,100,61, 0.08);
 }
 .tab-v2-item.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF845C 0%, #F2552C 100%);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(242,100,61, 0.3);
 }
 
 /* ===== 新版卡片容器 ===== */
@@ -1929,7 +1931,7 @@ body {
   padding: 12px 24px;
   border-radius: 14px;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF845C 0%, #F2552C 100%);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -1938,11 +1940,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 16px rgba(242,100,61, 0.3);
 }
 .btn-v2-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 24px rgba(242,100,61, 0.4);
 }
 .btn-v2-ghost {
   padding: 12px 24px;
@@ -2007,7 +2009,7 @@ body {
 .tk-actions { display:flex; gap:8px; margin-top:10px; }
 .tk-actions button { flex:1; padding:6px 10px; border-radius:10px; border:1px solid var(--border); background:#fff; font-size:12px; font-weight:600; color:var(--text-2); cursor:pointer; transition:all .2s; }
 .tk-actions button:hover { border-color:var(--accent-purple); color:var(--accent-purple-dark); }
-.tk-actions button.primary { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-color:transparent; }
+.tk-actions button.primary { background:linear-gradient(135deg,#FF845C,#F2552C); color:#fff; border-color:transparent; }
 .tk-actions button.primary:hover { opacity:.9; color:#fff; }
 .kanban-empty, .matrix-empty { text-align:center; color:var(--text-3); font-size:12px; padding:24px 8px; }
 .empty-state-v2 { text-align:center; color:var(--text-3); font-size:13px; padding:48px 16px; background:rgba(255,255,255,.6); border-radius:20px; border:1px dashed var(--border); }
@@ -2076,19 +2078,635 @@ html,body{overflow-x:hidden;}
 .study-sections::-webkit-scrollbar{display:none;}
 .study-section-btn{flex:1;min-width:max-content;padding:10px 16px;border:none;background:transparent;border-radius:11px;font-size:14px;font-weight:600;color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;transition:all .22s;font-family:inherit;}
 .study-section-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
-.study-section-btn.active{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;box-shadow:0 4px 12px rgba(102,126,234,.3);}
+.study-section-btn.active{background:linear-gradient(135deg,#FF845C 0%,#F2552C 100%);color:#fff;box-shadow:0 4px 12px rgba(242,100,61,.3);}
 .study-subview{display:none;}
 .study-subview.active{display:block;animation:studyFade .25s ease;}
 @keyframes studyFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 @media(max-width:768px){.study-section-btn{padding:9px 12px;font-size:13px;flex:0 0 auto;}.study-sections{margin-bottom:14px;}}
 
-<<<<<<< Updated upstream
-=======
 
 .cloud-sync-last{font-size:12px;color:var(--text-3);margin-top:3px;}
 .cloud-autosync-row input{flex-shrink:0;}
 
->>>>>>> Stashed changes
+
+/*@@APPLE_THEME_START*/
+/* ============================================================================
+   DanDanTable · "Slate & Ember" 高级灰 + 珊瑚橙主题（v2 精修）
+   语言：冷调中性灰阶为绝对主体；深色炭灰渐变侧栏；珊瑚橙克制点缀；
+         玻璃光泽按钮 / 多层柔影卡片 / 渐变与雾化倒影 / 墨青黑反色卡。
+   性质：纯视觉覆盖层（追加在原 CSS 之后），不改 HTML 结构 / JS 逻辑。
+   参考：Apple 简约 B 端（炭灰渐变侧栏、亮灰选中胶囊）、MILKISS（中性+冷光晕）、
+         sugarcrm（墨青黑标题条、彩色卡渐变雾化）。
+   ============================================================================ */
+
+:root {
+  /* ---- 中性冷灰阶（页面 85% 面积） ---- */
+  --gray-50:  #F7F8FA;
+  --gray-100: #F0F2F5;
+  --gray-200: #E5E8EC;
+  --gray-300: #D6DAE0;
+  --gray-400: #B7BDC6;
+  --gray-500: #939AA4;
+  --gray-600: #6F7781;
+  --gray-700: #4F565F;
+  --gray-800: #33383F;
+  --gray-900: #20242A;
+  --gray-950: #15181D;
+
+  /* ---- 侧边栏专用炭灰阶（略灰、冷调、非死黑） ---- */
+  --sb-1: #3B3B42;
+  --sb-2: #2E2E35;
+  --sb-3: #232329;
+  --sb-4: #19191F;
+
+  /* ---- 背景分层 ---- */
+  --bg: #E9EBEF;
+  --bg-soft: #E1E4E9;
+  --bg-inset: #F4F5F7;
+  --bg-card: #FFFFFF;
+
+  /* ---- 文字（冷调墨色） ---- */
+  --text-1: #1C1E22;
+  --text-2: #4F565F;
+  --text-3: #8B9098;
+  --text-sidebar: #F2F3F5;
+  --text-sidebar-muted: #9A9DA5;
+
+  /* 旧变量名兼容（stress-mini 等引用） */
+  --text-primary: #1C1E22;
+  --text-secondary: #8B9098;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F2F4F6;
+  --border-color: #E5E8EC;
+
+  /* ---- 边框 / 分隔 ---- */
+  --border: #E4E7EB;
+  --border-light: #EFF1F4;
+
+  /* ---- 品牌珊瑚橙（ember）完整色阶 ---- */
+  --orange-50:  #FEF2ED;
+  --orange-100: #FDE3D8;
+  --orange-200: #FAC6AF;
+  --orange-300: #F6A07E;
+  --orange-400: #F57E54;
+  --accent: #F2643D;
+  --orange-600: #E8512B;
+  --accent-strong: #E8512B;
+  --accent-deep: #C53E1E;
+  --orange-800: #A2331A;
+  --accent-soft: #FDECE5;
+  --accent-tint: rgba(242,100,61,.12);
+
+  /* 旧主色变量一键映射到橙 */
+  --blue: #F2643D;  --blue-dark: #D14928;  --blue-light: #FDECE5;
+  --purple: #F2643D; --purple-dark: #D14928; --purple-light: #FDECE5;
+
+  /* ---- 语义色：UI 低饱和莫兰迪版（色块/标签底，柔和高级） ---- */
+  --ui-blue:   #5B8DC9;  --ui-blue-soft:   #EAF1F9;  --ui-blue-ink:   #335E8C;
+  --ui-green:  #57AB7E;  --ui-green-soft:  #E9F5EE;  --ui-green-ink:  #2C7150;
+  --ui-amber:  #CF9944;  --ui-amber-soft:  #FAF1DD;  --ui-amber-ink:  #865F1B;
+  --ui-red:    #D86A60;  --ui-red-soft:    #FAECEA;  --ui-red-ink:    #9C3D35;
+  --ui-violet: #9279BC;  --ui-violet-soft: #EFEAF7;  --ui-violet-ink: #5B4484;
+  --ui-teal:   #55AFBC;  --ui-teal-soft:   #E6F4F6;  --ui-teal-ink:   #2B6E78;
+
+  /* ---- 语义色：数据鲜艳版（图表 / 状态点），略降饱和更耐看 ---- */
+  --accent-blue:   #2F95FF;  --accent-blue-dark:   #0E6FD6;  --accent-blue-light:   #EAF1F9;
+  --accent-green:  #35C469;  --accent-green-dark:  #219A4E;  --accent-green-light:  #E9F5EE;
+  --accent-yellow: #F5A623;  --accent-yellow-dark: #D18506;  --accent-yellow-light: #FAF1DD;
+  --accent-purple: #B56FE8;  --accent-purple-dark: #8E4EC4;  --accent-purple-light: #EFEAF7;
+  --accent-pink:   #F4564B;  --accent-pink-dark:   #D23228;  --accent-pink-light:   #FAECEA;
+  --accent-teal:   #5BC2D2;  --accent-teal-dark:   #2E97A8;  --accent-teal-light:   #E6F4F6;
+  --accent-orange: #F2643D;  --accent-orange-dark: #D14928;  --accent-orange-light: #FDECE5;
+  --green: var(--accent-green);  --green-dark: var(--accent-green-dark);
+  --yellow: var(--accent-yellow); --yellow-dark: var(--accent-yellow-dark);
+  --pink: var(--accent-pink);    --pink-dark: var(--accent-pink-dark);
+  --teal: var(--accent-teal);    --teal-dark: var(--accent-teal-dark);
+
+  /* ---- 渐变预设 ---- */
+  --grad-sidebar: linear-gradient(168deg, #3B3B42 0%, #2E2E35 42%, #222228 76%, #18181E 100%);
+  --grad-brand: linear-gradient(180deg, #FF8C66 0%, #F2643D 52%, #EC502C 100%);
+  --grad-brand-soft: linear-gradient(180deg, #FEE7DD, #FBD3C2);
+  --grad-dark: linear-gradient(155deg, #232A2D 0%, #14191B 60%, #0F1416 100%); /* 墨青黑反色卡 */
+  --grad-icon-dark: linear-gradient(160deg, #3A414B, #22262D);
+  --grad-blue:   linear-gradient(165deg, #6FA0D8, #4977AE);
+  --grad-green:  linear-gradient(165deg, #66BC8C, #3E9463);
+  --grad-amber:  linear-gradient(165deg, #DBA956, #BE8427);
+  --grad-red:    linear-gradient(165deg, #DE7C73, #C35147);
+  --grad-violet: linear-gradient(165deg, #A28BC8, #7B5FA6);
+  --grad-teal:   linear-gradient(165deg, #66C0CC, #3C94A2);
+
+  /* ---- 阴影：冷调、多层、柔和 ---- */
+  --shadow-sm: 0 1px 2px rgba(21,30,40,.05);
+  --shadow-md: 0 1px 2px rgba(21,30,40,.04), 0 7px 20px rgba(21,30,40,.07);
+  --shadow-lg: 0 3px 10px rgba(21,30,40,.08), 0 22px 56px rgba(21,30,40,.16);
+  --shadow-card: 0 1px 2px rgba(21,30,40,.04), 0 6px 18px rgba(21,30,40,.06);
+  --shadow-brand: 0 7px 18px rgba(242,100,61,.30), 0 2px 6px rgba(242,100,61,.20);
+  --inset-hi: inset 0 1px 0 rgba(255,255,255,.55);
+  --inset-hi-soft: inset 0 1px 0 rgba(255,255,255,.16);
+
+  /* ---- 圆角 / 动效 ---- */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --transition: .26s cubic-bezier(.22,.61,.36,1);
+}
+
+/* ---------- 全局底 / 字 ---------- */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--text-1);
+  letter-spacing: .01em;
+  background-color: var(--bg);
+  /* 极淡冷暖光晕，营造样图的空间层次（移动端关闭以保流畅） */
+  background-image:
+    radial-gradient(1000px 480px at 100% -12%, rgba(242,100,61,.055), transparent 62%),
+    radial-gradient(900px 620px at -12% 112%, rgba(84,138,176,.06), transparent 56%);
+  background-attachment: fixed;
+}
+button, input, select, textarea { font-family: inherit; }
+button { letter-spacing: .01em; }
+h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
+  font-variant-numeric: tabular-nums; font-feature-settings: "tnum";
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #C4CAD2; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #9AA1AB; background-clip: content-box; }
+
+/* ============================================================================
+   侧边栏：炭灰纵向渐变 + 顶部内高光 + 柔影的浮起圆角卡
+   ============================================================================ */
+.sidebar {
+  background: var(--grad-sidebar);
+  box-shadow: none; border-right: none;
+}
+@media (min-width: 769px) {
+  .sidebar {
+    top: 14px; left: 14px;
+    height: calc(100vh - 28px);
+    border-radius: 26px;
+    padding: 12px 0;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,.10),
+      inset 0 -1px 1px rgba(0,0,0,.35),
+      0 22px 50px rgba(10,12,16,.42);
+  }
+  /* 侧栏内一层顶部微光，强化磨砂玻璃的柔和感 */
+  .sidebar::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 38%;
+    border-radius: 26px 26px 0 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+  }
+  .main { margin-left: 268px; padding: 28px 32px 40px; }
+}
+@media (max-width: 768px) {
+  .sidebar {
+    background: var(--grad-sidebar);
+    border-radius: 0; margin: 0; height: 100vh; top: 0; left: 0; padding: 20px 0;
+  }
+}
+
+.sidebar-logo { padding: 2px 18px 14px; border-bottom: 1px solid rgba(255,255,255,.07); position: relative; }
+.sidebar-logo-icon {
+  border-radius: 13px;
+  background: var(--grad-brand);
+  box-shadow: var(--shadow-brand), var(--inset-hi-soft);
+}
+.sidebar-logo-text { color: var(--text-sidebar); letter-spacing: .02em; }
+.sidebar-logo-text span { color: var(--orange-400); }
+
+.sidebar-user { padding: 14px 18px 12px; border-bottom: 1px solid rgba(255,255,255,.07); position: relative; }
+.sidebar-avatar {
+  width: 52px; height: 52px; font-size: 20px; margin-bottom: 9px;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.10), var(--inset-hi-soft);
+}
+.sidebar-avatar::after { width: 12px; height: 12px; background: #35C469; border-color: var(--sb-3); box-shadow: 0 0 0 1px rgba(0,0,0,.3); }
+.sidebar-welcome { color: var(--text-sidebar-muted); }
+.sidebar-name { color: var(--text-sidebar); }
+
+.sidebar-nav { padding: 8px 10px; position: relative; }
+.nav-section { color: #6C6F78; letter-spacing: 1.6px; padding: 8px 11px 4px; }
+.nav-item {
+  position: relative;
+  border-radius: 12px;
+  padding: 8px 11px;
+  margin-bottom: 2px;
+  color: var(--text-sidebar-muted);
+  font-weight: 500;
+  transition: background .22s ease, color .22s ease;
+}
+.nav-item svg {
+  color: inherit;
+  background: rgba(255,255,255,.07);
+  width: 28px !important; height: 28px !important;
+  padding: 5px; box-sizing: content-box;
+  border-radius: 9px; margin-right: 3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+.nav-item svg path, .nav-item svg circle, .nav-item svg rect,
+.nav-item svg polyline, .nav-item svg line { fill: currentColor; }
+.nav-item:hover { background: rgba(255,255,255,.07); color: var(--text-sidebar); }
+.nav-item:hover svg { background: rgba(255,255,255,.13); }
+/* 选中：亮灰半透明胶囊 + 左侧 3px 橙条（唯一品牌色信号，约 1% 面积），图标保持中性 */
+.nav-item.active {
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.09));
+  color: #fff;
+  box-shadow: var(--inset-hi-soft), 0 5px 14px rgba(0,0,0,.26);
+}
+.nav-item.active::before {
+  content: ""; position: absolute; left: 3px; top: 50%;
+  transform: translateY(-50%); width: 3px; height: 20px;
+  border-radius: 3px; background: var(--grad-brand);
+  box-shadow: 0 0 9px rgba(242,100,61,.65);
+}
+.nav-item.active svg {
+  background: rgba(255,255,255,.17);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
+}
+.nav-badge { background: var(--accent-pink); font-weight: 700; box-shadow: 0 2px 6px rgba(244,86,75,.5); }
+
+.sidebar-footer { border-top: 1px solid rgba(255,255,255,.07); padding: 8px 10px; position: relative; }
+.sidebar-footer-btn { padding: 9px 11px; border-radius: 12px; color: var(--text-sidebar-muted); }
+.sidebar-footer-btn svg { color: inherit; }
+.sidebar-footer-btn:hover { background: rgba(255,255,255,.07); color: var(--text-sidebar); }
+
+/* ============================================================================
+   顶栏
+   ============================================================================ */
+.topbar-title h1 { font-size: 27px; font-weight: 800; letter-spacing: -.022em; color: var(--text-1); }
+.topbar-title p { color: var(--text-3); font-size: 13px; }
+.search-box input {
+  border-radius: 13px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid var(--border);
+  padding: 11px 16px 11px 40px;
+  box-shadow: var(--shadow-sm);
+}
+.search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-tint); background: #fff; }
+.icon-btn {
+  border-radius: 13px;
+  background: rgba(255,255,255,.78);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.icon-btn:hover { border-color: var(--gray-300); color: var(--text-1); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.icon-btn svg { fill: var(--text-2); }
+.icon-btn:hover svg { fill: var(--text-1); }
+.icon-btn .badge { background: var(--accent-pink); }
+
+/* 压力小条 + 智能分析（顶栏右侧，小巧一条） */
+.stress-mini {
+  background: rgba(255,255,255,.82);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 5px 12px 5px 8px;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.stress-mini:hover { background: #fff; box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.stress-mini-ring { width: 26px; height: 26px; }
+.stress-mini-ring::after { width: 19px; height: 19px; background: #fff; }
+.stress-mini-value { color: var(--text-1); font-size: 13px; }
+.stress-mini-label { color: var(--text-3); }
+.stress-mini .icon-btn {
+  background: var(--grad-brand) !important;
+  border: none !important; color: #fff !important;
+  width: 34px; height: 34px; border-radius: 50%;
+  box-shadow: var(--shadow-brand), var(--inset-hi-soft) !important;
+}
+.stress-mini .icon-btn svg { fill: #fff; }
+
+/* ============================================================================
+   卡片 / 统计卡：白卡 + 顶部细高光 + 多层柔影；图标默认中性，彩色克制
+   ============================================================================ */
+.view.active { animation: appleViewIn .26s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes appleViewIn { from { opacity: 0; } to { opacity: 1; } }
+.card, .card-v2 {
+  background: linear-gradient(180deg, #FFFFFF, #FCFDFD);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  animation: none;
+}
+.card { padding: 24px; }
+.card:hover, .card-v2:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card-title { font-weight: 700; letter-spacing: -.01em; }
+.card-action { color: var(--accent-deep); }
+.card-action:hover { color: var(--accent); }
+
+.stat-card {
+  background: linear-gradient(180deg,#FFFFFF,#FCFDFD);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+/* 去彩色整卡底，统一白卡 */
+.stat-card.green, .stat-card.yellow, .stat-card.blue,
+.stat-card.purple, .stat-card.pink, .stat-card.teal {
+  background: #fff; border: 1px solid var(--border);
+}
+.stat-card:hover { box-shadow: var(--shadow-md); }
+.stat-card-value { font-weight: 800; letter-spacing: -.02em; }
+.stat-card-change.up { color: var(--ui-green-ink); }
+.stat-card-change.down { color: var(--ui-red-ink); }
+.stat-card-change { background: var(--gray-100); }
+
+/* v2 统计卡：白卡 + 中性墨灰渐变图标块（呼应侧栏，不花） */
+.stat-card-v2 {
+  background: #fff !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+.stat-card-v2:hover { box-shadow: var(--shadow-md); }
+.stat-card-v2[class*="gradient-"] { background: #fff !important; }
+.stat-card-v2 .stat-icon {
+  border-radius: 13px;
+  background: var(--grad-icon-dark) !important;
+  color: #fff !important;
+  box-shadow: var(--inset-hi-soft), 0 4px 10px rgba(21,30,40,.18) !important;
+}
+.stat-card-v2 .stat-icon svg { fill: #fff !important; }
+.stat-value-v2 { font-weight: 800 !important; letter-spacing: -.02em; }
+
+/* 看板列：浅冷灰 */
+.kanban-column-v2 {
+  background: linear-gradient(180deg,#F4F6F8,#EFF2F4);
+  border: 1px solid var(--border-light); border-radius: 20px;
+}
+.kanban-column-v2:hover { background: linear-gradient(180deg,#F1F4F6,#ECEFF2); }
+
+/* ============================================================================
+   快捷入口：白卡 + 中性灰圆图标；hover 才泛品牌橙（彩色只在交互时出现）
+   ============================================================================ */
+.quick-action {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+.quick-action:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.quick-action-icon {
+  width: 50px !important; height: 50px !important;
+  border-radius: 50% !important;
+  background: var(--gray-100) !important;
+  color: var(--gray-700) !important;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--inset-hi) !important;
+  transition: background .22s ease, color .22s ease, box-shadow .22s ease;
+}
+.quick-action-icon svg { fill: currentColor !important; stroke: none !important; width: 22px; height: 22px; }
+/* 默认全部中性；hover 时圆标变品牌橙，克制且有反馈 */
+.quick-action:hover .quick-action-icon {
+  background: var(--grad-brand) !important;
+  color: #fff !important;
+  border-color: transparent;
+  box-shadow: var(--shadow-brand), var(--inset-hi-soft) !important;
+}
+.quick-action-label { color: var(--text-1); font-weight: 600; }
+
+/* ============================================================================
+   按钮：玻璃光泽渐变 + 顶部内高光 + 同色柔影
+   ============================================================================ */
+.btn { border-radius: 13px; font-weight: 600; letter-spacing: .01em; transition: transform .16s ease, box-shadow .2s ease, filter .2s ease; }
+.btn-primary {
+  background: var(--grad-brand);
+  box-shadow: var(--shadow-brand), var(--inset-hi-soft);
+  border: 1px solid rgba(196,62,30,.25);
+  color: #fff;
+}
+.btn-primary:hover { box-shadow: 0 10px 24px rgba(242,100,61,.40), var(--inset-hi-soft); transform: translateY(-1px); filter: saturate(1.04); }
+.btn-primary:active { transform: translateY(1px) scale(.99); box-shadow: 0 3px 9px rgba(242,100,61,.3); }
+.btn-ghost {
+  background: linear-gradient(180deg,#FFFFFF,#F6F8FA);
+  border: 1px solid var(--border); color: var(--text-1);
+  box-shadow: var(--shadow-sm), var(--inset-hi);
+}
+.btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-300); }
+.btn-success { background: var(--grad-green); box-shadow: 0 6px 15px rgba(62,148,99,.28), var(--inset-hi-soft); color:#fff; border:none; }
+.btn-warning { background: var(--grad-amber); box-shadow: 0 6px 15px rgba(190,132,39,.26), var(--inset-hi-soft); color:#fff; border:none; }
+.btn-danger  { background: linear-gradient(180deg,#E9746B,#D84A40); box-shadow: 0 6px 15px rgba(210,50,40,.26), var(--inset-hi-soft); color:#fff; border:none; }
+
+/* 表单：浅灰 inset 底，聚焦白底 + 橙环 */
+.form-input, .form-select, .form-textarea {
+  border-radius: 12px;
+  background: var(--gray-100);
+  border: 1px solid var(--border);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-tint);
+}
+
+/* iOS 分段控件 */
+.tab-v2 { background: #E3E6EA; border: 1px solid #DDE1E6; border-radius: 13px; padding: 3px; gap: 2px; }
+.tab-v2-item { border-radius: 10px; color: var(--gray-600); font-weight: 600; }
+.tab-v2-item:hover { background: rgba(0,0,0,.05); color: var(--text-1); }
+.tab-v2-item.active {
+  background: linear-gradient(180deg,#FFFFFF,#F7F9FA);
+  color: var(--text-1);
+  box-shadow: 0 1px 3px rgba(21,30,40,.14), 0 1px 1px rgba(21,30,40,.06), var(--inset-hi);
+}
+
+/* 学习中心子分段：墨黑渐变胶囊（呼应炭灰侧栏，把橙色让给主 CTA） */
+.study-sections {
+  background: #E3E6EA !important;
+  border: 1px solid #DDE1E6 !important;
+  box-shadow: inset 0 1px 2px rgba(21,30,40,.06);
+}
+.study-section-btn { color: var(--gray-600); }
+.study-section-btn:hover { background: rgba(21,30,40,.05); color: var(--text-1); }
+.study-section-btn.active {
+  background: linear-gradient(165deg,#3D444D 0%,#23272D 55%,#1B1F24 100%) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 6px 14px rgba(20,25,27,.32) !important;
+}
+.study-section-btn.active svg { stroke: #fff !important; }
+
+/* ============================================================================
+   列表 / 表格 / 状态标签（低饱和莫兰迪语义色）
+   ============================================================================ */
+.list-item { border-bottom: 1px solid var(--border-light); }
+.list-item:hover { background: var(--gray-50); }
+.list-item-value.positive { color: var(--ui-green-ink); }
+.list-item-value.negative { color: var(--ui-red-ink); }
+.status-completed { background: var(--ui-green-soft); color: var(--ui-green-ink); }
+.status-pending   { background: var(--ui-amber-soft); color: var(--ui-amber-ink); }
+.status-urgent    { background: var(--ui-red-soft);   color: var(--ui-red-ink); }
+.data-table th { color: var(--text-3); }
+.data-table td { border-bottom: 1px solid var(--border-light); }
+.data-table tr:hover td { background: var(--gray-50); }
+
+/* 周课表：浅灰表头；课程块统一覆一层玻璃光泽，彩色更柔和、白字可读 */
+.schedule-head { background: var(--gray-100); border-radius: 14px 14px 0 0; }
+.schedule-time-col, .schedule-day-col { color: var(--text-1); font-weight: 700; font-size: 12.5px; padding: 10px 6px; }
+.schedule-time-col { color: var(--text-2); }
+.schedule-time-cell { color: var(--text-3); }
+.schedule-course-block {
+  border-radius: 10px; overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(0,0,0,.06), 0 3px 9px rgba(21,30,40,.12);
+}
+.schedule-course-block::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.05));
+}
+.scb-name { font-weight: 700; }
+.schedule-cell { border-color: var(--border-light); }
+
+/* ============================================================================
+   目标卡：分类色在卡顶雾化、消融进白卡（参考 sugarcrm 的颜色倒影/融合）
+   ============================================================================ */
+.goal-card-v2 { position: relative; overflow: hidden; }
+/* 顶部分类色线下方一道极淡同色辉光，让颜色"融进"卡片而非生硬的边条 */
+.goal-card-v2 > .goal-icon-v2,
+.goal-card-v2 .goal-progress-ring-v2 { position: relative; z-index: 1; }
+
+/* ============================================================================
+   墨青黑反色卡（深色标题条 / 重点卡）——供需要强调的模块使用
+   ============================================================================ */
+.dark-panel, .dark-card {
+  background: var(--grad-dark);
+  color: #F3F5F6;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 20px;
+  box-shadow: var(--inset-hi-soft), 0 14px 34px rgba(12,18,20,.28);
+}
+.dark-panel .card-title, .dark-card .card-title { color: #F3F5F6; }
+
+/* ============================================================================
+   弹窗 / Toast / 欢迎屏
+   ============================================================================ */
+.modal-overlay {
+  background: rgba(16,20,24,.40);
+  backdrop-filter: blur(7px) saturate(1.25);
+  -webkit-backdrop-filter: blur(7px) saturate(1.25);
+}
+.modal {
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow: var(--shadow-lg);
+  padding: 28px;
+  background: linear-gradient(180deg,#FFFFFF,#FCFDFD);
+}
+.modal-title { letter-spacing: -.01em; }
+.toast { border-radius: 14px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-lg); }
+.toast.success { border-left-color: var(--accent-green); }
+.toast.error { border-left-color: var(--accent-pink); }
+.toast.warning { border-left-color: var(--accent-yellow); }
+
+.welcome-screen { background: var(--bg); }
+.welcome-card {
+  border-radius: 28px; border: 1px solid rgba(255,255,255,.8);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(180deg,#FFFFFF,#FCFDFD);
+}
+.welcome-logo { background: var(--grad-brand); border-radius: 22px; box-shadow: var(--shadow-brand), var(--inset-hi-soft); }
+.welcome-title { letter-spacing: -.02em; }
+.welcome-title span { color: var(--accent); }
+.welcome-profile-item { border-radius: 14px; }
+.welcome-profile-item:hover { background: var(--gray-100); border-color: var(--accent); }
+.avatar-color.selected { box-shadow: 0 0 0 2px var(--accent); }
+
+/* 隐私 / 数据声明卡：中性浅灰 + 橙图标 */
+.privacy-notice, .data-usage-notice {
+  background: var(--gray-100) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px;
+}
+.privacy-icon, .data-notice-icon { background: var(--accent-soft) !important; }
+.privacy-icon svg, .data-notice-icon svg { fill: var(--accent) !important; }
+.privacy-notice, .data-usage-notice {
+  background: var(--gray-100) !important;
+  border: 1px solid var(--border) !important;
+}
+.privacy-title, .data-notice-title { color: var(--text-1) !important; font-weight: 700 !important; }
+.privacy-notice strong, .data-usage-notice strong { color: var(--accent-deep) !important; font-weight: 700 !important; }
+.data-usage-notice code { background: #fff !important; border: 1px solid var(--border) !important; color: var(--accent-deep) !important; }
+
+/* ============================================================================
+   空状态 / 云同步图标
+   ============================================================================ */
+.empty-state-icon { background: var(--gray-100); border-radius: 18px; }
+/* 数据管理 · 云端同步：墨青黑反色卡（参考样图深色 Onboarding 卡），白玻璃按钮 */
+.cloud-sync-section {
+  background: var(--grad-dark) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  color: #F3F5F6 !important;
+  box-shadow: var(--inset-hi-soft), 0 16px 34px rgba(12,18,20,.26) !important;
+}
+.cloud-sync-title { color: #fff !important; }
+.cloud-sync-status, .cloud-sync-last { color: rgba(243,245,246,.70) !important; opacity: 1 !important; }
+.cloud-sync-icon {
+  background: rgba(255,255,255,.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+.cloud-sync-icon svg { fill: #fff !important; }
+.cloud-sync-btn.upload, .cloud-sync-btn.download {
+  background: rgba(255,255,255,.10) !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.cloud-sync-btn.upload { background: rgba(255,255,255,.17) !important; }
+.cloud-sync-btn.upload:hover:not(:disabled) { background: rgba(255,255,255,.27) !important; }
+.cloud-sync-btn.download:hover:not(:disabled) { background: rgba(255,255,255,.20) !important; }
+.cloud-login-section .btn {
+  background: #fff !important; color: #1C1E22 !important; border: none !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.28) !important;
+}
+.cloud-login-section .btn:hover { background: #F1F2F4 !important; }
+.cloud-login-section .btn svg { fill: #1C1E22 !important; }
+.cloud-login-badge { background: rgba(255,255,255,.14) !important; color: #fff !important; }
+.data-notice-banner { background: var(--gray-100) !important; border: 1px solid var(--border) !important; }
+
+/* ============================================================================
+   移动端：纯色无模糊、轻阴影、单列、关光晕，保证低端机流畅不闪烁
+   ============================================================================ */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    background-image: none;
+    background-color: var(--bg);
+  }
+  .main { padding: 18px 16px 104px; }
+  .topbar-title h1 { font-size: 23px; }
+
+  .bottom-nav {
+    bottom: 14px; left: 12px; right: 12px;
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    background: #fff;
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+    box-shadow: 0 12px 32px rgba(21,30,40,.16);
+  }
+  .bottom-nav-item { color: var(--gray-500); }
+  .bottom-nav-item.active { color: var(--accent); }
+  .bottom-nav-item.active svg { filter: drop-shadow(0 2px 5px rgba(242,100,61,.4)); }
+
+  .card, .card-v2, .stat-card, .stat-card-v2, .quick-action {
+    box-shadow: 0 1px 2px rgba(21,30,40,.05) !important;
+  }
+  .card:hover, .card-v2:hover, .stat-card:hover, .stat-card-v2:hover, .quick-action:hover { transform: none; }
+
+  .view.active { animation: appleFade .22s ease; }
+  .card { animation: none; }
+
+  .modal-overlay { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .search-box input, .icon-btn, .stress-mini { background: #fff; }
+  .schedule-course-block::after { display: none; }
+}
+@keyframes appleFade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/*@@APPLE_THEME_END*/
 </style>
 </head>
 <body>
@@ -2208,7 +2826,7 @@ html,body{overflow-x:hidden;}
             <div class="stress-mini-value" id="stress-mini-value">--</div>
             <div class="stress-mini-label" id="stress-mini-label">压力</div>
           </div>
-        <button class="icon-btn" onclick="showSmartAnalysis()" title="智能分析" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">
+        <button class="icon-btn" onclick="showSmartAnalysis()" title="智能分析" style="background:linear-gradient(135deg,#FF845C,#F2552C);color:#fff;">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         </button>
         </div>
@@ -2341,20 +2959,20 @@ html,body{overflow-x:hidden;}
               <div class="card-title">数据统计</div>
             </div>
             <div class="chart-row-v2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
+              <div style="text-align:center;padding:12px;background:#F5F5F7;border-radius:12px;">
                 <div style="font-size:24px;font-weight:800;color:var(--green-dark)" id="stat-courses">0</div>
                 <div style="font-size:11px;color:var(--text-3)">已修课程</div>
               </div>
-              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
-                <div style="font-size:24px;font-weight:800;color:var(--yellow-dark)" id="stat-exams">0</div>
+              <div style="text-align:center;padding:12px;background:#F5F5F7;border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:#CF9944" id="stat-exams">0</div>
                 <div style="font-size:11px;color:var(--text-3)">考试倒计时</div>
               </div>
-              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
-                <div style="font-size:24px;font-weight:800;color:var(--blue-dark)" id="stat-transactions">0</div>
+              <div style="text-align:center;padding:12px;background:#F5F5F7;border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:#5B8DC9" id="stat-transactions">0</div>
                 <div style="font-size:11px;color:var(--text-3)">记账记录</div>
               </div>
-              <div style="text-align:center;padding:12px;background:var(--bg);border-radius:12px;">
-                <div style="font-size:24px;font-weight:800;color:var(--purple-dark)" id="stat-schedules">0</div>
+              <div style="text-align:center;padding:12px;background:#F5F5F7;border-radius:12px;">
+                <div style="font-size:24px;font-weight:800;color:#9279BC" id="stat-schedules">0</div>
                 <div style="font-size:11px;color:var(--text-3)">作息安排</div>
               </div>
             </div>
@@ -2820,22 +3438,22 @@ html,body{overflow-x:hidden;}
         <div class="kanban-board-v2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
           <div class="kanban-column-v2">
             <div class="kanban-header-v2">
-              <div class="kanban-title-v2" style="color:#f59e0b;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 待办</div>
-              <div class="kanban-count-v2" style="background:#f59e0b;" id="kanban-pending-count">0</div>
+              <div class="kanban-title-v2" style="color:#CF9944;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 待办</div>
+              <div class="kanban-count-v2" style="background:#CF9944;" id="kanban-pending-count">0</div>
             </div>
             <div id="kanban-pending-list"></div>
           </div>
           <div class="kanban-column-v2">
             <div class="kanban-header-v2">
-              <div class="kanban-title-v2" style="color:#3b82f6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>进行中</div>
-              <div class="kanban-count-v2" style="background:#3b82f6;" id="kanban-progress-count">0</div>
+              <div class="kanban-title-v2" style="color:#5B8DC9;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>进行中</div>
+              <div class="kanban-count-v2" style="background:#5B8DC9;" id="kanban-progress-count">0</div>
             </div>
             <div id="kanban-progress-list"></div>
           </div>
           <div class="kanban-column-v2">
             <div class="kanban-header-v2">
-              <div class="kanban-title-v2" style="color:#10b981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>已完成</div>
-              <div class="kanban-count-v2" style="background:#10b981;" id="kanban-completed-count">0</div>
+              <div class="kanban-title-v2" style="color:#57AB7E;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>已完成</div>
+              <div class="kanban-count-v2" style="background:#57AB7E;" id="kanban-completed-count">0</div>
             </div>
             <div id="kanban-completed-list"></div>
           </div>
@@ -2857,20 +3475,20 @@ html,body{overflow-x:hidden;}
       <!-- 优先级矩阵视图 -->
       <div id="task-view-matrix" style="display:none;">
         <div class="matrix-board-v2" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;">
-          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#ef4444;">
-            <div class="matrix-title-v2" style="color:#991b1b;"><span class="mtx-dot" style="background:#ef4444"></span>重要且紧急</div>
+          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#FBEEED,#F6DAD7);border-color:#D86A60;">
+            <div class="matrix-title-v2" style="color:#9C3D35;"><span class="mtx-dot" style="background:#D86A60"></span>重要且紧急</div>
             <div id="matrix-urgent-important"></div>
           </div>
-          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#f59e0b;">
-            <div class="matrix-title-v2" style="color:#92400e;"><span class="mtx-dot" style="background:#f59e0b"></span>重要不紧急</div>
+          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#FCF7EC,#FAF1DD);border-color:#CF9944;">
+            <div class="matrix-title-v2" style="color:#865F1B;"><span class="mtx-dot" style="background:#CF9944"></span>重要不紧急</div>
             <div id="matrix-important-not-urgent"></div>
           </div>
-          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#3b82f6;">
-            <div class="matrix-title-v2" style="color:#1e40af;"><span class="mtx-dot" style="background:#3b82f6"></span>紧急不重要</div>
+          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#EDF2F8,#D9E5F2);border-color:#5B8DC9;">
+            <div class="matrix-title-v2" style="color:#335E8C;"><span class="mtx-dot" style="background:#5B8DC9"></span>紧急不重要</div>
             <div id="matrix-urgent-not-important"></div>
           </div>
-          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#10b981;">
-            <div class="matrix-title-v2" style="color:#065f46;"><span class="mtx-dot" style="background:#10b981"></span>不紧急不重要</div>
+          <div class="matrix-quadrant-v2" style="background:linear-gradient(135deg,#EDF5F0,#D9EBE1);border-color:#57AB7E;">
+            <div class="matrix-title-v2" style="color:#2C7150;"><span class="mtx-dot" style="background:#57AB7E"></span>不紧急不重要</div>
             <div id="matrix-not-urgent-not-important"></div>
           </div>
         </div>
@@ -3340,10 +3958,7 @@ html,body{overflow-x:hidden;}
         <div>
           <div class="cloud-sync-title">云端同步</div>
           <div class="cloud-sync-status" id="cloud-sync-status">未登录云端账号</div>
-<<<<<<< Updated upstream
-=======
           <div class="cloud-sync-last" id="cloud-last-sync"></div>
->>>>>>> Stashed changes
         </div>
       </div>
       <div class="cloud-sync-buttons">
@@ -3362,13 +3977,10 @@ html,body{overflow-x:hidden;}
           登录/注册云端账号
         </button>
       </div>
-<<<<<<< Updated upstream
-=======
       <label class="cloud-autosync-row" id="cloud-autosync-row" style="display:none;margin-top:12px;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer;">
-        <input type="checkbox" id="cloud-autosync" style="width:16px;height:16px;accent-color:#667eea;cursor:pointer;" onchange="toggleCloudAutoSync()">
+        <input type="checkbox" id="cloud-autosync" style="width:16px;height:16px;accent-color:#FF845C;cursor:pointer;" onchange="toggleCloudAutoSync()">
         <span>自动同步：登录后约每分钟自动上传，换设备登录同一账号即可恢复</span>
       </label>
->>>>>>> Stashed changes
     </div>
     <!-- 使用声明按钮 -->
     <div class="data-notice-banner" onclick="showDataUsageNotice()">
@@ -3385,14 +3997,14 @@ html,body{overflow-x:hidden;}
         <svg viewBox="0 0 24 24" style="width:32px;height:32px;margin-bottom:8px;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         导出数据
       </button>
-      <button class="btn btn-warning" onclick="document.getElementById('import-file').click()" style="flex-direction:column;padding:20px;">
+      <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()" style="color:var(--accent-deep);border-color:#F3C9BC;" style="flex-direction:column;padding:20px;">
         <svg viewBox="0 0 24 24" style="width:32px;height:32px;margin-bottom:8px;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
         导入数据
       </button>
     </div>
     <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
-    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px;margin-bottom:16px;">
-      <div style="font-weight:600;color:#991b1b;margin-bottom:8px;">危险操作</div>
+    <div style="background:#FBEEED;border:1px solid #F0C4C0;border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-weight:600;color:#9C3D35;margin-bottom:8px;">危险操作</div>
       <button class="btn btn-danger" onclick="clearAllData()">清除所有数据</button>
     </div>
     <div class="modal-actions">
@@ -3404,42 +4016,6 @@ html,body{overflow-x:hidden;}
 <div class="modal-overlay" id="modal-cloud-login">
   <div class="modal" style="max-width:420px;">
     <h2 class="modal-title">云端账号</h2>
-<<<<<<< Updated upstream
-    <p class="modal-desc">登录后可在多设备间同步数据</p>
-    
-    <div class="cloud-login-tabs">
-      <button class="cloud-login-tab active" id="cloud-tab-login" onclick="switchCloudTab('login')">登录</button>
-      <button class="cloud-login-tab" id="cloud-tab-register" onclick="switchCloudTab('register')">注册</button>
-    </div>
-    
-    <form id="cloud-login-form" onsubmit="event.preventDefault(); cloudLoginSubmit();">
-      <div class="form-group" id="cloud-nickname-group" style="display:none;">
-        <label class="form-label">昵称</label>
-        <input type="text" class="form-input" id="cloud-login-nickname" placeholder="显示名称（可选）">
-      </div>
-      <div class="form-group">
-        <label class="form-label">用户名</label>
-        <input type="text" class="form-input" id="cloud-login-username" placeholder="至少3个字符" required>
-      </div>
-      <div class="form-group">
-        <label class="form-label">密码</label>
-        <input type="password" class="form-input" id="cloud-login-password" placeholder="至少6个字符" required>
-      </div>
-      <div id="cloud-login-error" style="color:#ef4444;font-size:13px;margin-bottom:12px;display:none;"></div>
-      <button type="submit" class="btn btn-primary" style="width:100%;" id="cloud-login-submit-btn">登录</button>
-    </form>
-    
-    <div class="cloud-login-info">
-      <strong>数据安全说明：</strong><br>
-      • 您的数据加密存储在云端服务器<br>
-      • 密码使用bcrypt加密，服务方无法查看<br>
-      • 可随时在数据管理中导出数据备份<br>
-      • 云端同步为可选功能，不启用时数据仅存本地
-    </div>
-    
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-cloud-login')">取消</button>
-=======
     <p class="modal-desc">注册或登录后，可在多台设备间同步数据</p>
 
     <div class="cloud-login-tabs">
@@ -3456,7 +4032,7 @@ html,body{overflow-x:hidden;}
         <label class="form-label">密码</label>
         <input type="password" class="form-input" id="cloud-login-password" placeholder="至少6个字符" required autocomplete="current-password">
       </div>
-      <div id="cloud-login-error" style="color:#ef4444;font-size:13px;margin-bottom:12px;display:none;"></div>
+      <div id="cloud-login-error" style="color:#D86A60;font-size:13px;margin-bottom:12px;display:none;"></div>
       <button type="submit" class="btn btn-primary" style="width:100%;">登录并连接云端</button>
     </form>
 
@@ -3486,7 +4062,6 @@ html,body{overflow-x:hidden;}
 
     <div class="modal-actions">
       <button type="button" class="btn btn-ghost" onclick="closeModal('modal-cloud-login')">取消</button>
->>>>>>> Stashed changes
     </div>
   </div>
 </div>
@@ -3500,7 +4075,7 @@ html,body{overflow-x:hidden;}
     <p class="modal-desc">基于你的数据，给出个性化的学习生活建议</p>
     <div id="smart-analysis-content" style="margin-bottom:16px;">
       <div style="text-align:center;padding:40px;color:var(--text-secondary);">
-        <div style="font-size:32px;margin-bottom:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;vertical-align:-2px;display:inline-block;margin-right:0px;flex-shrink:0;"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg></div>
+        <div style="font-size:32px;margin-bottom:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A4F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;vertical-align:-2px;display:inline-block;margin-right:0px;flex-shrink:0;"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg></div>
         <div>正在分析你的数据...</div>
       </div>
     </div>
@@ -3845,6 +4420,37 @@ function throttle(fn, limit) {
   };
 }
 
+// ===== Apple 图表主题（注入） =====
+const APPLE_CHART_COLORS=['#F2643D','#2B2B31','#5B8DC9','#57AB7E','#CF9944','#9279BC','#8B9098','#55AFBC','#D86A60','#F6A07E','#B7BDC6'];
+function ensureAppleTheme(){
+  try{
+    if(window.__appleChartTheme || typeof echarts==='undefined') return;
+    const F='-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif';
+    echarts.registerTheme('apple',{
+      color:APPLE_CHART_COLORS,
+      backgroundColor:'transparent',
+      textStyle:{fontFamily:F,color:'#1D1D1F'},
+      title:{textStyle:{color:'#1D1D1F',fontWeight:700,fontFamily:F},subtextStyle:{color:'#86868B',fontFamily:F}},
+      legend:{textStyle:{color:'#6E6E73',fontFamily:F},pageTextStyle:{color:'#6E6E73'}},
+      tooltip:{backgroundColor:'rgba(255,255,255,.97)',borderColor:'#E5E5EA',borderWidth:1,padding:[9,13],
+        textStyle:{color:'#1D1D1F',fontFamily:F},
+        extraCssText:'border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.14);'},
+      categoryAxis:{axisLine:{lineStyle:{color:'#D1D1D6'}},axisTick:{show:false},
+        axisLabel:{color:'#86868B',fontFamily:F},splitLine:{show:false,lineStyle:{color:'#F0F0F3'}}},
+      valueAxis:{axisLine:{show:false},axisTick:{show:false},
+        axisLabel:{color:'#86868B',fontFamily:F},splitLine:{lineStyle:{color:'#F0F0F3',type:'dashed'}}},
+      line:{itemStyle:{borderWidth:0},lineStyle:{width:3},symbol:'circle',symbolSize:7,smooth:.4},
+      bar:{itemStyle:{borderRadius:[6,6,0,0],borderWidth:0},barMaxWidth:30},
+      pie:{itemStyle:{borderColor:'#fff',borderWidth:3,borderRadius:8},
+        label:{color:'#1D1D1F',fontFamily:F},labelLine:{lineStyle:{color:'#D1D1D6'}}},
+      radar:{axisName:{color:'#6E6E73',fontFamily:F},splitLine:{lineStyle:{color:'#ECECF0'}},
+        splitArea:{areaStyle:['rgba(0,0,0,0.015)','rgba(0,0,0,0.035)']}},
+      gauge:{title:{color:'#8B9098'},axisLine:{lineStyle:{color:[[.3,'#57AB7E'],[.7,'#CF9944'],[1,'#D86A60']]}}}
+    });
+    window.__appleChartTheme=true;
+  }catch(e){console.warn('apple theme register error:',e);}
+}
+
 // 安全的图表初始化（带错误处理和移动端优化）
 function initChart(containerId, option, chartKey) {
   try {
@@ -3857,7 +4463,8 @@ function initChart(containerId, option, chartKey) {
       state.charts[chartKey] = null;
     }
     
-    const chart = echarts.init(el, null, { renderer: isMobile ? 'canvas' : 'canvas' });
+    ensureAppleTheme();
+    const chart = echarts.init(el, 'apple', { renderer: isMobile ? 'canvas' : 'canvas' });
     
     // 移动端关闭动画，提升性能
     if (isMobile) {
@@ -3884,7 +4491,8 @@ function makeChart(key, id) {
   if (!el) return null;
   if (state.charts[key]) { try { state.charts[key].dispose(); } catch(e) {} state.charts[key] = null; }
   el.innerHTML = '';
-  const ch = echarts.init(el, null, { renderer: 'canvas' });
+  ensureAppleTheme();
+  const ch = echarts.init(el, 'apple', { renderer: 'canvas' });
   state.charts[key] = ch;
   return ch;
 }
@@ -3963,14 +4571,14 @@ const STORAGE_PREFIX = "campus_toolbox_";
 
 // ===== Constants =====
 const AVATAR_COLORS = [
-  { from: "#6C5CE7", to: "#5B4CC4", char: "学" },
-  { from: "#00B894", to: "#0891b2", char: "同" },
-  { from: "#FD79A8", to: "#db2777", char: "少" },
-  { from: "#00B894", to: "#059669", char: "青" },
-  { from: "#FDCB6E", to: "#d97706", char: "阳" },
-  { from: "#F0A500", to: "#ea580c", char: "光" },
-  { from: "#E17055", to: "#dc2626", char: "热" },
-  { from: "#A29BFE", to: "#7c3aed", char: "梦" }
+  { from: "#FF8C66", to: "#F2643D", char: "学" },
+  { from: "#7FA6D6", to: "#4977AE", char: "同" },
+  { from: "#D28A9C", to: "#B85C72", char: "少" },
+  { from: "#73BD96", to: "#3E9463", char: "青" },
+  { from: "#DBA956", to: "#BE8427", char: "阳" },
+  { from: "#F2A554", to: "#E07B39", char: "光" },
+  { from: "#DE7C73", to: "#C35147", char: "热" },
+  { from: "#A995CE", to: "#7B5FA6", char: "梦" }
 ];
 
 const GPA_ALGORITHMS = {
@@ -3988,29 +4596,29 @@ const GPA_ALGORITHMS = {
 };
 
 const EXPENSE_CATEGORIES = [
-  { id: "food", name: "餐饮", icon: "utensils", color: "#FD79A8" },
-  { id: "transport", name: "交通", icon: "bus", color: "#00B894" },
-  { id: "shopping", name: "购物", icon: "bag", color: "#6C5CE7" },
-  { id: "entertainment", name: "娱乐", icon: "gamepad", color: "#FDCB6E" },
-  { id: "study", name: "学习", icon: "book", color: "#0984E3" },
-  { id: "medical", name: "医疗", icon: "pill", color: "#E17055" },
-  { id: "other", name: "其他", icon: "package", color: "#636E72" }
+  { id: "food", name: "餐饮", icon: "utensils", color: "#F2643D" },
+  { id: "transport", name: "交通", icon: "bus", color: "#5B8DC9" },
+  { id: "shopping", name: "购物", icon: "bag", color: "#9279BC" },
+  { id: "entertainment", name: "娱乐", icon: "gamepad", color: "#C9748C" },
+  { id: "study", name: "学习", icon: "book", color: "#55AFBC" },
+  { id: "medical", name: "医疗", icon: "pill", color: "#D86A60" },
+  { id: "other", name: "其他", icon: "package", color: "#8B9098" }
 ];
 
 const INCOME_CATEGORIES = [
-  { id: "allowance", name: "生活费", icon: "wallet", color: "#00B894" },
-  { id: "parttime", name: "兼职", icon: "briefcase", color: "#6C5CE7" },
-  { id: "scholarship", name: "奖学金", icon: "trophy", color: "#FDCB6E" },
-  { id: "other", name: "其他", icon: "package", color: "#636E72" }
+  { id: "allowance", name: "生活费", icon: "wallet", color: "#57AB7E" },
+  { id: "parttime", name: "兼职", icon: "briefcase", color: "#5B8DC9" },
+  { id: "scholarship", name: "奖学金", icon: "trophy", color: "#CF9944" },
+  { id: "other", name: "其他", icon: "package", color: "#8B9098" }
 ];
 
 const SCHEDULE_CATEGORIES = [
-  { id: "study", name: "学习", color: "#6C5CE7" },
-  { id: "exercise", name: "运动", color: "#00B894" },
-  { id: "rest", name: "休息", color: "#FDCB6E" },
-  { id: "social", name: "社交", color: "#FD79A8" },
-  { id: "work", name: "工作", color: "#0984E3" },
-  { id: "other", name: "其他", color: "#636E72" }
+  { id: "study", name: "学习", color: "#5B8DC9" },
+  { id: "exercise", name: "运动", color: "#57AB7E" },
+  { id: "rest", name: "休息", color: "#CF9944" },
+  { id: "social", name: "社交", color: "#9279BC" },
+  { id: "work", name: "工作", color: "#55AFBC" },
+  { id: "other", name: "其他", color: "#8B9098" }
 ];
 
 const DEFAULT_HABITS = [
@@ -4444,9 +5052,9 @@ function _renderGPACharts(data) {
         smooth: true,
         symbol: 'circle',
         symbolSize: 8,
-        lineStyle: { width: 3, color: '#6C5CE7' },
-        itemStyle: { color: '#6C5CE7' },
-        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(108,92,231,0.3)' }, { offset: 1, color: 'rgba(108,92,231,0)' }]) }
+        lineStyle: { width: 3, color: '#F2643D' },
+        itemStyle: { color: '#F2643D' },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(242,100,61,0.25)' }, { offset: 1, color: 'rgba(242,100,61,0)' }]) }
       }]
     });
     state.charts.gpaTrend = chart;
@@ -4464,7 +5072,7 @@ function _renderGPACharts(data) {
       grid: { left: 40, right: 20, top: 20, bottom: 30 },
       xAxis: { type: 'category', data: ranges.map(r => r.name), axisLabel: { fontSize: 11 } },
       yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
-      series: [{ type: 'bar', data: counts, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#00B894' }, { offset: 1, color: '#0891b2' }]), borderRadius: [6, 6, 0, 0] }, barWidth: '50%' }]
+      series: [{ type: 'bar', data: counts, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#42A1FF' }, { offset: 1, color: '#5B8DC9' }]), borderRadius: [6, 6, 0, 0] }, barWidth: '50%' }]
     });
     state.charts.gpaDist = chart;
   }
@@ -4652,7 +5260,7 @@ function renderCountdown() {
     
     return `
       <div class="list-item" style="${c.done ? 'opacity:0.6;' : ''}">
-        <div class="list-item-avatar" style="background:${c.done ? '#ccc' : (isUrgent ? 'linear-gradient(135deg,#FD79A8,#db2777)' : 'linear-gradient(135deg,#FDCB6E,#d97706)')}">
+        <div class="list-item-avatar" style="background:${c.done ? '#ccc' : (isUrgent ? 'linear-gradient(135deg,#C9748C,#A84E66)' : 'linear-gradient(135deg,#CF9944,#865F1B)')}">
           ${c.done ? '' : categoryNames[c.category]?.charAt(0) || '?'}
         </div>
         <div class="list-item-content">
@@ -4776,7 +5384,7 @@ function renderFinance() {
   } else {
     container.innerHTML = list.slice(0, 50).map(t => {
       const cats = t.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
-      const cat = cats.find(c => c.id === t.category) || {name:t.category, icon:"package", color:"#999"};
+      const cat = cats.find(c => c.id === t.category) || {name:t.category, icon:"package", color:"#8B9098"};
       return `
         <div class="list-item">
           <div class="list-item-avatar" style="background:${cat.color}20;color:${cat.color};">${finIcon(cat.id,18)}</div>
@@ -4831,8 +5439,8 @@ function _renderFinanceCharts(data, monthTx) {
       xAxis: { type: 'category', data: months, axisLabel: { fontSize: 11 } },
       yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
       series: [
-        { name: '收入', type: 'bar', data: incomeData, itemStyle: { color: '#00B894', borderRadius: [6, 6, 0, 0] } },
-        { name: '支出', type: 'bar', data: expenseData, itemStyle: { color: '#FD79A8', borderRadius: [6, 6, 0, 0] } }
+        { name: '收入', type: 'bar', data: incomeData, itemStyle: { color: '#57AB7E', borderRadius: [6, 6, 0, 0] } },
+        { name: '支出', type: 'bar', data: expenseData, itemStyle: { color: '#F2643D', borderRadius: [6, 6, 0, 0] } }
       ]
     });
     state.charts.financeTrend = chart;
@@ -4949,7 +5557,7 @@ function saveBudget() {
 
 // ===================== 规划中心（档位A 重写） =====================
 function toMin(hm){ if(!hm) return 0; const p=String(hm).split(':'); return (parseInt(p[0])||0)*60+(parseInt(p[1])||0); }
-const HABIT_COLORS=['#6366f1','#10b981','#f59e0b','#ec4899','#06b6d4','#8b5cf6','#ef4444'];
+const HABIT_COLORS=['#5B8DC9','#57AB7E','#CF9944','#C9748C','#55AFBC','#9279BC','#D86A60'];
 function habitColor(h, idx){ return h.color || HABIT_COLORS[idx % HABIT_COLORS.length]; }
 function habitToday(h){ const k=new Date().toDateString(); return (h.completed && (h.completed[k]||0)) || 0; }
 function habitStreak(h){
@@ -5007,12 +5615,12 @@ function plannerTodayItems(){
   const items=[];
   (data.scheduleCourses||[]).forEach(c=>{
     if(c.dayOfWeek===todayDay && c.weekStart<=scheduleWeek && c.weekEnd>=scheduleWeek){
-      items.push({start:c.startTime,end:c.endTime,title:c.name,sub:[c.teacher,c.location].filter(Boolean).join(' · '),color:c.color||'#6366f1',kind:'课程'});
+      items.push({start:c.startTime,end:c.endTime,title:c.name,sub:[c.teacher,c.location].filter(Boolean).join(' · '),color:c.color||'#5B8DC9',kind:'课程'});
     }
   });
   (data.scheduleEvents||[]).forEach(e=>{
     if(eventOnDay(e,dayIdx,todayStr)){
-      items.push({start:e.startTime,end:e.endTime,title:e.title,sub:e.description||'',color:e.color||'#10b981',kind:'作息',done:e.done});
+      items.push({start:e.startTime,end:e.endTime,title:e.title,sub:e.description||'',color:e.color||'#57AB7E',kind:'作息',done:e.done});
     }
   });
   items.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
@@ -5053,8 +5661,8 @@ function renderPlannerTimeline(){
       const ch=makeChart('planTime','planner-time-chart');
       if(ch)ch.setOption({
         tooltip:{trigger:'item',formatter:'{b}: {c}分钟 ({d}%)'},
-        legend:{bottom:0,textStyle:{color:'#64748b',fontSize:10},type:'scroll'},
-        color:['#6366f1','#10b981','#a78bfa','#cbd5e1'],
+        legend:{bottom:0,textStyle:{color:'#6E6E73',fontSize:10},type:'scroll'},
+        color:APPLE_CHART_COLORS,
         series:[{type:'pie',radius:['42%','68%'],center:['50%','42%'],label:{show:false},labelLine:{show:false},
           data:[{name:'上课',value:classMin},{name:'作息活动',value:eventMin},{name:'睡眠',value:sleepMin},{name:'可支配',value:freeMin}].filter(x=>x.value>0)}]
       });
@@ -5074,7 +5682,7 @@ function renderPlannerTimeline(){
     const todayStr=now.toISOString().split('T')[0];
     if(!(data.health||[]).some(r=>r.date===todayStr)) arr.push('今天还没记录健康数据，睡前花 10 秒记一下吧');
     if(items.length>=5) arr.push('今天安排较满，注意在课间留出休息和喝水时间');
-    tips.innerHTML=arr.map(t=>'<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:13px;color:var(--text-2);"><span style="color:#6366f1;font-weight:700;flex-shrink:0;">•</span><span>'+t+'</span></div>').join('') || '<div style="color:var(--text-3);font-size:13px;">暂无特别建议</div>';
+    tips.innerHTML=arr.map(t=>'<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:13px;color:var(--text-2);"><span style="color:#5B8DC9;font-weight:700;flex-shrink:0;">•</span><span>'+t+'</span></div>').join('') || '<div style="color:var(--text-3);font-size:13px;">暂无特别建议</div>';
   }
 }
 
@@ -5106,7 +5714,7 @@ function renderPlannerHabits(){
     const sorted=habits.map((h,idx)=>({h,idx,st:habitStreak(h)})).sort((a,b)=>b.st-a.st);
     rank.innerHTML = sorted.length ? sorted.slice(0,6).map((o,i)=>{
       const color=habitColor(o.h,o.idx);
-      const medal=['#f59e0b','#94a3b8','#d97706'][i] || '#cbd5e1';
+      const medal=['#CF9944','#86868B','#865F1B'][i] || '#D1D1D6';
       return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-light);"><span style="width:22px;height:22px;border-radius:50%;background:'+medal+';color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">'+(i+1)+'</span><span style="flex:1;font-size:13px;font-weight:600;">'+escapeHtml(o.h.name)+'</span><span style="font-size:12px;color:var(--text-3);">'+o.st+' 天</span></div>';
     }).join('') : '<div class="matrix-empty">暂无数据</div>';
   }
@@ -5117,16 +5725,16 @@ function renderPlannerHabits(){
     if(vals.some(v=>v>0)){
       const ch=makeChart('habitsWeekly','habits-weekly-chart');
       if(ch)ch.setOption({tooltip:{trigger:'axis'},grid:{left:28,right:12,top:14,bottom:24},
-        xAxis:{type:'category',data:days,axisLabel:{color:'#94a3b8',fontSize:10},axisLine:{lineStyle:{color:'#e2e8f0'}}},
-        yAxis:{type:'value',minInterval:1,splitLine:{lineStyle:{color:'#f1f5f9'}},axisLabel:{color:'#94a3b8',fontSize:10}},
-        series:[{type:'line',data:vals,smooth:true,areaStyle:{color:'rgba(16,185,129,.15)'},lineStyle:{color:'#10b981',width:2.5},itemStyle:{color:'#10b981'},symbolSize:6}] });
+        xAxis:{type:'category',data:days,axisLabel:{color:'#86868B',fontSize:10},axisLine:{lineStyle:{color:'#D1D1D6'}}},
+        yAxis:{type:'value',minInterval:1,splitLine:{lineStyle:{color:'#F0F0F3'}},axisLabel:{color:'#86868B',fontSize:10}},
+        series:[{type:'line',data:vals,smooth:true,areaStyle:{color:'rgba(52,197,89,.15)'},lineStyle:{color:'#57AB7E',width:2.5},itemStyle:{color:'#57AB7E'},symbolSize:6}] });
     } else chartEmpty('habitsWeekly','habits-weekly-chart','打卡后显示近 7 天达标趋势');
   }
 }
 
 function showAddHabit(){
   const old=document.getElementById('modal-habit-form'); if(old)old.remove();
-  const colors=['#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4'];
+  const colors=['#5B8DC9','#57AB7E','#CF9944','#9279BC','#C9748C','#55AFBC'];
   let html='<div class="modal-overlay" id="modal-habit-form"><div class="modal" style="max-width:440px;"><h2 class="modal-title">新建习惯</h2><p class="modal-desc">每天打卡，积累连续天数</p>';
   html+='<div class="form-group"><label>习惯名称 *</label><input id="habit-name" class="input" placeholder="如：背单词、跑步"></div>';
   html+='<div class="form-row"><div class="form-group"><label>每日目标</label><input id="habit-target" type="number" class="input" value="1" min="1"></div>';
@@ -5179,13 +5787,13 @@ function renderPlannerHealth(){
     const recent=(data.health||[]).slice().sort((a,b)=>(a.date<b.date?-1:1)).slice(-14);
     if(recent.length){
       const ch=makeChart('healthTrend','health-trend-chart');
-      if(ch)ch.setOption({tooltip:{trigger:'axis'},legend:{data:['睡眠(h)','运动(分)'],textStyle:{color:'#64748b',fontSize:10},top:0},
+      if(ch)ch.setOption({tooltip:{trigger:'axis'},legend:{data:['睡眠(h)','运动(分)'],textStyle:{color:'#6E6E73',fontSize:10},top:0},
         grid:{left:34,right:38,top:30,bottom:24},
-        xAxis:{type:'category',data:recent.map(r=>r.date.slice(5).replace('-','/')),axisLabel:{color:'#94a3b8',fontSize:9}},
-        yAxis:[{type:'value',name:'h',nameTextStyle:{color:'#94a3b8',fontSize:9},splitLine:{lineStyle:{color:'#f1f5f9'}},axisLabel:{color:'#94a3b8',fontSize:9}},
-               {type:'value',name:'分',nameTextStyle:{color:'#94a3b8',fontSize:9},axisLabel:{color:'#94a3b8',fontSize:9}}],
-        series:[{name:'睡眠(h)',type:'line',smooth:true,data:recent.map(r=>r.sleep||0),lineStyle:{color:'#6366f1'},itemStyle:{color:'#6366f1'},symbolSize:5},
-                {name:'运动(分)',type:'bar',yAxisIndex:1,data:recent.map(r=>r.exercise||0),itemStyle:{color:'rgba(16,185,129,.55)',borderRadius:[4,4,0,0]},barWidth:'40%'}] });
+        xAxis:{type:'category',data:recent.map(r=>r.date.slice(5).replace('-','/')),axisLabel:{color:'#86868B',fontSize:9}},
+        yAxis:[{type:'value',name:'h',nameTextStyle:{color:'#86868B',fontSize:9},splitLine:{lineStyle:{color:'#F0F0F3'}},axisLabel:{color:'#86868B',fontSize:9}},
+               {type:'value',name:'分',nameTextStyle:{color:'#86868B',fontSize:9},axisLabel:{color:'#86868B',fontSize:9}}],
+        series:[{name:'睡眠(h)',type:'line',smooth:true,data:recent.map(r=>r.sleep||0),lineStyle:{color:'#5B8DC9'},itemStyle:{color:'#5B8DC9'},symbolSize:5},
+                {name:'运动(分)',type:'bar',yAxisIndex:1,data:recent.map(r=>r.exercise||0),itemStyle:{color:'rgba(52,197,89,.55)',borderRadius:[4,4,0,0]},barWidth:'40%'}] });
     } else chartEmpty('healthTrend','health-trend-chart','记录健康数据后显示趋势');
   }
   // 健康建议
@@ -5203,7 +5811,7 @@ function renderPlannerHealth(){
       if(t.mood==='bad'||t.mood==='normal')out.push('心情一般时，短暂休息或找人聊聊会有帮助');
       if(!out.length)out.push('各项指标都很健康，继续保持');
     }
-    tips.innerHTML=out.map(t=>'<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:13px;color:var(--text-2);"><span style="color:#10b981;font-weight:700;">•</span><span>'+t+'</span></div>').join('');
+    tips.innerHTML=out.map(t=>'<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border-light);font-size:13px;color:var(--text-2);"><span style="color:#57AB7E;font-weight:700;">•</span><span>'+t+'</span></div>').join('');
   }
 }
 
@@ -5219,11 +5827,11 @@ function renderPlannerWeekly(){
     const dayIdx=d-1;
     const cs=courses.filter(x=>x.dayOfWeek===d && x.weekStart<=scheduleWeek && x.weekEnd>=scheduleWeek);
     const evs=events.filter(e=>eventOnDay(e,dayIdx,''));
-    const items=cs.map(x=>({start:x.startTime,title:x.name,color:x.color||'#6366f1'})).concat(evs.map(e=>({start:e.startTime,title:e.title,color:e.color||'#10b981'})));
+    const items=cs.map(x=>({start:x.startTime,title:x.name,color:x.color||'#5B8DC9'})).concat(evs.map(e=>({start:e.startTime,title:e.title,color:e.color||'#57AB7E'})));
     items.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
     const isToday=todayD===d;
-    html+='<div style="background:#fff;border-radius:16px;padding:14px;border:1px solid var(--border-light);'+(isToday?'box-shadow:0 0 0 2px #6366f1;':'')+'">';
-    html+='<div style="font-weight:700;margin-bottom:8px;'+(isToday?'color:#6366f1;':'')+'">'+dayNames[dayIdx]+(isToday?' · 今天':'')+'</div>';
+    html+='<div style="background:#fff;border-radius:16px;padding:14px;border:1px solid var(--border-light);'+(isToday?'box-shadow:0 0 0 2px #5B8DC9;':'')+'">';
+    html+='<div style="font-weight:700;margin-bottom:8px;'+(isToday?'color:#5B8DC9;':'')+'">'+dayNames[dayIdx]+(isToday?' · 今天':'')+'</div>';
     if(!items.length) html+='<div style="font-size:12px;color:var(--text-3);padding:6px 0;">无安排</div>';
     else items.forEach(it=>{ html+='<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--border-light);font-size:12px;"><span style="width:6px;height:6px;border-radius:50%;background:'+it.color+';flex-shrink:0;"></span><span style="color:var(--text-3);width:42px;flex-shrink:0;">'+(it.start||'')+'</span><span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escapeHtml(it.title)+'</span></div>'; });
     html+='</div>';
@@ -5449,7 +6057,7 @@ function renderDashboard() {
       const isUrgent = days <= 3;
       return `
         <div class="list-item">
-          <div class="list-item-avatar" style="background:${isUrgent ? 'linear-gradient(135deg,#FD79A8,#db2777)' : 'linear-gradient(135deg,#FDCB6E,#d97706)'};">${isUrgent ? '!' : ''}</div>
+          <div class="list-item-avatar" style="background:${isUrgent ? 'linear-gradient(135deg,#C9748C,#A84E66)' : 'linear-gradient(135deg,#CF9944,#865F1B)'};">${isUrgent ? '!' : ''}</div>
           <div class="list-item-content">
             <div class="list-item-title">${c.name}</div>
             <div class="list-item-subtitle">${new Date(c.date).toLocaleDateString('zh-CN')}</div>
@@ -5514,14 +6122,14 @@ function _renderDashboardCharts(data) {
     });
     if(!data.courses || data.courses.length === 0){
       chart.clear();
-      chart.setOption({ graphic:[{type:'text',left:'center',top:'middle',style:{text:'暂无GPA数据，去「GPA计算」添加课程成绩',fill:'#94a3b8',fontSize:13,textAlign:'center'}}] });
+      chart.setOption({ graphic:[{type:'text',left:'center',top:'middle',style:{text:'暂无GPA数据，去「GPA计算」添加课程成绩',fill:'#86868B',fontSize:13,textAlign:'center'}}] });
     } else {
       chart.setOption({
         tooltip: { trigger: 'axis' },
         grid: { left: 40, right: 15, top: 15, bottom: 30 },
         xAxis: { type: 'category', data: semData.map(d => d.name), axisLabel: { fontSize: 10 } },
         yAxis: { type: 'value', max: 4.3, axisLabel: { fontSize: 10 } },
-        series: [{ type: 'line', data: semData.map(d => d.gpa), smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#6C5CE7' }, itemStyle: { color: '#6C5CE7' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(108,92,231,0.2)' }, { offset: 1, color: 'rgba(108,92,231,0)' }]) } }]
+        series: [{ type: 'line', data: semData.map(d => d.gpa), smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#F2643D' }, itemStyle: { color: '#F2643D' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(242,100,61,0.18)' }, { offset: 1, color: 'rgba(242,100,61,0)' }]) } }]
       });
     }
     state.charts.dashGpa = chart;
@@ -5542,7 +6150,7 @@ function _renderDashboardCharts(data) {
     
     if(catData.length === 0){
       chart.clear();
-      chart.setOption({ graphic:[{type:'text',left:'center',top:'middle',style:{text:'本月暂无支出记录',fill:'#94a3b8',fontSize:13,textAlign:'center'}}] });
+      chart.setOption({ graphic:[{type:'text',left:'center',top:'middle',style:{text:'本月暂无支出记录',fill:'#86868B',fontSize:13,textAlign:'center'}}] });
     } else {
       chart.setOption({
         tooltip: { trigger: 'item', formatter: '{b}: ¥{c}' },
@@ -5692,7 +6300,7 @@ function renderScheduleView() {
             const sh = parseInt(c.startTime); const sm = parseInt(c.startTime.split(':')[1]);
             const eh = parseInt(c.endTime); const em = parseInt(c.endTime.split(':')[1]);
             const dur = (eh - sh) + (em - sm) / 60;
-            html += '<div class="schedule-course-block" style="background:' + (c.color || '#4F46E5') + ';min-height:' + (dur * 2) + 'em;" onclick="event.stopPropagation();scheduleEditCourse(\'' + c.id + '\')"><div class="scb-name">' + escapeHtml(c.name) + '</div><div class="scb-location">' + escapeHtml(c.location || '') + '</div><div class="scb-time">' + c.startTime + '-' + c.endTime + '</div></div>';
+            html += '<div class="schedule-course-block" style="background:' + (c.color || '#F2643D') + ';min-height:' + (dur * 2) + 'em;" onclick="event.stopPropagation();scheduleEditCourse(\'' + c.id + '\')"><div class="scb-name">' + escapeHtml(c.name) + '</div><div class="scb-location">' + escapeHtml(c.location || '') + '</div><div class="scb-time">' + c.startTime + '-' + c.endTime + '</div></div>';
           }
         });
         html += '</div>';
@@ -5713,7 +6321,7 @@ function renderScheduleView() {
       } else {
         dayCourses.sort((a, b) => a.startTime.localeCompare(b.startTime));
         dayCourses.forEach(c => {
-          html += '<div class="schedule-list-item" style="border-left:4px solid ' + (c.color || '#4F46E5') + ';padding:12px;margin:8px 0;background:var(--bg-card);border-radius:8px;cursor:pointer;" onclick="scheduleEditCourse(\'' + c.id + '\')"><div style="font-weight:600;">' + escapeHtml(c.name) + '</div><div style="color:var(--text-secondary);font-size:13px;">' + escapeHtml(c.teacher ? c.teacher + ' | ' : '') + (c.location || '') + ' | ' + c.startTime + '-' + c.endTime + '</div></div>';
+          html += '<div class="schedule-list-item" style="border-left:4px solid ' + (c.color || '#F2643D') + ';padding:12px;margin:8px 0;background:var(--bg-card);border-radius:8px;cursor:pointer;" onclick="scheduleEditCourse(\'' + c.id + '\')"><div style="font-weight:600;">' + escapeHtml(c.name) + '</div><div style="color:var(--text-secondary);font-size:13px;">' + escapeHtml(c.teacher ? c.teacher + ' | ' : '') + (c.location || '') + ' | ' + c.startTime + '-' + c.endTime + '</div></div>';
         });
       }
       html += '</div>';
@@ -5730,7 +6338,7 @@ function scheduleCellClick(day, time) { showScheduleCourseModal(null, day, time)
 function showScheduleCourseModal(course, day, time) {
   const isEdit = !!course;
   const days = ['周一','周二','周三','周四','周五','周六','周日'];
-  const colors = ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'];
+  const colors = ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'];
   // 移除已存在的模态框
   const existing = document.getElementById('modal-schedule-course');
   if (existing) existing.remove();
@@ -5745,7 +6353,7 @@ function showScheduleCourseModal(course, day, time) {
   html += '<div class="form-row"><div class="form-group"><label>起始周</label><input id="sc-weekstart" class="input" type="number" min="1" max="20" value="' + (course ? course.weekStart : 1) + '"></div><div class="form-group"><label>结束周</label><input id="sc-weekend" class="input" type="number" min="1" max="20" value="' + (course ? course.weekEnd : 16) + '"></div></div>';
   html += '<div class="form-group"><label>课程颜色</label><div class="color-picker">';
   colors.forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'sc-color\').value=\'' + clr + '\';var dots=this.parentNode.querySelectorAll(\'.color-dot\');dots.forEach(d=>d.style.boxShadow=\'\');this.style.boxShadow=\'0 0 0 3px rgba(0,0,0,0.2)\';"></span>'; });
-  html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#4F46E5') + '"></div>';
+  html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#F2643D') + '"></div>';
   html += '<div class="form-group"><label>备注</label><input id="sc-note" class="input" value="' + (course ? escapeAttr(course.note || '') : '') + '"></div>';
   if (isEdit) { html += '<input type="hidden" id="sc-id" value="' + course.id + '">'; }
   html += '<div class="modal-actions">';
@@ -5819,7 +6427,7 @@ function updateDashSchedule() {
   if (todayCourses.length === 0) {
     el.innerHTML = '<div style="color:var(--text-secondary);padding:16px;text-align:center;">今日暂无课程</div>';
   } else {
-    el.innerHTML = todayCourses.map(c => '<div class="dash-schedule-item" style="border-left:3px solid ' + (c.color||'#4F46E5') + ';padding:8px 12px;margin:4px 0;border-radius:0 8px 8px 0;background:var(--bg-main);"><strong>' + escapeHtml(c.name) + '</strong> <span style="color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + '</span> <span style="color:var(--text-secondary);font-size:12px;">' + escapeHtml(c.location||'') + '</span></div>').join('');
+    el.innerHTML = todayCourses.map(c => '<div class="dash-schedule-item" style="border-left:3px solid ' + (c.color||'#F2643D') + ';padding:8px 12px;margin:4px 0;border-radius:0 8px 8px 0;background:var(--bg-main);"><strong>' + escapeHtml(c.name) + '</strong> <span style="color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + '</span> <span style="color:var(--text-secondary);font-size:12px;">' + escapeHtml(c.location||'') + '</span></div>').join('');
   }
 }
 
@@ -5827,7 +6435,7 @@ function updateDashSchedule() {
 let taskFilter = 'all';
 
 function taskPriorityMeta(p) {
-  return ({ high: { label: '高', color: '#EF4444' }, medium: { label: '中', color: '#F59E0B' }, low: { label: '低', color: '#10B981' } })[p] || { label: '中', color: '#F59E0B' };
+  return ({ high: { label: '高', color: '#D86A60' }, medium: { label: '中', color: '#CF9944' }, low: { label: '低', color: '#57AB7E' } })[p] || { label: '中', color: '#CF9944' };
 }
 
 function taskCardHTML(t, mode) {
@@ -5837,10 +6445,10 @@ function taskCardHTML(t, mode) {
   let dueLabel = '';
   if (due && !t.completed) {
     const days = Math.ceil((due - today0) / 86400000);
-    if (days < 0) dueLabel = '<span class="task-tag-v2" style="background:#fee2e2;color:#b91c1c;">已过期</span>';
-    else if (days === 0) dueLabel = '<span class="task-tag-v2" style="background:#fee2e2;color:#b91c1c;">今日截止</span>';
-    else if (days <= 2) dueLabel = '<span class="task-tag-v2" style="background:#fef3c7;color:#92400e;">剩' + days + '天</span>';
-    else dueLabel = '<span class="task-tag-v2" style="background:#f1f5f9;color:#64748b;">剩' + days + '天</span>';
+    if (days < 0) dueLabel = '<span class="task-tag-v2" style="background:#F6DAD7;color:#9C3D35;">已过期</span>';
+    else if (days === 0) dueLabel = '<span class="task-tag-v2" style="background:#F6DAD7;color:#9C3D35;">今日截止</span>';
+    else if (days <= 2) dueLabel = '<span class="task-tag-v2" style="background:#FAF1DD;color:#865F1B;">剩' + days + '天</span>';
+    else dueLabel = '<span class="task-tag-v2" style="background:#F0F0F3;color:#6E6E73;">剩' + days + '天</span>';
   }
   let actions = '';
   if (mode === 'kanban') {
@@ -5856,7 +6464,7 @@ function taskCardHTML(t, mode) {
   html += '<div class="task-title-v2"' + (t.completed ? ' style="text-decoration:line-through;opacity:.55;"' : '') + '>' + escapeHtml(t.title) + '</div>';
   if (t.description) html += '<div style="font-size:12px;color:var(--text-3);margin:2px 0 6px;">' + escapeHtml(t.description) + '</div>';
   html += '<div class="task-meta-v2">';
-  if (t.courseName) html += '<span class="task-tag-v2" style="background:#eef2ff;color:#4f46e5;">' + escapeHtml(t.courseName) + '</span>';
+  if (t.courseName) html += '<span class="task-tag-v2" style="background:#eef2ff;color:#F2643D;">' + escapeHtml(t.courseName) + '</span>';
   html += '<span class="task-tag-v2" style="background:' + pm.color + '1a;color:' + pm.color + ';">' + pm.label + '优先级</span>';
   if (due) html += '<span style="font-size:11px;color:var(--text-3);">' + (due.getMonth()+1) + '/' + due.getDate() + ' 截止</span>';
   html += dueLabel;
@@ -5891,9 +6499,9 @@ function renderTaskCharts(tasks) {
     if (ch) ch.setOption({
       tooltip: { trigger: 'axis' },
       grid: { left: 36, right: 16, top: 20, bottom: 28 },
-      xAxis: { type: 'category', data: days, axisLine: { lineStyle: { color: '#cbd5e1' } }, axisLabel: { color: '#94a3b8' } },
-      yAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: '#f1f5f9' } }, axisLabel: { color: '#94a3b8' } },
-      series: [{ type: 'bar', data: vals, barWidth: '45%', itemStyle: { color: { type: 'linear', x:0,y:0,x2:0,y2:1, colorStops: [{offset:0,color:'#818cf8'},{offset:1,color:'#6366f1'}] }, borderRadius: [6,6,0,0] } }]
+      xAxis: { type: 'category', data: days, axisLine: { lineStyle: { color: '#D1D1D6' } }, axisLabel: { color: '#86868B' } },
+      yAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: '#F0F0F3' } }, axisLabel: { color: '#86868B' } },
+      series: [{ type: 'bar', data: vals, barWidth: '45%', itemStyle: { color: { type: 'linear', x:0,y:0,x2:0,y2:1, colorStops: [{offset:0,color:'#FF845C'},{offset:1,color:'#F2552C'}] }, borderRadius: [6,6,0,0] } }]
     });
   } else {
     chartEmpty('taskWeekly', 'task-weekly-chart', '完成任务后这里显示近 7 天趋势');
@@ -5903,11 +6511,11 @@ function renderTaskCharts(tasks) {
   tasks.forEach(t => { const k = t.courseName || '未分类'; map[k] = (map[k]||0) + 1; });
   const entries = Object.entries(map);
   if (entries.length) {
-    const palette = ['#6366f1','#22d3ee','#34d399','#fbbf24','#fb7185','#a78bfa','#f97316','#94a3b8'];
+    const palette = ['#5B8DC9','#87DBFF','#6DD986','#FFB84D','#FF6B7A','#C9A4F0','#F2643D','#86868B'];
     const ch = makeChart('taskCourse', 'task-course-chart');
     if (ch) ch.setOption({
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-      legend: { bottom: 0, textStyle: { color: '#64748b', fontSize: 11 }, type: 'scroll' },
+      legend: { bottom: 0, textStyle: { color: '#6E6E73', fontSize: 11 }, type: 'scroll' },
       color: palette,
       series: [{ type: 'pie', radius: ['42%','68%'], center: ['50%','44%'], avoidLabelOverlap: true, label: { show: false }, labelLine: { show: false },
         data: entries.map(([k,v]) => ({ name: k, value: v })) }]
@@ -6033,7 +6641,7 @@ function showAddTask() {
   html += '<div class="form-group"><label>关联课程</label><select id="task-course" class="input"><option value="">无</option>';
   courses.forEach(c => { html += '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>'; });
   html += '</select></div>';
-  html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;"><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'high\';this.style.borderColor=\'#EF4444\';return false;" style="border:2px solid #EF4444;color:#EF4444;">高</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'medium\';return false;" style="border:2px solid #F59E0B;color:#F59E0B;">中</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'low\';return false;" style="border:2px solid #10B981;color:#10B981;">低</button></div><input type="hidden" id="task-priority" value="medium"></div>';
+  html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;"><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'high\';this.style.borderColor=\'#D86A60\';return false;" style="border:2px solid #D86A60;color:#D86A60;">高</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'medium\';return false;" style="border:2px solid #CF9944;color:#CF9944;">中</button><button class="btn btn-ghost" type="button" onclick="document.getElementById(\'task-priority\').value=\'low\';return false;" style="border:2px solid #57AB7E;color:#57AB7E;">低</button></div><input type="hidden" id="task-priority" value="medium"></div>';
   html += '<div class="form-group"><label>截止日期</label><input id="task-due" class="input" type="datetime-local"></div>';
   html += '<input type="hidden" id="task-edit-id" value="">';
   html += '</div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal(\'modal-task-form\')">取消</button><button class="btn btn-primary" onclick="taskSave()">保存</button></div></div></div>';
@@ -6054,7 +6662,7 @@ function taskEdit(taskId) {
   html += '</select></div>';
   html += '<div class="form-group"><label>优先级</label><div style="display:flex;gap:8px;">';
   ['high','medium','low'].forEach(p => {
-    const clrs = {high:'#EF4444',medium:'#F59E0B',low:'#10B981'};
+    const clrs = {high:'#D86A60',medium:'#CF9944',low:'#57AB7E'};
     html += '<button class="btn ' + (task.priority === p ? 'btn-primary' : 'btn-ghost') + '" type="button" onclick="document.getElementById(\'task-priority\').value=\'' + p + '\';return false;" style="border:2px solid ' + clrs[p] + ';color:' + clrs[p] + ';">' + ({high:'高',medium:'中',low:'低'})[p] + '</button>';
   });
   html += '</div><input type="hidden" id="task-priority" value="' + task.priority + '"></div>';
@@ -6148,11 +6756,11 @@ function updateDashTaskBadge() {
 let goalFilter = 'all';
 
 const GOAL_CAT = {
-  academic: { label: '学业', color: '#3B82F6', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>' },
-  health:   { label: '健康', color: '#10B981', icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg>' },
-  finance:  { label: '财务', color: '#F59E0B', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1.1-1.7 2.5-1.7s2.5.7 2.5 1.8c0 2.2-5 1.2-5 3.5 0 1.1 1.1 1.9 2.5 1.9s2.5-.7 2.5-1.8"/></svg>' },
-  skill:    { label: '技能', color: '#8B5CF6', icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>' },
-  other:    { label: '其他', color: '#64748B', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>' }
+  academic: { label: '学业', color: '#5B8DC9', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>' },
+  health:   { label: '健康', color: '#57AB7E', icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg>' },
+  finance:  { label: '财务', color: '#CF9944', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1 1.1-1.7 2.5-1.7s2.5.7 2.5 1.8c0 2.2-5 1.2-5 3.5 0 1.1 1.1 1.9 2.5 1.9s2.5-.7 2.5-1.8"/></svg>' },
+  skill:    { label: '技能', color: '#9279BC', icon: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>' },
+  other:    { label: '其他', color: '#6E6E73', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg>' }
 };
 function goalMeta(cat) { return GOAL_CAT[cat] || GOAL_CAT.other; }
 
@@ -6188,14 +6796,15 @@ function renderGoalsView() {
   grid.innerHTML = filtered.map(g => {
     const meta = goalMeta(g.category);
     const color = g.color || meta.color;
+    const _cm=color.replace('#','');const _cr=parseInt(_cm.substr(0,2),16),_cg=parseInt(_cm.substr(2,2),16),_cb=parseInt(_cm.substr(4,2),16);const glowA=a=>'rgba('+_cr+','+_cg+','+_cb+','+a+')';
     const progress = g.progress || 0;
     const ms = g.milestones || [];
     const done = ms.filter(m=>m.completed).length;
     const isDone = g.status === 'completed';
-    let html = '<div class="goal-card-v2" style="border-top:4px solid '+color+';" onclick="goalEdit(\''+g.id+'\')">';
+    let html = '<div class="goal-card-v2" style="border-top:4px solid '+color+';background-image:linear-gradient(180deg,'+glowA(.13)+' 0%,rgba(255,255,255,0) 46%);" onclick="goalEdit(\''+g.id+'\')">';
     html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;">';
     html += '<div style="display:flex;align-items:center;gap:12px;min-width:0;">';
-    html += '<div style="width:44px;height:44px;border-radius:14px;background:'+color+';display:flex;align-items:center;justify-content:center;flex-shrink:0;">'+meta.icon.replaceAll('<svg','<svg style="width:22px;height:22px;"')+'</div>';
+    html += '<div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(0,0,0,.10)),'+color+';display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 4px 11px '+glowA(.30)+';">'+meta.icon.replaceAll('<svg','<svg style="width:22px;height:22px;"')+'</div>';
     html += '<div style="min-width:0;"><div style="font-weight:700;font-size:15px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'+(isDone?'opacity:.6;text-decoration:line-through;':'')+'">'+escapeHtml(g.title)+'</div>';
     html += '<div style="font-size:12px;color:var(--text-3);margin-top:2px;">'+meta.label+(g.targetDate?' · 截止 '+g.targetDate:'')+'</div></div></div>';
     html += '<div class="goal-progress-ring-v2" style="background:conic-gradient('+color+' '+progress+'%,#eef0f7 0);flex-shrink:0;"><span class="goal-progress-value-v2" style="color:'+color+';">'+progress+'%</span></div>';
@@ -6204,7 +6813,7 @@ function renderGoalsView() {
     html += '<div style="font-size:12px;color:var(--text-3);margin-bottom:10px;">子任务 '+done+'/'+ms.length+(isDone?' · 已达成':'')+'</div>';
     if (ms.length) {
       html += '<div style="display:flex;flex-direction:column;gap:6px;max-height:120px;overflow:auto;">';
-      html += ms.slice(0,6).map(m=>'<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;'+(m.completed?'color:var(--text-3);':'color:var(--text-2);')+'" onclick="event.stopPropagation();goalToggleMilestone(\''+g.id+'\',\''+m.id+'\')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;fill:'+(m.completed?color:'none')+';stroke:'+(m.completed?color:'#cbd5e1')+';stroke-width:2;"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" fill="none"/></svg><span style="'+(m.completed?'text-decoration:line-through;':'')+'">'+escapeHtml(m.title)+'</span></div>').join('');
+      html += ms.slice(0,6).map(m=>'<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;'+(m.completed?'color:var(--text-3);':'color:var(--text-2);')+'" onclick="event.stopPropagation();goalToggleMilestone(\''+g.id+'\',\''+m.id+'\')"><svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;fill:'+(m.completed?color:'none')+';stroke:'+(m.completed?color:'#D1D1D6')+';stroke-width:2;"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" fill="none"/></svg><span style="'+(m.completed?'text-decoration:line-through;':'')+'">'+escapeHtml(m.title)+'</span></div>').join('');
       html += '</div>';
     }
     html += '</div>';
@@ -6221,7 +6830,7 @@ function renderGoalsTimeline() {
   if (!goals.length) { box.innerHTML = '<div class="empty-state-v2">还没有目标，创建一个吧</div>'; return; }
   goals.sort((a,b)=>{ if(!a.targetDate)return 1; if(!b.targetDate)return -1; return a.targetDate<b.targetDate?-1:(a.targetDate>b.targetDate?1:0); });
   let html = '<div style="position:relative;padding-left:28px;">';
-  html += '<div style="position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(#c7d2fe,#e2e8f0);"></div>';
+  html += '<div style="position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(#c7d2fe,#D1D1D6);"></div>';
   goals.forEach(g=>{
     const meta=goalMeta(g.category); const color=g.color||meta.color; const progress=g.progress||0;
     const isDone=g.status==='completed';
@@ -6244,16 +6853,16 @@ function renderGoalsCharts() {
   setTimeout(()=>{
     const data = getProfileDataCached(state.currentProfileId) || {};
     const goals = data.goalsData || [];
-    const axisLabel = { color:'#94a3b8', fontSize:11 };
+    const axisLabel = { color:'#86868B', fontSize:11 };
     // 进度对比
     if (goals.length) {
       const ch = makeChart('goalProgress','goal-progress-chart');
       if (ch) ch.setOption({
         tooltip:{trigger:'axis',formatter:p=>p[0].name+': '+p[0].value+'%'},
         grid:{left:8,right:40,top:10,bottom:20,containLabel:true},
-        xAxis:{type:'value',max:100,splitLine:{lineStyle:{color:'#f1f5f9'}},axisLabel},
-        yAxis:{type:'category',data:goals.map(g=>(g.title||'').slice(0,8)),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#64748b',fontSize:11}},
-        series:[{type:'bar',data:goals.map(g=>({value:g.progress||0,itemStyle:{color:g.status==='completed'?'#10b981':'#6366f1',borderRadius:[0,6,6,0]}})),barWidth:'55%',label:{show:true,position:'right',formatter:'{c}%',color:'#94a3b8',fontSize:10}}]
+        xAxis:{type:'value',max:100,splitLine:{lineStyle:{color:'#F0F0F3'}},axisLabel},
+        yAxis:{type:'category',data:goals.map(g=>(g.title||'').slice(0,8)),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#6E6E73',fontSize:11}},
+        series:[{type:'bar',data:goals.map(g=>({value:g.progress||0,itemStyle:{color:g.status==='completed'?'#57AB7E':'#5B8DC9',borderRadius:[0,6,6,0]}})),barWidth:'55%',label:{show:true,position:'right',formatter:'{c}%',color:'#86868B',fontSize:10}}]
       });
     } else chartEmpty('goalProgress','goal-progress-chart','暂无目标进度数据');
     // 分类分布
@@ -6263,8 +6872,8 @@ function renderGoalsCharts() {
       const ch=makeChart('goalCategory','goal-category-chart');
       if(ch)ch.setOption({
         tooltip:{trigger:'item',formatter:'{b}: {c} ({d}%)'},
-        legend:{bottom:0,textStyle:{color:'#64748b',fontSize:11},type:'scroll'},
-        color:['#3B82F6','#10B981','#F59E0B','#8B5CF6','#64748B'],
+        legend:{bottom:0,textStyle:{color:'#6E6E73',fontSize:11},type:'scroll'},
+        color:APPLE_CHART_COLORS,
         series:[{type:'pie',radius:['45%','70%'],center:['50%','42%'],label:{show:false},labelLine:{show:false},data:cent.map(([k,v])=>({name:goalMeta(k).label,value:v,itemStyle:{color:goalMeta(k).color}}))}]
       });
     } else chartEmpty('goalCategory','goal-category-chart','暂无分类数据');
@@ -6278,8 +6887,8 @@ function renderGoalsCharts() {
         tooltip:{trigger:'axis'},
         grid:{left:32,right:16,top:16,bottom:24},
         xAxis:{type:'category',data:months.map(m=>m.slice(2).replace('-','/')),axisLabel},
-        yAxis:{type:'value',minInterval:1,splitLine:{lineStyle:{color:'#f1f5f9'}},axisLabel},
-        series:[{type:'bar',data:months.map(m=>mc[m]),barWidth:'45%',itemStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'#34d399'},{offset:1,color:'#10b981'}]},borderRadius:[6,6,0,0]}}]
+        yAxis:{type:'value',minInterval:1,splitLine:{lineStyle:{color:'#F0F0F3'}},axisLabel},
+        series:[{type:'bar',data:months.map(m=>mc[m]),barWidth:'45%',itemStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'#6DD986'},{offset:1,color:'#57AB7E'}]},borderRadius:[6,6,0,0]}}]
       });
     } else chartEmpty('goalMonthly','goal-monthly-chart','完成目标后显示月度达成');
   },120);
@@ -6294,8 +6903,8 @@ function showAddGoal() {
   html += '<div class="form-group"><label>详细描述</label><textarea id="goal-desc" class="input" rows="2"></textarea></div>';
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input"><option value="academic">学业</option><option value="health">健康</option><option value="finance">财务</option><option value="skill">技能</option><option value="other">其他</option></select></div>';
   html += '<div class="form-group"><label>主题色</label><div class="color-picker">';
-  ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
-  html += '</div><input type="hidden" id="goal-color" value="#4F46E5"></div>';
+  ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="#F2643D"></div>';
   html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date"></div>';
   html += '<input type="hidden" id="goal-edit-id" value=""></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">创建</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
@@ -6312,8 +6921,8 @@ function goalEdit(goalId) {
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input">';
   cats.forEach(c => { html += '<option value="' + c.v + '"' + (goal.category===c.v?' selected':'') + '>' + c.l + '</option>'; });
   html += '</select></div><div class="form-group"><label>主题色</label><div class="color-picker">';
-  ['#4F46E5','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#06B6D4','#F97316'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
-  html += '</div><input type="hidden" id="goal-color" value="' + (goal.color||'#4F46E5') + '"></div>';
+  ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="' + (goal.color||'#F2643D') + '"></div>';
   html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date" value="' + (goal.targetDate||'') + '"></div>';
   html += '<div class="form-group"><label>子任务</label><div id="goal-milestones-list">';
   (goal.milestones||[]).forEach(m => { html += '<div style="display:flex;gap:8px;margin-bottom:4px;"><input class="input" value="' + escapeAttr(m.title) + '" data-mid="' + m.id + '" style="flex:1;"><button class="btn btn-ghost" onclick="this.parentElement.remove();" style="padding:4px 8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;vertical-align:-2px;display:inline-block;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'; });
@@ -6498,22 +7107,22 @@ function renderStressIndex() {
   // 等级和建议
   let level, levelLabel, color, advice;
   if (score <= 25) {
-    level = 'relaxed'; levelLabel = '轻松'; color = '#10B981';
+    level = 'relaxed'; levelLabel = '轻松'; color = '#57AB7E';
     advice = ['状态非常好，继续保持健康的生活节奏', '可以适当挑战一些有难度的目标', '今天适合做些创造性的工作'];
   } else if (score <= 45) {
-    level = 'moderate'; levelLabel = '适中'; color = '#84CC16';
+    level = 'moderate'; levelLabel = '适中'; color = '#9DB45A';
     advice = ['状态不错，注意劳逸结合', '记得按时吃饭和休息', '可以适当安排一些放松活动'];
   } else if (score <= 60) {
-    level = 'normal'; levelLabel = '正常'; color = '#F59E0B';
+    level = 'normal'; levelLabel = '正常'; color = '#CF9944';
     advice = ['有点忙，注意合理安排时间', '建议每天留出30分钟放松时间', '记得多喝水，保持精力充沛'];
   } else if (score <= 75) {
-    level = 'elevated'; levelLabel = '偏高'; color = '#F97316';
+    level = 'elevated'; levelLabel = '偏高'; color = '#F2643D';
     advice = ['最近有点累，记得给自己放松时间', '建议优先处理高优先级任务', '要不要试试番茄钟提高效率？', '保证每天7小时以上睡眠'];
   } else if (score <= 90) {
-    level = 'high'; levelLabel = '高压'; color = '#EF4444';
+    level = 'high'; levelLabel = '高压'; color = '#D86A60';
     advice = ['你最近压力太大了，请务必注意休息', '建议减少一些非必要的任务', '今天早点睡，明天效率会更高', '可以和朋友聊聊天释放压力'];
   } else {
-    level = 'critical'; levelLabel = '过载'; color = '#DC2626';
+    level = 'critical'; levelLabel = '过载'; color = '#9C3D35';
     advice = ['你已经处于压力过载状态！', '请立即减少任务量，优先保证休息', '建议今天只做最重要的1-2件事', '如果持续感到焦虑，请寻求专业帮助'];
   }
   
@@ -6545,7 +7154,7 @@ function renderStressIndex() {
   const miniLabel = document.getElementById('stress-mini-label');
   if (miniRing) {
     const angle = (score / 100) * 360;
-    miniRing.style.background = 'conic-gradient(' + color + ' ' + angle + 'deg, #e5e7eb ' + angle + 'deg)';
+    miniRing.style.background = 'conic-gradient(' + color + ' ' + angle + 'deg, #E5E5EA ' + angle + 'deg)';
   }
   if (miniValue) miniValue.textContent = score;
   if (miniLabel) miniLabel.textContent = levelLabel;
@@ -6572,11 +7181,11 @@ function showStressDetail() {
     html += '<div style="margin-bottom:20px;">';
     html += '<div style="font-weight:700;margin-bottom:12px;">压力来源分析</div>';
     const items = [
-      {label:'任务压力', value: todayStress.breakdown.task, color:'#F59E0B'},
-      {label:'学业压力', value: todayStress.breakdown.academic, color:'#3B82F6'},
-      {label:'财务压力', value: todayStress.breakdown.finance, color:'#10B981'},
-      {label:'作息压力', value: todayStress.breakdown.schedule, color:'#8B5CF6'},
-      {label:'目标压力', value: todayStress.breakdown.goal, color:'#EC4899'}
+      {label:'任务压力', value: todayStress.breakdown.task, color:'#CF9944'},
+      {label:'学业压力', value: todayStress.breakdown.academic, color:'#5B8DC9'},
+      {label:'财务压力', value: todayStress.breakdown.finance, color:'#57AB7E'},
+      {label:'作息压力', value: todayStress.breakdown.schedule, color:'#9279BC'},
+      {label:'目标压力', value: todayStress.breakdown.goal, color:'#C9748C'}
     ];
     items.forEach(item => {
       html += '<div style="margin-bottom:10px;">';
@@ -6754,7 +7363,7 @@ function renderFinanceInsight() {
     h += '<div style="margin-top:16px;"><div style="font-weight:600;margin-bottom:8px;">分类占比</div>'+catBreakdown.slice(0,5).map(c=>'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="width:60px;font-size:13px;">'+c.category+'</span><div class="progress-bar" style="flex:1;"><div class="progress-fill" style="width:'+c.percentage+'%;background:var(--accent-purple);"></div></div><span style="width:60px;text-align:right;font-size:13px;">'+c.percentage+'%</span></div>').join('')+'</div>';
   }
   if (insights.length > 0) {
-    h += '<div style="margin-top:16px;"><div style="font-weight:600;margin-bottom:8px;">智能洞察</div>'+insights.map(i=>'<div class="insight-item" style="padding:10px 12px;margin-bottom:8px;border-radius:8px;background:'+(i.type==='warning'?'#fef2f2':i.type==='tip'?'#eff6ff':'#f0fdf4')+';"><div style="font-weight:600;">'+insightIcon(i.type)+' '+i.title+'</div><div style="font-size:13px;color:var(--text-secondary);">'+i.detail+'</div><div style="font-size:13px;color:var(--accent-blue);margin-top:4px;">'+i.suggestion+'</div></div>').join('')+'</div>';
+    h += '<div style="margin-top:16px;"><div style="font-weight:600;margin-bottom:8px;">智能洞察</div>'+insights.map(i=>'<div class="insight-item" style="padding:10px 12px;margin-bottom:8px;border-radius:8px;background:'+(i.type==='warning'?'#FBEEED':i.type==='tip'?'#EDF2F8':'#f0fdf4')+';"><div style="font-weight:600;">'+insightIcon(i.type)+' '+i.title+'</div><div style="font-size:13px;color:var(--text-secondary);">'+i.detail+'</div><div style="font-size:13px;color:var(--accent-blue);margin-top:4px;">'+i.suggestion+'</div></div>').join('')+'</div>';
   }
   if (tags.length > 0) { h += '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">'+tags.map(t=>'<span class="tag" style="padding:4px 12px;border-radius:20px;font-size:12px;background:var(--accent-blue);color:#fff;">'+t+'</span>').join('')+'</div>'; }
   h += '</div>'; section.innerHTML = h;
@@ -6805,7 +7414,7 @@ const ICON_PATHS = {
 function ico(n,size,color){ const p=ICON_PATHS[n]||ICON_PATHS.info; return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(color||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:'+(size||16)+'px;height:'+(size||16)+'px;vertical-align:-2px;display:inline-block;flex-shrink:0;">'+p+'</svg>'; }
 const FIN_ICON={food:'utensils',transport:'bus',shopping:'bag',entertainment:'gamepad',study:'book',medical:'pill',other:'package',allowance:'wallet',parttime:'briefcase',scholarship:'trophy'};
 function finIcon(id,size,color){ return ico(FIN_ICON[id]||'package',size,color); }
-function insightIcon(type,size){ if(type==='warning')return ico('alert',size||16,'#f59e0b'); if(type==='positive')return ico('check',size||16,'#10b981'); if(type==='error')return ico('xcircle',size||16,'#ef4444'); return ico('info',size||16,'#3b82f6'); }
+function insightIcon(type,size){ if(type==='warning')return ico('alert',size||16,'#CF9944'); if(type==='positive')return ico('check',size||16,'#57AB7E'); if(type==='error')return ico('xcircle',size||16,'#D86A60'); return ico('info',size||16,'#5B8DC9'); }
 window.ico=ico; window.finIcon=finIcon; window.insightIcon=insightIcon;
 
 function escapeHtml(str) { if(!str)return''; return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -6889,7 +7498,7 @@ function generateSmartAnalysis() {
   const today = now.toISOString().split('T')[0];
   
   // 显示加载
-  container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="display:inline-block;width:40px;height:40px;border:3px solid #e5e7eb;border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:16px;color:#6b7280;">正在深度分析你的数据...</div></div>';
+  container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="display:inline-block;width:40px;height:40px;border:3px solid #E5E5EA;border-top-color:#FF845C;border-radius:50%;animation:spin 1s linear infinite;"></div><div style="margin-top:16px;color:#6E6E73;">正在深度分析你的数据...</div></div>';
   
   try {
     // 数据收集
@@ -6956,18 +7565,18 @@ function generateSmartAnalysis() {
     
     // 概览卡片
     html += '<div class="fin-overview-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">';
-    html += '<div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#1e40af;">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">当前GPA</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#92400e;">' + pendingTasks.length + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">待办任务</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#065f46;">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">本月支出</div></div>';
-    html += '<div style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#9d174d;">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:11px;color:#6b7280;margin-top:2px;">压力指数</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#EDF2F8,#D9E5F2);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#335E8C;">' + (currentGPA ? currentGPA.toFixed(2) : '--') + '</div><div style="font-size:11px;color:#6E6E73;margin-top:2px;">当前GPA</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#FAF1DD,#F2E2BD);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#865F1B;">' + pendingTasks.length + '</div><div style="font-size:11px;color:#6E6E73;margin-top:2px;">待办任务</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#D9EBE1,#C0DFCB);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#2C7150;">¥' + monthExpense.toFixed(0) + '</div><div style="font-size:11px;color:#6E6E73;margin-top:2px;">本月支出</div></div>';
+    html += '<div style="background:linear-gradient(135deg,#FAECEA,#F3D8D5);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:24px;font-weight:800;color:#9C3D35;">' + (todayStress ? todayStress.score : '--') + '</div><div style="font-size:11px;color:#6E6E73;margin-top:2px;">压力指数</div></div>';
     html += '</div>';
     
     // 鼓励区
-    html += '<div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #10b981;">';
-    html += '<div style="font-weight:700;margin-bottom:12px;color:#065f46;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>做得好的地方</div>';
+    html += '<div style="background:linear-gradient(135deg,#EDF5F0,#D9EBE1);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #57AB7E;">';
+    html += '<div style="font-weight:700;margin-bottom:12px;color:#2C7150;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z"/></svg>做得好的地方</div>';
     encouragements.forEach(e => {
       html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
-      html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('check',16,'#10b981') + ' ' + e.title + '</div>';
+      html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('check',16,'#57AB7E') + ' ' + e.title + '</div>';
       html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + e.detail + '</div>';
       html += '</div>';
     });
@@ -6975,11 +7584,11 @@ function generateSmartAnalysis() {
     
     // 建议区
     if (suggestions.length > 0) {
-      html += '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #f59e0b;">';
-      html += '<div style="font-weight:700;margin-bottom:12px;color:#92400e;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>改进建议</div>';
+      html += '<div style="background:linear-gradient(135deg,#FCF7EC,#FAF1DD);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #CF9944;">';
+      html += '<div style="font-weight:700;margin-bottom:12px;color:#865F1B;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg>改进建议</div>';
       suggestions.forEach(s => {
         html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
-        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('bulb',16,'#3b82f6') + ' ' + s.title + '</div>';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('bulb',16,'#5B8DC9') + ' ' + s.title + '</div>';
         html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + s.detail + '</div>';
         html += '</div>';
       });
@@ -6988,11 +7597,11 @@ function generateSmartAnalysis() {
     
     // 警告区
     if (warnings.length > 0) {
-      html += '<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #ef4444;">';
-      html += '<div style="font-weight:700;margin-bottom:12px;color:#991b1b;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M10.29 3.86 1.86 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>需要注意</div>';
+      html += '<div style="background:linear-gradient(135deg,#FBEEED,#F6DAD7);border-radius:14px;padding:18px;margin-bottom:16px;border-left:4px solid #D86A60;">';
+      html += '<div style="font-weight:700;margin-bottom:12px;color:#9C3D35;font-size:15px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><path d="M10.29 3.86 1.86 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>需要注意</div>';
       warnings.forEach(w => {
         html += '<div style="margin-bottom:10px;padding:12px;background:rgba(255,255,255,0.7);border-radius:10px;">';
-        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('alert',16,'#f59e0b') + ' ' + w.title + '</div>';
+        html += '<div style="font-weight:600;font-size:13px;margin-bottom:3px;">' + ico('alert',16,'#CF9944') + ' ' + w.title + '</div>';
         html += '<div style="font-size:12px;color:#374151;line-height:1.5;">' + w.detail + '</div>';
         html += '</div>';
       });
@@ -7000,16 +7609,16 @@ function generateSmartAnalysis() {
     }
     
     // 综合评分
-    html += '<div style="text-align:center;padding:20px;background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-radius:14px;border:2px solid #c4b5fd;">';
-    html += '<div style="font-size:13px;color:#6b7280;margin-bottom:6px;">综合生活管理评分</div>';
-    html += '<div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">' + score + '</div>';
-    html += '<div style="font-size:14px;color:#6b7280;margin-top:8px;font-weight:500;">' + (score >= 85 ? '非常优秀！继续保持' : score >= 70 ? '表现不错，还有提升空间' : score >= 50 ? '还需要努力，加油！' : '需要立即调整状态') + '</div>';
+    html += '<div style="text-align:center;padding:20px;background:linear-gradient(135deg,#F4F5F7,#ECEEF1);border-radius:14px;border:2px solid #D2D6DD;">';
+    html += '<div style="font-size:13px;color:#6E6E73;margin-bottom:6px;">综合生活管理评分</div>';
+    html += '<div style="font-size:56px;font-weight:900;background:linear-gradient(135deg,#FF845C,#F2552C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;">' + score + '</div>';
+    html += '<div style="font-size:14px;color:#6E6E73;margin-top:8px;font-weight:500;">' + (score >= 85 ? '非常优秀！继续保持' : score >= 70 ? '表现不错，还有提升空间' : score >= 50 ? '还需要努力，加油！' : '需要立即调整状态') + '</div>';
     html += '</div>';
     
     container.innerHTML = html;
   } catch (err) {
     console.error('智能分析出错:', err);
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;"><div style="font-size:32px;margin-bottom:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div>分析出错了，请刷新页面重试</div><div style="font-size:12px;margin-top:8px;color:#9ca3af;">' + err.message + '</div></div>';
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:#D86A60;"><div style="font-size:32px;margin-bottom:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;display:inline-block;margin-right:4px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div>分析出错了，请刷新页面重试</div><div style="font-size:12px;margin-top:8px;color:#9ca3af;">' + err.message + '</div></div>';
   }
 }
 window.generateSmartAnalysis = generateSmartAnalysis;
