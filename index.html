@@ -55,9 +55,9 @@ window.showDataUsageNotice = showDataUsageNotice;
   --accent-yellow: #f0c75e;
   --accent-yellow-dark: #d4a843;
   --accent-yellow-light: #faf0d4;
-  --accent-orange: #e8846a;
-  --accent-orange-dark: #d06a50;
-  --accent-orange-light: #fae0d8;
+  --accent-orange: #9BA567;
+  --accent-orange-dark: #778446;
+  --accent-orange-light: #EDF1DE;
   --accent-blue: #6b8fc5;
   --accent-blue-dark: #5075a8;
   --accent-blue-light: #dce6f2;
@@ -1782,12 +1782,12 @@ body {
 }
 .tab-v2-item:hover {
   color: var(--text-1);
-  background: rgba(242,100,61, 0.08);
+  background: rgba(138,152,86, 0.08);
 }
 .tab-v2-item.active {
   background: linear-gradient(135deg, #FF845C 0%, #F2552C 100%);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(242,100,61, 0.3);
+  box-shadow: 0 4px 12px rgba(138,152,86, 0.3);
 }
 
 /* ===== 新版卡片容器 ===== */
@@ -1940,11 +1940,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 16px rgba(242,100,61, 0.3);
+  box-shadow: 0 4px 16px rgba(138,152,86, 0.3);
 }
 .btn-v2-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(242,100,61, 0.4);
+  box-shadow: 0 8px 24px rgba(138,152,86, 0.4);
 }
 .btn-v2-ghost {
   padding: 12px 24px;
@@ -2078,7 +2078,7 @@ html,body{overflow-x:hidden;}
 .study-sections::-webkit-scrollbar{display:none;}
 .study-section-btn{flex:1;min-width:max-content;padding:10px 16px;border:none;background:transparent;border-radius:11px;font-size:14px;font-weight:600;color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;transition:all .22s;font-family:inherit;}
 .study-section-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
-.study-section-btn.active{background:linear-gradient(135deg,#FF845C 0%,#F2552C 100%);color:#fff;box-shadow:0 4px 12px rgba(242,100,61,.3);}
+.study-section-btn.active{background:linear-gradient(135deg,#FF845C 0%,#F2552C 100%);color:#fff;box-shadow:0 4px 12px rgba(138,152,86,.3);}
 .study-subview{display:none;}
 .study-subview.active{display:block;animation:studyFade .25s ease;}
 @keyframes studyFade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
@@ -2149,17 +2149,17 @@ html,body{overflow-x:hidden;}
   --orange-200: #FAC6AF;
   --orange-300: #F6A07E;
   --orange-400: #F57E54;
-  --accent: #F2643D;
-  --orange-600: #E8512B;
-  --accent-strong: #E8512B;
-  --accent-deep: #C53E1E;
-  --orange-800: #A2331A;
-  --accent-soft: #FDECE5;
-  --accent-tint: rgba(242,100,61,.12);
+  --accent: #8A9856;
+  --orange-600: #778446;
+  --accent-strong: #778446;
+  --accent-deep: #5C6836;
+  --orange-800: #4C6B50;
+  --accent-soft: #EDF1DE;
+  --accent-tint: rgba(138,152,86,.12);
 
   /* 旧主色变量一键映射到橙 */
-  --blue: #F2643D;  --blue-dark: #D14928;  --blue-light: #FDECE5;
-  --purple: #F2643D; --purple-dark: #D14928; --purple-light: #FDECE5;
+  --blue: #8A9856;  --blue-dark: #6B7545;  --blue-light: #EDF1DE;
+  --purple: #8A9856; --purple-dark: #6B7545; --purple-light: #EDF1DE;
 
   /* ---- 语义色：UI 低饱和莫兰迪版（色块/标签底，柔和高级） ---- */
   --ui-blue:   #5B8DC9;  --ui-blue-soft:   #EAF1F9;  --ui-blue-ink:   #335E8C;
@@ -2176,7 +2176,7 @@ html,body{overflow-x:hidden;}
   --accent-purple: #B56FE8;  --accent-purple-dark: #8E4EC4;  --accent-purple-light: #EFEAF7;
   --accent-pink:   #F4564B;  --accent-pink-dark:   #D23228;  --accent-pink-light:   #FAECEA;
   --accent-teal:   #5BC2D2;  --accent-teal-dark:   #2E97A8;  --accent-teal-light:   #E6F4F6;
-  --accent-orange: #F2643D;  --accent-orange-dark: #D14928;  --accent-orange-light: #FDECE5;
+  --accent-orange: #8A9856;  --accent-orange-dark: #6B7545;  --accent-orange-light: #EDF1DE;
   --green: var(--accent-green);  --green-dark: var(--accent-green-dark);
   --yellow: var(--accent-yellow); --yellow-dark: var(--accent-yellow-dark);
   --pink: var(--accent-pink);    --pink-dark: var(--accent-pink-dark);
@@ -2184,8 +2184,8 @@ html,body{overflow-x:hidden;}
 
   /* ---- 渐变预设 ---- */
   --grad-sidebar: linear-gradient(168deg, #3B3B42 0%, #2E2E35 42%, #222228 76%, #18181E 100%);
-  --grad-brand: linear-gradient(180deg, #FF8C66 0%, #F2643D 52%, #EC502C 100%);
-  --grad-brand-soft: linear-gradient(180deg, #FEE7DD, #FBD3C2);
+  --grad-brand: linear-gradient(180deg, #B5C085 0%, #8A9856 52%, #7A8648 100%);
+  --grad-brand-soft: linear-gradient(180deg, #F0F3E0, #E2E8CC);
   --grad-dark: linear-gradient(155deg, #232A2D 0%, #14191B 60%, #0F1416 100%); /* 墨青黑反色卡 */
   --grad-icon-dark: linear-gradient(160deg, #3A414B, #22262D);
   --grad-blue:   linear-gradient(165deg, #6FA0D8, #4977AE);
@@ -2200,7 +2200,7 @@ html,body{overflow-x:hidden;}
   --shadow-md: 0 1px 2px rgba(21,30,40,.04), 0 7px 20px rgba(21,30,40,.07);
   --shadow-lg: 0 3px 10px rgba(21,30,40,.08), 0 22px 56px rgba(21,30,40,.16);
   --shadow-card: 0 1px 2px rgba(21,30,40,.04), 0 6px 18px rgba(21,30,40,.06);
-  --shadow-brand: 0 7px 18px rgba(242,100,61,.30), 0 2px 6px rgba(242,100,61,.20);
+  --shadow-brand: 0 7px 18px rgba(138,152,86,.30), 0 2px 6px rgba(138,152,86,.20);
   --inset-hi: inset 0 1px 0 rgba(255,255,255,.55);
   --inset-hi-soft: inset 0 1px 0 rgba(255,255,255,.16);
 
@@ -2223,7 +2223,7 @@ body {
   background-color: var(--bg);
   /* 极淡冷暖光晕，营造样图的空间层次（移动端关闭以保流畅） */
   background-image:
-    radial-gradient(1000px 480px at 100% -12%, rgba(242,100,61,.055), transparent 62%),
+    radial-gradient(1000px 480px at 100% -12%, rgba(138,152,86,.055), transparent 62%),
     radial-gradient(900px 620px at -12% 112%, rgba(84,138,176,.06), transparent 56%);
   background-attachment: fixed;
 }
@@ -2321,7 +2321,7 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
   content: ""; position: absolute; left: 3px; top: 50%;
   transform: translateY(-50%); width: 3px; height: 20px;
   border-radius: 3px; background: var(--grad-brand);
-  box-shadow: 0 0 9px rgba(242,100,61,.65);
+  box-shadow: 0 0 9px rgba(138,152,86,.65);
 }
 .nav-item.active svg {
   background: rgba(255,255,255,.17);
@@ -2480,8 +2480,8 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
   border: 1px solid rgba(196,62,30,.25);
   color: #fff;
 }
-.btn-primary:hover { box-shadow: 0 10px 24px rgba(242,100,61,.40), var(--inset-hi-soft); transform: translateY(-1px); filter: saturate(1.04); }
-.btn-primary:active { transform: translateY(1px) scale(.99); box-shadow: 0 3px 9px rgba(242,100,61,.3); }
+.btn-primary:hover { box-shadow: 0 10px 24px rgba(138,152,86,.40), var(--inset-hi-soft); transform: translateY(-1px); filter: saturate(1.04); }
+.btn-primary:active { transform: translateY(1px) scale(.99); box-shadow: 0 3px 9px rgba(138,152,86,.3); }
 .btn-ghost {
   background: linear-gradient(180deg,#FFFFFF,#F6F8FA);
   border: 1px solid var(--border); color: var(--text-1);
@@ -2686,7 +2686,7 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
   }
   .bottom-nav-item { color: var(--gray-500); }
   .bottom-nav-item.active { color: var(--accent); }
-  .bottom-nav-item.active svg { filter: drop-shadow(0 2px 5px rgba(242,100,61,.4)); }
+  .bottom-nav-item.active svg { filter: drop-shadow(0 2px 5px rgba(138,152,86,.4)); }
 
   .card, .card-v2, .stat-card, .stat-card-v2, .quick-action {
     box-shadow: 0 1px 2px rgba(21,30,40,.05) !important;
@@ -2706,17 +2706,827 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
+/* ============================================================================
+   DanDanTable · v3-addons.css — 柔光气泡面板 / 深色小日历 / 3D 层叠卡
+   追加在 current-theme-v2.css 之后，与"Slate & Ember"系统协调。
+   纯视觉层，不改 HTML 结构 / JS 逻辑。
+   ============================================================================ */
+
+/* ============================================================================
+   1. CSS 自定义变量（v3 命名空间，不污染现有 :root）
+   ============================================================================ */
+
+:root {
+  /* ---- 气泡面板 ---- */
+  --v3-panel-bg-start:    #DDD2BF;   /* 暖燕麦奶油上浅 */
+  --v3-panel-bg-end:      #CFC4B0;   /* 略深下 */
+  --v3-panel-radius:      30px;
+  --v3-panel-highlight:   rgba(255,255,255,.58);
+  --v3-panel-shadow:      0 8px 28px rgba(130,108,82,.13);
+
+  /* ---- 气泡颜色变体 ---- */
+  --v3-bb-amber:          #F2C85C;
+  --v3-bb-amber-soft:     rgba(242,200,92,.15);
+  --v3-bb-amber-glow:     rgba(242,200,92,.50);
+  --v3-bb-coral:          #9BA567;
+  --v3-bb-coral-soft:     rgba(232,155,130,.15);
+  --v3-bb-coral-glow:     rgba(232,155,130,.50);
+  --v3-bb-ink:            #2B2B31;
+  --v3-bb-ink-soft:       rgba(43,43,49,.20);
+  --v3-bb-ink-glow:       rgba(43,43,49,.45);
+
+  /* ---- 气泡模糊量 ---- */
+  --v3-blur-sm:           2px;
+  --v3-blur-md:           4px;
+  --v3-blur-lg:           6px;
+
+  /* ---- 小日历 ---- */
+  --v3-cal-bg-start:      #1B1C21;
+  --v3-cal-bg-end:        #232429;
+  --v3-cal-radius:        24px;
+  --v3-cal-done:          #F2C85C;
+  --v3-cal-done-glow:     0 0 14px rgba(242,200,92,.55);
+  --v3-cal-scheduled:     #34363D;
+  --v3-cal-today:         #F2C85C;
+  --v3-cal-today-alt:     rgba(255,255,255,.80);
+  --v3-cal-cell:          34px;
+  --v3-cal-font:          12.5px;
+
+  /* ---- 3D 层叠卡 ---- */
+  --v3-stack-radius:      20px;
+  --v3-stack-shadow:      0 8px 28px rgba(21,30,40,.11);
+  --v3-stack-shadow-hov:  0 16px 50px rgba(21,30,40,.20);
+  --v3-stack-rotate:      7deg;
+  --v3-stack-offset:      16px;
+  --v3-stack-z-offset:    28px;
+}
+
+
+/* ============================================================================
+   2. .v3-bubble-panel —— 柔光气泡数据面板
+      暖燕麦奶油底色 + 超大圆角 + 极淡内高光
+   ============================================================================ */
+
+.v3-bubble-panel {
+  position: relative;
+  min-height: 220px;
+  padding: 28px 24px 20px;
+  background: linear-gradient(168deg, var(--v3-panel-bg-start), var(--v3-panel-bg-end));
+  border-radius: var(--v3-panel-radius);
+  box-shadow:
+    inset 0 1px 0 var(--v3-panel-highlight),
+    var(--v3-panel-shadow);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 面板额外一层微光叠加（极淡斜向光泽） */
+.v3-bubble-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 110% 90% at 20% 0%, rgba(255,255,255,.25), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- 气泡基类 ---------- */
+.v3-bubble {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+}
+
+/* 气泡发光层（伪元素做 radial-gradient + blur，文字不受影响） */
+.v3-bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ---- 尺寸变体 ---- */
+.v3-bubble--lg { width: 130px; height: 130px; }
+.v3-bubble--md { width: 100px; height: 100px; }
+.v3-bubble--sm { width: 76px;  height: 76px;  }
+
+.v3-bubble--lg .v3-bubble-num { font-size: 30px; font-weight: 800; }
+.v3-bubble--md .v3-bubble-num { font-size: 24px; font-weight: 800; }
+.v3-bubble--sm .v3-bubble-num { font-size: 18px; font-weight: 800; }
+
+.v3-bubble--lg .v3-bubble-label { font-size: 11px; }
+.v3-bubble--md .v3-bubble-label { font-size: 10px; }
+.v3-bubble--sm .v3-bubble-label { font-size: 9px; }
+
+/* ---- 颜色变体：琥珀黄 ---- */
+.v3-bubble--amber::before {
+  background: radial-gradient(circle at 50% 50%,
+    var(--v3-bb-amber) 0%,
+    var(--v3-bb-amber) 32%,
+    var(--v3-bb-amber-soft) 50%,
+    transparent 68%);
+  filter: blur(var(--v3-blur-md));
+}
+.v3-bubble--amber .v3-bubble-num { color: #2B2B31; }
+.v3-bubble--amber .v3-bubble-label { color: rgba(43,43,49,.60); }
+
+/* ---- 颜色变体：珊瑚橙粉 ---- */
+.v3-bubble--coral::before {
+  background: radial-gradient(circle at 50% 50%,
+    var(--v3-bb-coral) 0%,
+    var(--v3-bb-coral) 32%,
+    var(--v3-bb-coral-soft) 50%,
+    transparent 68%);
+  filter: blur(var(--v3-blur-md));
+}
+.v3-bubble--coral .v3-bubble-num { color: #fff; }
+.v3-bubble--coral .v3-bubble-label { color: rgba(255,255,255,.70); }
+
+/* ---- 颜色变体：墨黑 ---- */
+.v3-bubble--ink::before {
+  background: radial-gradient(circle at 50% 50%,
+    var(--v3-bb-ink) 0%,
+    var(--v3-bb-ink) 32%,
+    var(--v3-bb-ink-soft) 50%,
+    transparent 68%);
+  filter: blur(var(--v3-blur-md));
+}
+.v3-bubble--ink .v3-bubble-num { color: #fff; }
+.v3-bubble--ink .v3-bubble-label { color: rgba(255,255,255,.65); }
+
+/* ---- 气泡文字 ---- */
+.v3-bubble-num {
+  line-height: 1;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  position: relative;
+  margin-top: 4px;
+}
+.v3-bubble-label {
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: .02em;
+  position: relative;
+  max-width: 80%;
+}
+
+/* ---------- 图例 ---------- */
+.v3-legend {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(120,100,80,.18);
+}
+.v3-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: rgba(43,43,49,.70);
+  font-weight: 500;
+}
+.v3-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================================
+   3. .v3-mini-cal —— 深色圆角小日历
+      近黑渐变卡片 + 柔和内阴影 + 彩色状态圆
+   ============================================================================ */
+
+.v3-mini-cal {
+  background: linear-gradient(175deg, var(--v3-cal-bg-start), var(--v3-cal-bg-end));
+  border-radius: var(--v3-cal-radius);
+  padding: 20px 16px 16px;
+  color: #F3F5F6;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 12px 32px rgba(12,16,20,.30);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ---- 顶栏：标题 + 月份切换 ---- */
+.v3-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+.v3-cal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #F3F5F6;
+  letter-spacing: .01em;
+}
+.v3-cal-month-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(243,245,246,.50);
+  cursor: default;
+}
+.v3-cal-month-picker::after {
+  content: "";
+  display: inline-block;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid rgba(243,245,246,.45);
+  margin-top: 2px;
+}
+
+/* ---- 星期表头 ---- */
+.v3-cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 6px;
+  padding: 0 4px;
+  justify-items: center;
+}
+.v3-cal-week span {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(243,245,246,.40);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  width: var(--v3-cal-cell);
+  text-align: center;
+}
+
+/* ---- 日期网格 ---- */
+.v3-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  padding: 0 4px;
+  justify-items: center;
+}
+
+.v3-cal-day {
+  width: var(--v3-cal-cell);
+  height: var(--v3-cal-cell);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--v3-cal-font);
+  font-weight: 500;
+  color: rgba(243,245,246,.65);
+  transition: background .2s ease, box-shadow .2s ease, color .2s ease;
+  cursor: default;
+  box-sizing: border-box;
+}
+
+/* 已完成：实心琥珀黄圆 + 黄色光晕 */
+.v3-cal-day.is-done {
+  background: var(--v3-cal-done);
+  color: #1B1C21;
+  font-weight: 700;
+  box-shadow: var(--v3-cal-done-glow);
+}
+
+/* 已排期：深灰圆 */
+.v3-cal-day.is-scheduled {
+  background: var(--v3-cal-scheduled);
+  color: rgba(243,245,246,.75);
+  font-weight: 600;
+}
+
+/* 今天：空心描边 */
+.v3-cal-day.is-today {
+  background: transparent;
+  color: var(--v3-cal-today);
+  font-weight: 700;
+  border: 1.5px solid var(--v3-cal-today);
+}
+
+/* ---- 日历图例 ---- */
+.v3-cal-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(243,245,246,.08);
+  justify-content: center;
+}
+.v3-cal-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: rgba(243,245,246,.55);
+  font-weight: 500;
+}
+.v3-cal-legend .v3-legend-dot {
+  width: 7px;
+  height: 7px;
+}
+
+
+/* ============================================================================
+   4. .v3-stack —— 3D 层叠卡片组
+      透视容器 + 三张错位倾斜白卡 + 柔和阴影
+   ============================================================================ */
+
+.v3-stack {
+  position: relative;
+  perspective: 900px;
+  perspective-origin: 50% 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 260px;
+  padding: 20px 0;
+}
+
+.v3-stack-card {
+  flex: 0 0 auto;
+  width: 220px;
+  background: #FFFFFF;
+  border-radius: var(--v3-stack-radius);
+  box-shadow: var(--v3-stack-shadow);
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.22,.61,.36,1),
+              box-shadow .35s cubic-bezier(.22,.61,.36,1);
+  position: relative;
+}
+
+/* 三张卡的初始偏移与旋转 —— 通过 nth-child 实现错位层叠 */
+.v3-stack-card:nth-child(1) {
+  transform: rotateY(calc(var(--v3-stack-rotate) * -1))
+             translateX(calc(var(--v3-stack-offset) * -1))
+             translateZ(calc(var(--v3-stack-z-offset) * -1));
+  z-index: 1;
+  margin-right: calc(var(--v3-stack-offset) * -1.8);
+}
+
+.v3-stack-card:nth-child(2) {
+  transform: rotateY(0deg) translateX(0) translateZ(0);
+  z-index: 3;
+  /* 中间卡最正、最大、在最前 */
+  width: 236px;
+}
+
+.v3-stack-card:nth-child(3) {
+  transform: rotateY(var(--v3-stack-rotate))
+             translateX(var(--v3-stack-offset))
+             translateZ(calc(var(--v3-stack-z-offset) * -1));
+  z-index: 1;
+  margin-left: calc(var(--v3-stack-offset) * -1.8);
+}
+
+/* ---- 卡片内部 ---- */
+.v3-stack-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--gray-100);
+  border-radius: var(--v3-stack-radius) var(--v3-stack-radius) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.v3-stack-data {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.v3-stack-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-1);
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.v3-stack-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: .02em;
+}
+
+/* ---- Hover：卡轻微浮起 ---- */
+@media (hover: hover) {
+  .v3-stack-card:hover {
+    transform: rotateY(0deg) translateX(0) translateZ(12px) scale(1.02);
+    box-shadow: var(--v3-stack-shadow-hov);
+    z-index: 10;
+  }
+}
+
+
+/* ============================================================================
+   5. 移动端适配（max-width: 768px）
+        - 气泡面板高度缩小、气泡等比缩小、图例换行
+        - 日历紧凑、保持 7 列不溢
+        - 3D 卡叠减弱旋转、关闭 hover
+   ============================================================================ */
+
+@media (max-width: 768px) {
+
+  /* ---- Bubble panel ---- */
+  .v3-bubble-panel {
+    min-height: 160px;
+    padding: 20px 16px 16px;
+    border-radius: 24px;
+  }
+  .v3-bubble--lg { width: 100px;  height: 100px; }
+  .v3-bubble--md { width: 80px;   height: 80px;  }
+  .v3-bubble--sm { width: 60px;   height: 60px;  }
+
+  .v3-bubble--lg .v3-bubble-num { font-size: 24px; }
+  .v3-bubble--md .v3-bubble-num { font-size: 19px; }
+  .v3-bubble--sm .v3-bubble-num { font-size: 15px; }
+  .v3-bubble--lg .v3-bubble-label { font-size: 10px; }
+  .v3-bubble--md .v3-bubble-label { font-size: 9px; }
+  .v3-bubble--sm .v3-bubble-label { font-size: 8px; }
+
+  .v3-legend {
+    gap: 10px;
+    padding-top: 10px;
+    margin-top: 8px;
+  }
+  .v3-legend span { font-size: 10.5px; }
+
+  /* ---- Mini calendar ---- */
+  .v3-mini-cal {
+    padding: 16px 12px 14px;
+    border-radius: 20px;
+  }
+  .v3-cal-head { margin-bottom: 10px; }
+  .v3-cal-title { font-size: 14px; }
+  .v3-cal-week span,
+  .v3-cal-day {
+    --v3-cal-cell: 28px;
+    --v3-cal-font: 11px;
+  }
+  .v3-cal-grid { gap: 2px; }
+  .v3-cal-legend { gap: 12px; }
+  .v3-cal-legend span { font-size: 10px; }
+
+  /* ---- 3D stack ---- */
+  .v3-stack { min-height: 200px; }
+  .v3-stack-card {
+    width: 170px;
+    --v3-stack-rotate: 4deg;
+    --v3-stack-offset: 10px;
+    --v3-stack-z-offset: 16px;
+  }
+  .v3-stack-card:nth-child(2) { width: 182px; }
+  .v3-stack-img { aspect-ratio: 16 / 11; }
+  .v3-stack-data { padding: 10px 12px 14px; }
+  .v3-stack-value { font-size: 15px; }
+  .v3-stack-label { font-size: 10.5px; }
+
+  /* 移动端关掉 hover 浮起 */
+  .v3-stack-card:hover {
+    transform: none !important;
+    box-shadow: var(--v3-stack-shadow) !important;
+  }
+  .v3-stack-card:nth-child(1):hover { transform: rotateY(-4deg) translateX(-10px) translateZ(-16px) !important; }
+  .v3-stack-card:nth-child(3):hover { transform: rotateY(4deg) translateX(10px) translateZ(-16px) !important; }
+}
+
+
+/* ============================================================================
+   6. 无障碍：减少动效
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .v3-bubble::before { filter: blur(2px) !important; }
+  .v3-stack-card { transition: none !important; }
+  .v3-cal-day { transition: none !important; }
+}
+
+
+/* ============================================================================
+   End of v3-addons.css
+   ============================================================================ */
+
+
+/* === v3 追加：欢迎页 3D 插画 / 面板标题 === */
+.v3-welcome-hero{ width:148px; margin:4px auto 2px; }
+.v3-welcome-hero img{ width:100%; height:auto; display:block;
+  filter: drop-shadow(0 14px 26px rgba(138,152,86,.20));
+  animation: v3float 4.5s ease-in-out infinite; }
+@keyframes v3float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+.v3-panel-title{ position:relative; z-index:2; font-size:16px; font-weight:800;
+  color:#3a3226; letter-spacing:.01em; }
+.v3-panel-sub{ position:relative; z-index:2; font-size:11.5px; color:rgba(58,50,38,.6); margin-bottom:4px; }
+.v3-empty-art{ width:120px; margin:0 auto 8px; display:block; }
+@media (prefers-reduced-motion: reduce){ .v3-welcome-hero img{ animation:none; } }
+
+
+/* ===== v4 抹茶绿叶皮肤 ===== */
+/* ============================================================
+   v4 抹茶绿叶清新风皮肤 — 覆盖层
+   取色源：ref6-green.png（Storage 抹茶绿界面）
+   主抹茶 #9BA567 / 浅抹茶 #C9D0A4 / 深绿叶 #4C6B50
+   ============================================================ */
+
+:root{
+  /* ---- 抹茶绿色阶 ---- */
+  --matcha-50:  #F4F6EA;
+  --matcha-100: #E9EDD7;
+  --matcha-200: #D8DFB8;
+  --matcha-300: #C9D0A4;   /* 浅抹茶（圆环/文件夹） */
+  --matcha-400: #B2BC82;
+  --matcha-500: #9BA567;   /* 主抹茶（侧栏/强调） */
+  --matcha-600: #848E52;
+  --matcha-700: #6B7545;
+  --matcha-800: #4C6B50;   /* 深绿叶 */
+  --matcha-900: #3A4A3C;
+
+  /* ---- 品牌橙 → 抹茶绿 ---- */
+  --accent:        #8A9856;
+  --accent-strong: #778446;
+  --accent-deep:   #5C6836;
+  --accent-soft:   #EDF1DE;
+  --accent-tint:   rgba(155,165,103,.16);
+
+  --orange-50:  var(--matcha-50);
+  --orange-100: var(--matcha-100);
+  --orange-200: var(--matcha-200);
+  --orange-300: var(--matcha-300);
+  --orange-400: var(--matcha-400);
+  --orange-600: var(--matcha-600);
+  --orange-800: var(--matcha-800);
+
+  /* 旧主色映射（原为橙）→ 抹茶 */
+  --blue:       #8A9856;  --blue-dark:  #6B7545;  --blue-light:  #EDF1DE;
+  --purple:     #8A9856;  --purple-dark:#6B7545;  --purple-light:#EDF1DE;
+
+  --accent-orange:       #8A9856;
+  --accent-orange-dark:  #6B7545;
+  --accent-orange-light: #EDF1DE;
+
+  /* ---- 渐变预设换抹茶 ---- */
+  --grad-brand:      linear-gradient(180deg, #B5C085 0%, #9BA567 52%, #7A8648 100%);
+  --grad-brand-soft: linear-gradient(180deg, #F0F3E0, #E2E8CC);
+  --shadow-brand:    0 7px 18px rgba(138,152,86,.32), 0 2px 6px rgba(138,152,86,.20);
+
+  /* 语义绿微调得更贴近抹茶（不强制，保留多彩分类色） */
+  --ui-green:      #7BA06A;  --ui-green-soft:  #EAF1DE;  --ui-green-ink:  #4A6338;
+  --accent-green:  #6FA05A;  --accent-green-dark: #4F7A3E;
+}
+
+/* ============================================================
+   1. 全局背景：柔和抹茶绿渐变（参考 ref5 渐变质感）
+   ============================================================ */
+body{
+  background:
+    radial-gradient(1200px 600px at 85% -8%, rgba(201,208,164,.45), transparent 60%),
+    radial-gradient(900px 500px at -8% 110%, rgba(155,165,103,.28), transparent 55%),
+    linear-gradient(180deg, #F1F4E4 0%, #E6EBD2 45%, #DDE3C6 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* ============================================================
+   2. 白色模块上淡抹茶色（描边 + 极浅底 + hover）
+   ============================================================ */
+.card, .stat-card, .quick-action, .panel, .modal-content,
+.list-item, .tk-card, .goal-card, .course-card{
+  border: 1px solid rgba(201,208,164,.55) !important;
+  box-shadow: 0 1px 2px rgba(107,117,69,.04), 0 6px 18px rgba(107,117,69,.07) !important;
+}
+.card:hover, .stat-card:hover, .quick-action:hover{
+  background: #F7F9EE !important;
+  border-color: rgba(155,165,103,.55) !important;
+}
+
+/* 仪表盘主区卡片底极淡抹茶 */
+.dashboard-main .card{ background: linear-gradient(180deg, #FFFFFF, #FBFCF4) !important; }
+
+/* ============================================================
+   3. 气泡面板：奶油底微调成淡抹茶奶油 + 珊瑚泡改抹茶
+   ============================================================ */
+.v3-bubble-panel{
+  background: linear-gradient(135deg, #E8ECD4 0%, #D8DFB8 55%, #C9D0A4 100%) !important;
+  border: 1px solid rgba(155,165,103,.4) !important;
+}
+.v3-panel-title{ color: #4A5236 !important; }
+.v3-panel-sub{ color: rgba(74,82,54,.65) !important; }
+
+/* 珊瑚泡 → 抹茶绿泡 */
+.v3-bubble--coral{
+  background: radial-gradient(circle at 35% 30%, #C9D0A4 0%, #9BA567 55%, #6B7545 100%) !important;
+  box-shadow: 0 18px 40px rgba(107,117,69,.45), inset 0 2px 6px rgba(255,255,255,.45) !important;
+}
+/* 墨黑泡保留（做对比），琥珀黄泡保留（清新点缀） */
+
+/* ============================================================
+   4. 图例修正：面板内底部同一直线横排 + 圆点放大
+   ============================================================ */
+.v3-legend{
+  position: absolute !important;
+  left: 0; right: 0; bottom: 14px;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 28px !important;
+  z-index: 3 !important;
+  margin: 0 !important;
+}
+.v3-legend span{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12.5px !important;
+  color: #4A5236 !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+.v3-legend-dot{
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============================================================
+   5. 侧栏：炭灰保留，但选中条改抹茶绿
+   ============================================================ */
+.sidebar .nav-item.active::before,
+.sidebar nav a.active::before{
+  background: linear-gradient(180deg, #B5C085, #7A8648) !important;
+}
+.sidebar .nav-item.active,
+.sidebar nav a.active{
+  color: #C9D0A4 !important;
+}
+
+/* ============================================================
+   6. 欢迎页：背景板改抹茶渐变 + 按钮
+   ============================================================ */
+.welcome-page{
+  background: linear-gradient(180deg, #F1F4E4 0%, #E2E8CC 100%) !important;
+}
+.welcome-card{
+  background: linear-gradient(180deg, #FFFFFF, #F7F9EE) !important;
+  border: 1px solid rgba(201,208,164,.6) !important;
+}
+
+/* ============================================================
+   7. 绿叶装饰（页面角落，半透明）
+   ============================================================ */
+.v4-leaf-decor{
+  position: fixed;
+  right: -40px; bottom: -40px;
+  width: 280px; height: 280px;
+  background-image: url('assets/leaf-decor.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: .10;
+  pointer-events: none;
+  z-index: 0;
+  filter: saturate(1.1);
+}
+.v4-leaf-decor--tl{
+  right: auto; left: -50px; bottom: auto; top: 80px;
+  width: 200px; height: 200px;
+  opacity: .07;
+  transform: rotate(-25deg);
+}
+
+/* ============================================================
+   8. 移动端适配
+   ============================================================ */
+@media (max-width: 768px){
+  .v4-leaf-decor{ width: 160px; height: 160px; opacity: .08; }
+  .v4-leaf-decor--tl{ display: none; }
+  .v3-legend{ gap: 16px !important; bottom: 10px; }
+  .v3-legend span{ font-size: 11px !important; gap: 6px !important; }
+  .v3-legend-dot{ width: 11px !important; height: 11px !important; }
+  /* 移动端关模糊光晕保流畅 */
+  body{ background: linear-gradient(180deg, #F1F4E4, #DDE3C6) !important; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .v4-leaf-decor{ display: none; }
+}
+
+
+/* ===== v4.1 气泡调整 + 欢迎页横版重设计 ===== */
+.v3-bubble--lg{ width:150px; height:150px; }
+.v3-bubble--lg .v3-bubble-num{ font-size:34px; }
+.v3-bubble--leaf{
+  background: radial-gradient(circle at 35% 30%, #6B8A5E 0%, #4C6B50 55%, #2E4030 100%) !important;
+  box-shadow: 0 14px 32px rgba(46,64,48,.5), inset 0 2px 6px rgba(255,255,255,.35) !important;
+}
+
+/* 欢迎页横版 */
+.welcome-screen{
+  background: url('assets/welcome-bg.jpg') center/cover no-repeat, linear-gradient(135deg,#E8ECD4,#9BA567) !important;
+  flex-direction: row !important;
+  padding: 0 !important;
+}
+.welcome-sidebar{
+  width: 90px; flex-shrink:0;
+  background: rgba(76,107,80,.55);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 32px 0;
+  border-right: 1px solid rgba(255,255,255,.18);
+}
+.welcome-sidebar-logo{
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg,#C9D0A4,#8A9856);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 18px rgba(76,107,80,.45);
+  margin-bottom: 40px;
+}
+.welcome-sidebar-logo svg{ width:28px; height:28px; fill:#fff; }
+.welcome-sidebar-icons{ display:flex; flex-direction:column; gap:20px; flex:1; }
+.ws-icon{
+  width: 40px; height: 40px; border-radius: 12px;
+  background: rgba(255,255,255,.14);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.ws-icon:hover{ background: rgba(255,255,255,.28); }
+.ws-icon svg{ width:20px; height:20px; fill:rgba(255,255,255,.88); }
+.welcome-sidebar-bottom{ color:rgba(255,255,255,.55); font-size:10px; letter-spacing:1px; }
+
+.welcome-main{ flex:1; display:flex; align-items:center; justify-content:center; padding: 40px; }
+.welcome-card{
+  background: rgba(255,255,255,.72) !important;
+  backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(255,255,255,.65) !important;
+  border-radius: 28px !important;
+  max-width: 560px !important; width: 100% !important;
+  padding: 44px 48px !important;
+  box-shadow: 0 24px 64px rgba(76,107,80,.28) !important;
+}
+.welcome-logo{ display:none; }
+.welcome-title{ font-size: 38px !important; color: #3A4A3C !important; letter-spacing:-.02em; }
+.welcome-title span{ color: #8A9856 !important; }
+.welcome-desc{ color: rgba(58,74,60,.72) !important; font-size:14px; }
+
+@media (max-width: 768px){
+  .v3-bubble--lg{ width:108px; height:108px; }
+  .v3-bubble--lg .v3-bubble-num{ font-size:26px; }
+  .welcome-sidebar{ display:none; }
+  .welcome-main{ padding: 20px; }
+  .welcome-card{ padding: 32px 24px !important; border-radius: 22px !important; }
+  .welcome-title{ font-size: 30px !important; }
+}
+
 /*@@APPLE_THEME_END*/
 </style>
 </head>
 <body>
 
+<!-- v4 绿叶装饰 -->
+<div class="v4-leaf-decor" aria-hidden="true"></div>
+<div class="v4-leaf-decor v4-leaf-decor--tl" aria-hidden="true"></div>
+
 <!-- ===== Welcome Screen ===== -->
 <div class="welcome-screen" id="welcome-screen">
-  <div class="welcome-card">
-    <div class="welcome-logo">
+  <div class="welcome-sidebar">
+    <div class="welcome-sidebar-logo">
       <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
     </div>
+    <div class="welcome-sidebar-icons">
+      <div class="ws-icon"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+      <div class="ws-icon"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg></div>
+      <div class="ws-icon"><svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg></div>
+      <div class="ws-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+    </div>
+    <div class="welcome-sidebar-bottom">DanDanTable</div>
+  </div>
+  <div class="welcome-main">
+  <div class="welcome-card">
     <h1 class="welcome-title">DanDan<span>Table</span></h1>
     <p class="welcome-desc">GPA计算 · 考试倒计时 · 记账管理 · 生活作息<br>一个应用，搞定大学生活的方方面面</p>
     <div class="welcome-profiles" id="welcome-profiles"></div>
@@ -2738,6 +3548,7 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>
 
@@ -2872,6 +3683,34 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
         </button>
       </div>
       
+      <!-- v3 柔光气泡概览 -->
+      <div class="v3-bubble-panel">
+        <div class="v3-panel-title">今日学习概览</div>
+        <div class="v3-panel-sub">一眼看清你的学习与生活全貌</div>
+        <div class="v3-bubble v3-bubble--sm v3-bubble--ink" style="top:40%;left:5%;">
+          <span class="v3-bubble-num" id="v3-b-exam">--</span>
+          <span class="v3-bubble-label">最近考试</span>
+        </div>
+        <div class="v3-bubble v3-bubble--md v3-bubble--coral" style="top:35%;left:19%;">
+          <span class="v3-bubble-num" id="v3-b-expense">¥0</span>
+          <span class="v3-bubble-label">本月支出</span>
+        </div>
+        <div class="v3-bubble v3-bubble--sm v3-bubble--leaf" style="top:43%;left:38%;">
+          <span class="v3-bubble-num" id="v3-b-tasks">0</span>
+          <span class="v3-bubble-label">待办作业</span>
+        </div>
+        <div class="v3-bubble v3-bubble--lg v3-bubble--amber" style="top:30%;left:55%;">
+          <span class="v3-bubble-num" id="v3-b-gpa">--</span>
+          <span class="v3-bubble-label">GPA</span>
+        </div>
+        <div class="v3-legend">
+          <span><span class="v3-legend-dot" style="background:#F2C85C;"></span>GPA</span>
+          <span><span class="v3-legend-dot" style="background:#9BA567;"></span>本月支出</span>
+          <span><span class="v3-legend-dot" style="background:#4C6B50;"></span>待办作业</span>
+          <span><span class="v3-legend-dot" style="background:#2B2B31;"></span>最近考试</span>
+        </div>
+      </div>
+
       <!-- Stats Cards -->
       <div class="stats-grid">
         <div class="stat-card green">
@@ -2941,6 +3780,9 @@ h1,h2,h3,.stat-card-value,.stat-value-v2,.list-item-value {
             <div class="chart-container small" id="dashboard-finance-chart"></div>
           </div>
           
+          <!-- v3 深色小日历 -->
+          <div class="v3-mini-cal" id="v3-mini-cal"></div>
+
           <!-- Today's Schedule -->
           <div class="card">
             <div class="card-header">
@@ -4421,7 +5263,7 @@ function throttle(fn, limit) {
 }
 
 // ===== Apple 图表主题（注入） =====
-const APPLE_CHART_COLORS=['#F2643D','#2B2B31','#5B8DC9','#57AB7E','#CF9944','#9279BC','#8B9098','#55AFBC','#D86A60','#F6A07E','#B7BDC6'];
+const APPLE_CHART_COLORS=['#8A9856','#2B2B31','#5B8DC9','#57AB7E','#CF9944','#9279BC','#8B9098','#55AFBC','#D86A60','#F6A07E','#B7BDC6'];
 function ensureAppleTheme(){
   try{
     if(window.__appleChartTheme || typeof echarts==='undefined') return;
@@ -4571,7 +5413,7 @@ const STORAGE_PREFIX = "campus_toolbox_";
 
 // ===== Constants =====
 const AVATAR_COLORS = [
-  { from: "#FF8C66", to: "#F2643D", char: "学" },
+  { from: "#B5C085", to: "#8A9856", char: "学" },
   { from: "#7FA6D6", to: "#4977AE", char: "同" },
   { from: "#D28A9C", to: "#B85C72", char: "少" },
   { from: "#73BD96", to: "#3E9463", char: "青" },
@@ -4596,7 +5438,7 @@ const GPA_ALGORITHMS = {
 };
 
 const EXPENSE_CATEGORIES = [
-  { id: "food", name: "餐饮", icon: "utensils", color: "#F2643D" },
+  { id: "food", name: "餐饮", icon: "utensils", color: "#8A9856" },
   { id: "transport", name: "交通", icon: "bus", color: "#5B8DC9" },
   { id: "shopping", name: "购物", icon: "bag", color: "#9279BC" },
   { id: "entertainment", name: "娱乐", icon: "gamepad", color: "#C9748C" },
@@ -4800,9 +5642,18 @@ function switchView(view) {
 function loadProfiles() {
   state.profiles = storageGet("profiles", []);
   state.currentProfileId = storageGet("current_profile", null);
+  // v4 迁移：旧橙色头像 → 抹茶绿
+  var _migrated = false;
+  state.profiles.forEach(function(p){
+    if(/FF8C66|F2643D|EC502C|E8512B|D14928|C53E1E|e8846a|d06a50/i.test((p.colorFrom||"")+(p.colorTo||""))){
+      p.colorFrom="#B5C085"; p.colorTo="#8A9856"; _migrated=true;
+    }
+  });
+  if(_migrated) storageSet("profiles", state.profiles);
 }
 
 function renderWelcomeProfiles() {
+  state.profiles.forEach(function(p){ if(/FF8C66|F2643D|EC502C|E8512B|D14928|C53E1E|e8846a|d06a50|F57E54|F6A07E|FAC6AF|FDE3D8/i.test((p.colorFrom||"")+(p.colorTo||""))){ p.colorFrom="#B5C085"; p.colorTo="#8A9856"; } });
   const container = $("welcome-profiles");
   if (state.profiles.length === 0) {
     container.innerHTML = '<div style="text-align:center;color:var(--text-3);font-size:13px;padding:16px;">还没有档案，创建一个开始使用吧</div>';
@@ -4882,7 +5733,9 @@ function enterProfile(profileId) {
   // 更新侧边栏
   $("sidebar-name").textContent = profile.name;
   const avatar = $("sidebar-avatar");
-  avatar.style.background = `linear-gradient(135deg,${profile.colorFrom},${profile.colorTo})`;
+  var _cf = profile.colorFrom, _ct = profile.colorTo;
+  if(/FF8C66|F2643D|EC502C|E8512B|D14928|C53E1E|e8846a|d06a50|F57E54|F6A07E|FAC6AF|FDE3D8/i.test((_cf||"")+(_ct||""))){ _cf="#B5C085"; _ct="#8A9856"; }
+  avatar.style.background = `linear-gradient(135deg,${_cf},${_ct})`;
   avatar.textContent = profile.name.charAt(0);
   // 隐藏欢迎页，显示应用
   $("welcome-screen").style.display = "none";
@@ -5052,9 +5905,9 @@ function _renderGPACharts(data) {
         smooth: true,
         symbol: 'circle',
         symbolSize: 8,
-        lineStyle: { width: 3, color: '#F2643D' },
-        itemStyle: { color: '#F2643D' },
-        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(242,100,61,0.25)' }, { offset: 1, color: 'rgba(242,100,61,0)' }]) }
+        lineStyle: { width: 3, color: '#8A9856' },
+        itemStyle: { color: '#8A9856' },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(138,152,86,0.25)' }, { offset: 1, color: 'rgba(138,152,86,0)' }]) }
       }]
     });
     state.charts.gpaTrend = chart;
@@ -5440,7 +6293,7 @@ function _renderFinanceCharts(data, monthTx) {
       yAxis: { type: 'value', axisLabel: { fontSize: 11 } },
       series: [
         { name: '收入', type: 'bar', data: incomeData, itemStyle: { color: '#57AB7E', borderRadius: [6, 6, 0, 0] } },
-        { name: '支出', type: 'bar', data: expenseData, itemStyle: { color: '#F2643D', borderRadius: [6, 6, 0, 0] } }
+        { name: '支出', type: 'bar', data: expenseData, itemStyle: { color: '#8A9856', borderRadius: [6, 6, 0, 0] } }
       ]
     });
     state.charts.financeTrend = chart;
@@ -6096,9 +6949,61 @@ function renderDashboard() {
   
   // 图表
   renderDashboardCharts(data);
+  try { renderV3Bubbles(data); } catch(e){ console.warn('v3 bubbles', e); }
+  try { renderV3MiniCal(data); } catch(e){ console.warn('v3 cal', e); }
   
   // 压力指数
   try { renderStressIndex(); } catch(e) { console.error('渲染压力指数失败:', e); }
+}
+
+function renderV3Bubbles(data){
+  var g = $("v3-b-gpa"); if(!g) return;
+  var gpa = calculateGPA(data.courses, data.gpaAlgorithm);
+  g.textContent = (gpa && gpa !== "--") ? gpa : "--";
+  var ms = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  var exp = (data.transactions||[]).filter(function(t){ return t.type==='expense' && new Date(t.date) >= ms; })
+      .reduce(function(a,t){return a+(+t.amount||0);},0);
+  $("v3-b-expense").textContent = "¥" + Math.round(exp);
+  var now = Date.now();
+  var act = (data.countdowns||[]).filter(function(c){ return !c.done && new Date(c.date).getTime() >= now; });
+  var el = $("v3-b-exam");
+  if(act.length){
+    act.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+    el.textContent = Math.ceil((new Date(act[0].date).getTime()-now)/86400000) + "天";
+  } else { el.textContent = "--"; }
+  var tk = (data.tasksData||data.tasks||[]).filter(function(t){ return !t.completed && !t.done; });
+  var te = $("v3-b-tasks"); if(te) te.textContent = tk.length;
+}
+
+function renderV3MiniCal(data){
+  var el = $("v3-mini-cal"); if(!el) return;
+  var now = new Date(), y = now.getFullYear(), m = now.getMonth();
+  var startW = (new Date(y,m,1).getDay()+6)%7;
+  var dim = new Date(y,m+1,0).getDate();
+  var todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var sched={}, done={};
+  var prefix = y+'-'+String(m+1).padStart(2,'0');
+  (data.scheduleEvents||[]).forEach(function(e){
+    if(!e.date || e.repeat==='daily') return;
+    if(String(e.date).slice(0,7)!==prefix) return;
+    if(e.done) done[e.date]=1; else sched[e.date]=1;
+  });
+  var wd=['一','二','三','四','五','六','日'];
+  var h='<div class="v3-cal-head"><span class="v3-cal-title">'+now.toLocaleDateString('zh-CN',{month:'long'})+'</span><span class="v3-cal-month-picker"></span></div>';
+  h+='<div class="v3-cal-week">'+wd.map(function(w){return '<span>'+w+'</span>';}).join('')+'</div>';
+  h+='<div class="v3-cal-grid">';
+  for(var i=0;i<startW;i++) h+='<span class="v3-cal-day"></span>';
+  for(var d=1;d<=dim;d++){
+    var ds=prefix+'-'+String(d).padStart(2,'0');
+    var cls='v3-cal-day';
+    if(ds===todayStr) cls+=' is-today';
+    else if(done[ds]) cls+=' is-done';
+    else if(sched[ds]) cls+=' is-scheduled';
+    h+='<span class="'+cls+'">'+d+'</span>';
+  }
+  h+='</div>';
+  h+='<div class="v3-cal-legend"><span><span class="v3-legend-dot" style="border:1.5px solid #F2C85C;background:transparent;"></span>今天</span><span><span class="v3-legend-dot" style="background:#F2C85C;"></span>已完成</span><span><span class="v3-legend-dot" style="background:#34363D;"></span>有计划</span></div>';
+  el.innerHTML=h;
 }
 
 function renderDashboardCharts(data) {
@@ -6129,7 +7034,7 @@ function _renderDashboardCharts(data) {
         grid: { left: 40, right: 15, top: 15, bottom: 30 },
         xAxis: { type: 'category', data: semData.map(d => d.name), axisLabel: { fontSize: 10 } },
         yAxis: { type: 'value', max: 4.3, axisLabel: { fontSize: 10 } },
-        series: [{ type: 'line', data: semData.map(d => d.gpa), smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#F2643D' }, itemStyle: { color: '#F2643D' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(242,100,61,0.18)' }, { offset: 1, color: 'rgba(242,100,61,0)' }]) } }]
+        series: [{ type: 'line', data: semData.map(d => d.gpa), smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#8A9856' }, itemStyle: { color: '#8A9856' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(138,152,86,0.18)' }, { offset: 1, color: 'rgba(138,152,86,0)' }]) } }]
       });
     }
     state.charts.dashGpa = chart;
@@ -6300,7 +7205,7 @@ function renderScheduleView() {
             const sh = parseInt(c.startTime); const sm = parseInt(c.startTime.split(':')[1]);
             const eh = parseInt(c.endTime); const em = parseInt(c.endTime.split(':')[1]);
             const dur = (eh - sh) + (em - sm) / 60;
-            html += '<div class="schedule-course-block" style="background:' + (c.color || '#F2643D') + ';min-height:' + (dur * 2) + 'em;" onclick="event.stopPropagation();scheduleEditCourse(\'' + c.id + '\')"><div class="scb-name">' + escapeHtml(c.name) + '</div><div class="scb-location">' + escapeHtml(c.location || '') + '</div><div class="scb-time">' + c.startTime + '-' + c.endTime + '</div></div>';
+            html += '<div class="schedule-course-block" style="background:' + (c.color || '#8A9856') + ';min-height:' + (dur * 2) + 'em;" onclick="event.stopPropagation();scheduleEditCourse(\'' + c.id + '\')"><div class="scb-name">' + escapeHtml(c.name) + '</div><div class="scb-location">' + escapeHtml(c.location || '') + '</div><div class="scb-time">' + c.startTime + '-' + c.endTime + '</div></div>';
           }
         });
         html += '</div>';
@@ -6321,7 +7226,7 @@ function renderScheduleView() {
       } else {
         dayCourses.sort((a, b) => a.startTime.localeCompare(b.startTime));
         dayCourses.forEach(c => {
-          html += '<div class="schedule-list-item" style="border-left:4px solid ' + (c.color || '#F2643D') + ';padding:12px;margin:8px 0;background:var(--bg-card);border-radius:8px;cursor:pointer;" onclick="scheduleEditCourse(\'' + c.id + '\')"><div style="font-weight:600;">' + escapeHtml(c.name) + '</div><div style="color:var(--text-secondary);font-size:13px;">' + escapeHtml(c.teacher ? c.teacher + ' | ' : '') + (c.location || '') + ' | ' + c.startTime + '-' + c.endTime + '</div></div>';
+          html += '<div class="schedule-list-item" style="border-left:4px solid ' + (c.color || '#8A9856') + ';padding:12px;margin:8px 0;background:var(--bg-card);border-radius:8px;cursor:pointer;" onclick="scheduleEditCourse(\'' + c.id + '\')"><div style="font-weight:600;">' + escapeHtml(c.name) + '</div><div style="color:var(--text-secondary);font-size:13px;">' + escapeHtml(c.teacher ? c.teacher + ' | ' : '') + (c.location || '') + ' | ' + c.startTime + '-' + c.endTime + '</div></div>';
         });
       }
       html += '</div>';
@@ -6338,7 +7243,7 @@ function scheduleCellClick(day, time) { showScheduleCourseModal(null, day, time)
 function showScheduleCourseModal(course, day, time) {
   const isEdit = !!course;
   const days = ['周一','周二','周三','周四','周五','周六','周日'];
-  const colors = ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'];
+  const colors = ['#8A9856','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#8A9856'];
   // 移除已存在的模态框
   const existing = document.getElementById('modal-schedule-course');
   if (existing) existing.remove();
@@ -6353,7 +7258,7 @@ function showScheduleCourseModal(course, day, time) {
   html += '<div class="form-row"><div class="form-group"><label>起始周</label><input id="sc-weekstart" class="input" type="number" min="1" max="20" value="' + (course ? course.weekStart : 1) + '"></div><div class="form-group"><label>结束周</label><input id="sc-weekend" class="input" type="number" min="1" max="20" value="' + (course ? course.weekEnd : 16) + '"></div></div>';
   html += '<div class="form-group"><label>课程颜色</label><div class="color-picker">';
   colors.forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'sc-color\').value=\'' + clr + '\';var dots=this.parentNode.querySelectorAll(\'.color-dot\');dots.forEach(d=>d.style.boxShadow=\'\');this.style.boxShadow=\'0 0 0 3px rgba(0,0,0,0.2)\';"></span>'; });
-  html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#F2643D') + '"></div>';
+  html += '</div><input type="hidden" id="sc-color" value="' + (course ? course.color : '#8A9856') + '"></div>';
   html += '<div class="form-group"><label>备注</label><input id="sc-note" class="input" value="' + (course ? escapeAttr(course.note || '') : '') + '"></div>';
   if (isEdit) { html += '<input type="hidden" id="sc-id" value="' + course.id + '">'; }
   html += '<div class="modal-actions">';
@@ -6427,7 +7332,7 @@ function updateDashSchedule() {
   if (todayCourses.length === 0) {
     el.innerHTML = '<div style="color:var(--text-secondary);padding:16px;text-align:center;">今日暂无课程</div>';
   } else {
-    el.innerHTML = todayCourses.map(c => '<div class="dash-schedule-item" style="border-left:3px solid ' + (c.color||'#F2643D') + ';padding:8px 12px;margin:4px 0;border-radius:0 8px 8px 0;background:var(--bg-main);"><strong>' + escapeHtml(c.name) + '</strong> <span style="color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + '</span> <span style="color:var(--text-secondary);font-size:12px;">' + escapeHtml(c.location||'') + '</span></div>').join('');
+    el.innerHTML = todayCourses.map(c => '<div class="dash-schedule-item" style="border-left:3px solid ' + (c.color||'#8A9856') + ';padding:8px 12px;margin:4px 0;border-radius:0 8px 8px 0;background:var(--bg-main);"><strong>' + escapeHtml(c.name) + '</strong> <span style="color:var(--text-secondary);">' + c.startTime + '-' + c.endTime + '</span> <span style="color:var(--text-secondary);font-size:12px;">' + escapeHtml(c.location||'') + '</span></div>').join('');
   }
 }
 
@@ -6464,7 +7369,7 @@ function taskCardHTML(t, mode) {
   html += '<div class="task-title-v2"' + (t.completed ? ' style="text-decoration:line-through;opacity:.55;"' : '') + '>' + escapeHtml(t.title) + '</div>';
   if (t.description) html += '<div style="font-size:12px;color:var(--text-3);margin:2px 0 6px;">' + escapeHtml(t.description) + '</div>';
   html += '<div class="task-meta-v2">';
-  if (t.courseName) html += '<span class="task-tag-v2" style="background:#eef2ff;color:#F2643D;">' + escapeHtml(t.courseName) + '</span>';
+  if (t.courseName) html += '<span class="task-tag-v2" style="background:#eef2ff;color:#8A9856;">' + escapeHtml(t.courseName) + '</span>';
   html += '<span class="task-tag-v2" style="background:' + pm.color + '1a;color:' + pm.color + ';">' + pm.label + '优先级</span>';
   if (due) html += '<span style="font-size:11px;color:var(--text-3);">' + (due.getMonth()+1) + '/' + due.getDate() + ' 截止</span>';
   html += dueLabel;
@@ -6511,7 +7416,7 @@ function renderTaskCharts(tasks) {
   tasks.forEach(t => { const k = t.courseName || '未分类'; map[k] = (map[k]||0) + 1; });
   const entries = Object.entries(map);
   if (entries.length) {
-    const palette = ['#5B8DC9','#87DBFF','#6DD986','#FFB84D','#FF6B7A','#C9A4F0','#F2643D','#86868B'];
+    const palette = ['#5B8DC9','#87DBFF','#6DD986','#FFB84D','#FF6B7A','#C9A4F0','#8A9856','#86868B'];
     const ch = makeChart('taskCourse', 'task-course-chart');
     if (ch) ch.setOption({
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
@@ -6903,8 +7808,8 @@ function showAddGoal() {
   html += '<div class="form-group"><label>详细描述</label><textarea id="goal-desc" class="input" rows="2"></textarea></div>';
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input"><option value="academic">学业</option><option value="health">健康</option><option value="finance">财务</option><option value="skill">技能</option><option value="other">其他</option></select></div>';
   html += '<div class="form-group"><label>主题色</label><div class="color-picker">';
-  ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
-  html += '</div><input type="hidden" id="goal-color" value="#F2643D"></div>';
+  ['#8A9856','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#8A9856'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="#8A9856"></div>';
   html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date"></div>';
   html += '<input type="hidden" id="goal-edit-id" value=""></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal(\'modal-goal-form\')">取消</button><button class="btn btn-primary" onclick="goalSave()">创建</button></div></div></div>';
   document.body.insertAdjacentHTML('beforeend', html);
@@ -6921,8 +7826,8 @@ function goalEdit(goalId) {
   html += '<div class="form-group"><label>分类</label><select id="goal-cat" class="input">';
   cats.forEach(c => { html += '<option value="' + c.v + '"' + (goal.category===c.v?' selected':'') + '>' + c.l + '</option>'; });
   html += '</select></div><div class="form-group"><label>主题色</label><div class="color-picker">';
-  ['#F2643D','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#F2643D'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
-  html += '</div><input type="hidden" id="goal-color" value="' + (goal.color||'#F2643D') + '"></div>';
+  ['#8A9856','#57AB7E','#CF9944','#D86A60','#9279BC','#C9748C','#55AFBC','#8A9856'].forEach(clr => { html += '<span class="color-dot" style="background:' + clr + ';" onclick="document.getElementById(\'goal-color\').value=\'' + clr + '\';return false;"></span>'; });
+  html += '</div><input type="hidden" id="goal-color" value="' + (goal.color||'#8A9856') + '"></div>';
   html += '<div class="form-group"><label>目标日期</label><input id="goal-date" class="input" type="date" value="' + (goal.targetDate||'') + '"></div>';
   html += '<div class="form-group"><label>子任务</label><div id="goal-milestones-list">';
   (goal.milestones||[]).forEach(m => { html += '<div style="display:flex;gap:8px;margin-bottom:4px;"><input class="input" value="' + escapeAttr(m.title) + '" data-mid="' + m.id + '" style="flex:1;"><button class="btn btn-ghost" onclick="this.parentElement.remove();" style="padding:4px 8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;vertical-align:-2px;display:inline-block;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>'; });
@@ -7116,7 +8021,7 @@ function renderStressIndex() {
     level = 'normal'; levelLabel = '正常'; color = '#CF9944';
     advice = ['有点忙，注意合理安排时间', '建议每天留出30分钟放松时间', '记得多喝水，保持精力充沛'];
   } else if (score <= 75) {
-    level = 'elevated'; levelLabel = '偏高'; color = '#F2643D';
+    level = 'elevated'; levelLabel = '偏高'; color = '#8A9856';
     advice = ['最近有点累，记得给自己放松时间', '建议优先处理高优先级任务', '要不要试试番茄钟提高效率？', '保证每天7小时以上睡眠'];
   } else if (score <= 90) {
     level = 'high'; levelLabel = '高压'; color = '#D86A60';
