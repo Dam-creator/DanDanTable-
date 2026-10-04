@@ -11,7 +11,16 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'dandantable-secret-key-2024';
+// 安全：生产环境必须显式提供 JWT_SECRET。
+// 原先回退到硬编码默认值，而本仓库是公开的 —— 若线上未配置该变量，
+// 任何人都能用默认密钥伪造任意 userId 的令牌，读写他人数据。
+// 因此生产环境缺少该变量时直接拒绝启动（fail closed）；本地开发才使用临时密钥。
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? null : 'dev-only-insecure-secret');
+if (!JWT_SECRET) {
+  console.error('!! 未设置 JWT_SECRET 环境变量，生产环境拒绝启动。');
+  console.error('!! 请在 Render 控制台 → Environment 中添加 JWT_SECRET（随机长字符串）后重新部署。');
+  process.exit(1);
+}
 const JWT_EXPIRES_IN = '7d';
 
 app.use(cors());
@@ -52,7 +61,7 @@ app.post('/api/register', async (req, res) => {
     if (password.length < 6) return res.status(400).json({ success: false, message: '密码至少6个字符' });
     const existingUser = await userOps.findByUsername(username);
     if (existingUser) return res.status(409).json({ success: false, message: '用户名已被注册' });
-    const passwordHash = bcrypt.hashSync(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
     const userId = await userOps.create(username, passwordHash, nickname);
     const token = jwt.sign({ userId, username }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     res.json({ success: true, message: '注册成功', data: { token, user: { id: userId, username, nickname: nickname || username } } });
@@ -65,7 +74,7 @@ app.post('/api/login', async (req, res) => {
     if (!username || !password) return res.status(400).json({ success: false, message: '用户名和密码不能为空' });
     const user = await userOps.findByUsername(username);
     if (!user) return res.status(401).json({ success: false, message: '用户名或密码错误' });
-    const isValid = bcrypt.compareSync(password, user.password_hash);
+    const isValid = await bcrypt.compare(password, user.password_hash);
     if (!isValid) return res.status(401).json({ success: false, message: '用户名或密码错误' });
     const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     res.json({ success: true, message: '登录成功', data: { token, user: { id: user.id, username: user.username, nickname: user.nickname } } });
