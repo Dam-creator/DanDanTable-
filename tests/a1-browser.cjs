@@ -1,0 +1,121 @@
+/* Run: node tests/a1-browser.cjs. Set PLAYWRIGHT_MODULE if Playwright is not on PATH. */
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),vm=require('vm');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const root=path.resolve(__dirname,'..'),source=path.join(root,'index.html');
+const out=process.env.A1_SCREENSHOTS || path.join(root,'tests','screenshots');fs.mkdirSync(out,{recursive:true});
+const html=fs.readFileSync(source,'utf8');
+for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){if(!/\bsrc=/.test(match[1]))new vm.Script(match[2]);}
+new vm.Script(fs.readFileSync(path.join(root,'assets','a1-workspace.js'),'utf8'));
+const passed=[];function check(name,actual,expected=true){assert.deepEqual(actual,expected,name);passed.push(name);}
+(async()=>{
+ const browser=await chromium.launch({channel:process.env.BROWSER_CHANNEL || 'msedge',headless:true});
+ try{
+  const context=await browser.newContext({viewport:{width:1600,height:1050},timezoneId:'Asia/Shanghai'}),page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.route('**/dandantable.onrender.com/**',r=>r.abort());
+  await page.goto('file:///'+source.replaceAll('\\','/'),{waitUntil:'load'});
+  await page.evaluate(()=>{document.getElementById('new-profile-username').value='a1-test';document.getElementById('new-profile-name').value='预览同学';createProfile();});
+  check('A1 boot without runtime errors',errors,[]);
+  check('Empty workspace has clear actions',await page.locator('#a1-home-courses').innerText().then(t=>t.includes('第一个课程')));
+  check('Upgrade backup exists',await page.evaluate(()=>!!storageGet('pre_a1_'+state.currentProfileId,null)));
+  await page.evaluate(()=>{
+   const d=getProfileData(state.currentProfileId),sem=d.semesters[0].id,today=localDateKey(),date=new Date();date.setDate(date.getDate()+5);
+   d.courses=[{id:'grade_math',name:'高等数学',credit:3,score:90,semesterId:sem},{id:'grade_english',name:'大学英语',credit:1,score:80,semesterId:sem}];
+   d.scheduleCourses=[{id:'math',name:'高等数学',dayOfWeek:new Date().getDay()||7,startTime:'14:00',endTime:'15:00',weekStart:1,weekEnd:16,location:'教学楼 B302',color:'#879757'},{id:'english',name:'大学英语',dayOfWeek:2,startTime:'10:00',endTime:'11:30',weekStart:1,weekEnd:16}];
+   d.learningCourses=[{id:'lc_math',name:'高等数学',scheduleIds:['math'],gradeIds:['grade_math']},{id:'lc_english',name:'大学英语',scheduleIds:['english'],gradeIds:['grade_english']},{id:'lc_code',name:'程序设计',scheduleIds:[],gradeIds:[]}];
+   d.tasksData=[{id:'task_math',title:'完成积分练习',courseId:'math',courseName:'高等数学',estimatedMinutes:45,dueDate:today,priority:'high',status:'todo',completed:false},{id:'task_english',title:'准备英语展示',courseId:'lc_english',estimatedMinutes:30,priority:'medium',completed:false},{id:'task_code',title:'整理实验报告',courseId:'lc_code',estimatedMinutes:60,priority:'low',completed:false}];
+   d.courseReviewItems=Array.from({length:5},(_,i)=>({id:'review_'+i,courseId:'lc_math',title:i===3?'完成积分练习':'数学专题 '+i,completed:i<3,taskId:i===3?'task_math':null}));
+   d.countdowns=[{id:'exam_math',name:'高等数学期中考试',courseId:'lc_math',date:localDateKey(date),done:false}];
+   d.scheduleEvents=[{id:'exercise',title:'晚间运动',date:today,startTime:'19:00',endTime:'20:00',category:'exercise',repeat:''}];
+   d.transactions=[{id:'food',date:today,type:'expense',amount:628,category:'food'}];d.budget={food:800,study:400};
+   d.goalsData=[{id:'goal',title:'本月复习计划',status:'active',progress:20,milestones:[]}];saveProfileData(state.currentProfileId,d);renderDashboard();
+  });
+  check('Explicit links combine grade and timetable without duplication',await page.evaluate(()=>DanDanA1.courses(DanDanA1.read()).length),3);
+  check('Course progress comes from review checklist',await page.locator('#a1-home-courses').innerText().then(t=>t.includes('60%')));
+  await page.locator('[data-a1=task-toggle][data-id=task_math]').first().click();
+  check('Task completion updates linked review',await page.evaluate(()=>[DanDanA1.reviewStats(DanDanA1.read(),DanDanA1.courses(DanDanA1.read())[0]).percent,DanDanA1.read().tasksData[0].status]),[80,'done']);
+  await page.locator('#a1-undo').click();check('Undo restores linked review',await page.evaluate(()=>DanDanA1.reviewStats(DanDanA1.read(),DanDanA1.courses(DanDanA1.read())[0]).percent),60);
+  await page.locator('#a1-home-courses [data-id=lc_math]').click();
+  check('Course detail displays grades, tasks, exam and review',await page.locator('#a1-dialog').innerText().then(t=>['完成积分练习','期中考试','3 学分','复习清单'].every(s=>t.includes(s))));
+  await page.locator('#a1-review-title').fill('复习极限');await page.locator('[data-a1=review-add]').click();
+  check('Independent review item is persisted',await page.evaluate(()=>DanDanA1.read().courseReviewItems.some(r=>r.title==='复习极限')));
+  await page.keyboard.press('Escape');
+  await page.locator('.a1-new-task').click();await page.locator('#task-title').fill('新作业');await page.locator('#task-course').selectOption('lc_code');await page.locator('#a1-task-estimate').fill('35');
+  await page.evaluate(()=>taskSave());await page.waitForTimeout(400);
+  check('Estimate and course saved with the main task',await page.evaluate(()=>{const t=DanDanA1.read().tasksData.find(t=>t.title==='新作业');return[t.estimatedMinutes,t.courseId];}),[35,'lc_code']);
+  page.on('dialog',dialog=>dialog.accept());
+  await page.evaluate(()=>{switchView('tasks');taskDelete(DanDanA1.read().tasksData.find(t=>t.title==='新作业').id);});
+  check('Deleted task is removed and undo is visible outside home',await page.locator('#a1-undo').isVisible()&&await page.evaluate(()=>!DanDanA1.read().tasksData.some(t=>t.title==='新作业')));
+  await page.locator('#a1-undo').click();check('Undo restores deleted task with its metadata',await page.evaluate(()=>DanDanA1.read().tasksData.find(t=>t.title==='新作业').estimatedMinutes),35);await page.evaluate(()=>switchView('dashboard'));
+  await page.evaluate(()=>taskEdit('task_math'));await page.locator('#task-title').fill('完成积分练习（修订）');await page.evaluate(()=>taskSave());await page.waitForTimeout(400);
+  check('Editing task preserves status and linked metadata',await page.evaluate(()=>[DanDanA1.read().tasksData[0].status,DanDanA1.read().tasksData[0].estimatedMinutes]),['todo',45]);
+  const originalDeadline=await page.evaluate(()=>DanDanA1.read().tasksData[0].dueDate);
+  check('Legacy date-only deadline survives editing',await page.evaluate(()=>calendarDaysUntil(DanDanA1.read().tasksData[0].dueDate)),0);
+  await page.evaluate(()=>DanDanA1.slotForm('task_math'));await page.locator('#a1-slot-start').fill('14:30');await page.locator('[data-a1=slot-save]').click();
+  check('Timetable overlap is blocked',await page.locator('#a1-form-error').innerText().then(t=>t.includes('重叠')));
+  await page.locator('#a1-slot-start').fill('19:15');await page.locator('[data-a1=slot-save]').click();check('Schedule overlap is blocked',await page.locator('#a1-form-error').innerText().then(t=>t.includes('运动')));
+  await page.locator('#a1-slot-start').fill('23:45');await page.locator('[data-a1=slot-save]').click();check('Cross-midnight slot is blocked',await page.locator('#a1-form-error').innerText().then(t=>t.includes('午夜')));
+  await page.locator('#a1-slot-start').fill('18:00');await page.locator('[data-a1=slot-save]').click();
+  check('Slot is saved without changing task deadline',await page.evaluate(()=>[DanDanA1.read().studySlots.length,DanDanA1.read().studySlots[0].endTime,DanDanA1.read().tasksData[0].dueDate]),[1,'18:45',originalDeadline]);
+  await page.evaluate(()=>DanDanA1.slotForm('task_english'));await page.locator('#a1-slot-start').fill('18:15');await page.locator('[data-a1=slot-save]').click();check('Existing study slot overlap is blocked',await page.locator('#a1-form-error').innerText().then(t=>t.includes('重叠')));await page.keyboard.press('Escape');
+  await page.evaluate(()=>DanDanA1.openCourse('lc_math'));await page.locator('#a1-dialog [data-a1=focus-task]').first().click();check('Start focus inside a course returns to timer',await page.locator('#a1-dialog').isHidden());await page.waitForTimeout(1200);
+  await page.evaluate(()=>{const d=DanDanA1.read();d.focusActive.startedAt-=61000;saveProfileData(state.currentProfileId,d);DanDanA1.focusPause();});
+  const paused=await page.evaluate(()=>DanDanA1.read().focusActive.elapsedMs);await page.waitForTimeout(1000);
+  check('Paused time is excluded',await page.evaluate(()=>DanDanA1.elapsed(DanDanA1.read().focusActive)),paused);
+  await page.reload({waitUntil:'load'});check('Active focus survives reload',await page.evaluate(()=>DanDanA1.read().focusActive.status),'paused');
+  await page.evaluate(()=>DanDanA1.focusToggle());await page.evaluate(()=>{const d=DanDanA1.read();d.focusActive.startedAt-=1000;saveProfileData(state.currentProfileId,d);DanDanA1.focusFinish();});
+  await page.locator('#a1-focus-complete').check();await page.locator('[data-a1=focus-save]').click();
+  check('Focus saved once and task completed explicitly',await page.evaluate(()=>{const d=DanDanA1.read();return[d.focusSessions.length,d.focusSessions[0].seconds>=62,d.tasksData[0].completed,d.focusActive];}),[1,true,true,null]);
+  await page.evaluate(()=>DanDanA1.focusSave()).catch(()=>{});check('Ending again does not duplicate session',await page.evaluate(()=>DanDanA1.read().focusSessions.length),1);
+  await page.evaluate(()=>{window.firstProfile=state.currentProfileId;DanDanA1.focusToggle('task_english');});
+  await page.evaluate(()=>{document.getElementById('new-profile-username').value='second';document.getElementById('new-profile-name').value='第二档案';createProfile();});
+  check('Switch profile pauses outgoing timer and isolates records',await page.evaluate(()=>[DanDanA1.read(firstProfile).focusActive.status,DanDanA1.read().focusSessions.length,DanDanA1.read().studySlots.length]),['paused',0,0]);
+  await page.evaluate(()=>enterProfile(firstProfile));check('Returning profile restores its paused timer',await page.evaluate(()=>DanDanA1.read().focusActive.taskId),'task_english');
+  await page.evaluate(()=>{DanDanA1.focusFinish();});await page.locator('[data-a1=focus-save]').click();
+  await page.evaluate(()=>switchView('courses'));await page.locator('#a1-course-search').fill('英语');check('Course search',await page.locator('#a1-all-courses .a1-course').count(),1);await page.locator('#a1-course-search').fill('');
+  await page.evaluate(()=>{const d=DanDanA1.read();d.scheduleCourses.push({id:'same_name_schedule',name:'同名课程',dayOfWeek:3,startTime:'08:00',endTime:'09:00',weekStart:1,weekEnd:16});d.courses.push({id:'same_name_grade',name:'同名课程',credit:2,score:85,semesterId:d.semesters[0].id});saveProfileData(state.currentProfileId,d);switchView('courses');});
+  check('Matching names are not merged automatically',await page.evaluate(()=>DanDanA1.courses(DanDanA1.read()).length),5);
+  await page.locator('[data-a1=course-new]').last().click();await page.locator('#a1-course-name').fill('明确关联的课程');
+  await page.locator('[name=a1-schedule-link][value=same_name_schedule]').check();await page.locator('[name=a1-grade-link][value=same_name_grade]').check();await page.locator('[data-a1=course-save]').click();
+  check('Explicit source linking creates one workspace',await page.evaluate(()=>DanDanA1.courses(DanDanA1.read()).length),4);
+  const linkedCourse=await page.evaluate(()=>DanDanA1.read().learningCourses.find(c=>c.name==='明确关联的课程').id);
+  await page.evaluate(id=>DanDanA1.openCourse(id),linkedCourse);await page.locator('[data-a1=course-manage]').click();await page.locator('[data-a1=course-delete]').click();
+  check('Deleting workspace preserves source grades and timetable',await page.evaluate(()=>[DanDanA1.read().courses.some(c=>c.id==='same_name_grade'),DanDanA1.read().scheduleCourses.some(c=>c.id==='same_name_schedule')]),[true,true]);
+  await page.evaluate(()=>switchView('dashboard'));await page.locator('#a1-undo').click();check('Workspace deletion can be undone',await page.evaluate(id=>DanDanA1.read().learningCourses.some(c=>c.id===id),linkedCourse));
+  await page.evaluate(()=>DanDanA1.openCourse('lc_code'));await page.locator('[data-a1=course-exam]').click();await page.locator('#countdown-name').fill('程序设计新考试');await page.locator('#countdown-date').fill(await page.evaluate(()=>localDateKey()));await page.evaluate(()=>saveCountdown());
+  check('New workspace exam keeps explicit course association',await page.evaluate(()=>DanDanA1.read().countdowns.find(c=>c.name==='程序设计新考试').courseId),'lc_code');
+  await page.evaluate(()=>DanDanA1.openCourse('lc_code'));await page.locator('[data-a1=exam-unlink]').click();check('Unlinking exam preserves the exam record',await page.evaluate(()=>{const exam=DanDanA1.read().countdowns.find(c=>c.name==='程序设计新考试');return[!!exam,exam.courseId];}),[true,null]);await page.keyboard.press('Escape');
+  await page.evaluate(()=>{const d=DanDanA1.read();d.learningCourses=d.learningCourses.filter(c=>c.name!=='明确关联的课程');d.scheduleCourses=d.scheduleCourses.filter(c=>c.id!=='same_name_schedule');d.courses=d.courses.filter(c=>c.id!=='same_name_grade');d.countdowns=d.countdowns.filter(c=>c.name!=='程序设计新考试');saveProfileData(state.currentProfileId,d);switchView('dashboard');});
+  await page.locator('#a1-focus-duration').fill('1');await page.evaluate(()=>{DanDanA1.focusToggle('task_code');const d=DanDanA1.read();d.focusActive.startedAt-=120000;saveProfileData(state.currentProfileId,d);});await page.waitForTimeout(650);
+  check('Timer finishes without automatically completing task',await page.evaluate(()=>[DanDanA1.read().focusActive.status,DanDanA1.elapsed(DanDanA1.read().focusActive),DanDanA1.read().tasksData.find(t=>t.id==='task_code').completed]),['ready',60000,false]);
+  await page.evaluate(()=>DanDanA1.focusFinish());await page.locator('[data-a1=focus-save]').click();check('Focus is capped at selected duration',await page.evaluate(()=>DanDanA1.read().focusSessions.at(-1).seconds),60);
+  check('Cloud snapshot includes all new records',await page.evaluate(()=>{const data=JSON.parse(collectLocalData()[STORAGE_PREFIX+'data_'+state.currentProfileId]);return[data.focusSessions.length>0,data.studySlots.length>0,data.courseReviewItems.length>0,data.learningCourses.length>0];}),[true,true,true,true]);
+  const downloadPromise=page.waitForEvent('download');await page.evaluate(()=>exportData());const download=await downloadPromise;const exported=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
+  check('Export preserves new records',exported['data_'+exported.currentProfileId].focusSessions.length>0);
+  const restore=await page.evaluate(()=>({profiles:state.profiles,currentProfileId:state.currentProfileId,['data_'+state.currentProfileId]:DanDanA1.read()}));
+  await page.evaluate(()=>{const d=DanDanA1.read();d.studySlots=[];saveProfileData(state.currentProfileId,d);});
+  await page.evaluate(json=>importData({target:{files:[new File([json],'backup.json',{type:'application/json'})]}}),JSON.stringify(restore));await page.waitForTimeout(200);
+  check('Import restores new records',await page.evaluate(()=>DanDanA1.read().studySlots.length),1);
+  const cloudSnapshot=await page.evaluate(()=>{const d=JSON.parse(JSON.stringify(DanDanA1.read()));d.marker='cloud-restored';const snapshot={[STORAGE_PREFIX+'data_'+state.currentProfileId]:JSON.stringify(d)};const pending=DanDanA1.read();pending.marker='old-pending';saveProfileDataCached(state.currentProfileId,pending);cloudToken='test-token';return snapshot;});
+  await page.route('**/api/sync/download',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({success:true,data:cloudSnapshot})}));
+  check('Cloud restore endpoint handles snapshot',await page.evaluate(()=>cloudDownload(true)));
+  await page.waitForTimeout(650);await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));
+  check('Cloud restore is not overwritten by old cache or pending saves',await page.evaluate(()=>[DanDanA1.read().marker,JSON.parse(localStorage.getItem(STORAGE_PREFIX+'data_'+state.currentProfileId)).marker]),['cloud-restored','cloud-restored']);
+  for(const view of ['gpa','countdown','finance','plan','tasks','goals','courses','dashboard']){
+    await page.evaluate(v=>switchView(v),view);await page.waitForTimeout(150);check('Existing/new view opens: '+view,await page.locator('#view-'+view).evaluate(e=>e.classList.contains('active')));
+  }
+  await page.locator('#global-search').fill('积分');check('Global search retains task access',await page.locator('#global-search-results').innerText().then(t=>t.includes('积分')));await page.locator('#global-search').fill('');
+  await page.locator('#global-search').blur();await page.locator('#toast-container').evaluate(e=>e.innerHTML='');
+  await page.screenshot({path:path.join(out,'A1-桌面首页.png'),fullPage:true});
+  await page.evaluate(()=>DanDanA1.openCourse('lc_math'));await page.screenshot({path:path.join(out,'A1-课程工作区.png')});await page.keyboard.press('Escape');
+  for(const width of [1440,1024,768,390,320]){
+    await page.setViewportSize({width,height:900});await page.waitForTimeout(200);
+    check('Home fits '+width+'px',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.main').scrollWidth<=document.querySelector('.main').clientWidth));
+    if(width===390)await page.screenshot({path:path.join(out,'A1-手机首页.png'),fullPage:true});
+    await page.evaluate(()=>switchView('courses'));check('Courses fit '+width+'px',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.evaluate(()=>switchView('dashboard'));
+  }
+  check('No runtime errors',errors,[]);
+  fs.writeFileSync(path.join(out,'验证结果.json'),JSON.stringify({passed:passed.length,checks:passed,runtimeErrors:errors},null,2));
+  console.log('PASS '+passed.length+' checks. Screenshots: '+out);
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});
