@@ -1,0 +1,172 @@
+/* Olive Liquid Glass: optical layers belong to surfaces, never to text. */
+body.a1-app.liquid-app {
+  --text-1:#253022;--text-2:#54604f;--text-3:#64715d;--text-secondary:#64715d;
+  --glass-fill:rgba(255,255,252,.76);--glass-stroke:rgba(255,255,255,.88);
+  --glass-shadow:0 12px 35px #323d2410,0 2px 5px #323d2408,inset 0 1px 0 #fff;
+  background:#f4f3eb !important;
+  background-image:radial-gradient(ellipse at 90% 5%,#bfcba36b,transparent 44%),radial-gradient(ellipse at 15% 80%,#ddcfaa50,transparent 45%) !important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+.liquid-app::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(125deg,transparent 50%,#fffffff0 56%,transparent 63%),radial-gradient(ellipse at 88% 35%,#8b9b6450,transparent 35%);}
+.a1-app.liquid-app .app {max-width:1740px;margin:0 auto;padding:0;background:transparent;border-radius:0;box-shadow:none;min-height:100vh;gap:0;}
+.a1-app.liquid-app .sidebar {width:220px;flex-basis:220px;top:0;height:100dvh;border-radius:0 0 26px 0;padding:30px 0 14px;background:linear-gradient(150deg,#2e392aef,#47543bf2) !important;border-right:1px solid #ffffff70;box-shadow:inset -1px 0 1px #ffffff80,8px 0 28px #2830210e;backdrop-filter:blur(24px) saturate(125%);}
+.liquid-app .sidebar-logo {flex-wrap:wrap;padding:0 22px 25px;gap:6px;}
+.liquid-app .sidebar-logo-text {font-family:Georgia,serif;font-size:25px;letter-spacing:-.7px;}
+.liquid-app .sidebar-logo-icon {display:none;}
+.lg-brand-note {width:100%;font-size:9px;letter-spacing:2.8px;color:#e0e6d2;margin-top:2px;}
+.liquid-app .sidebar-user {padding:12px 22px 20px;}
+.liquid-app .sidebar-nav {padding:0 14px;}
+.liquid-app .nav-section {color:#c4cdb8;letter-spacing:2px;padding-top:18px;}
+.a1-app.liquid-app .nav-item {border:1px solid transparent;padding:12px 14px;border-radius:17px;font-size:14px;margin:5px 0;color:#f3f5ed;}
+.a1-app.liquid-app .nav-item.active {background:linear-gradient(130deg,#ffffff30,#c5d0a817) !important;color:#fff !important;border-color:#ffffff65;box-shadow:inset 0 1px 2px #ffffffe0,inset 0 -1px 2px #ecf0d75c,0 3px 10px #0e180e24;backdrop-filter:blur(16px);}
+.a1-app.liquid-app .nav-item.active svg {color:#fff !important;}
+.a1-app.liquid-app .main {padding:34px;background:transparent;border-radius:0;min-height:100vh;}
+.a1-app.liquid-app .main.a1-home {padding:34px;}
+.liquid-app .a1-board {display:block;min-height:0;}
+.liquid-app .a1-work {padding:0;display:grid;grid-template-columns:minmax(0,1.75fr) minmax(290px,1fr);gap:20px;align-items:start;}
+.liquid-app .a1-mid,.liquid-app .a1-focus-area {display:contents;}
+.liquid-app .lg-left,.liquid-app .lg-right {min-width:0;display:flex;flex-direction:column;gap:20px;}
+.liquid-app .lg-left {grid-column:1;}.liquid-app .lg-right {grid-column:2;}
+.liquid-app .lg-left>* ,.liquid-app .lg-right>* {width:100%;min-width:0;}
+.liquid-app .main:not(.a1-home) .lg-greeting {display:none;}
+.liquid-app .a1-work>.topbar {grid-column:1/-1;margin:0 0 7px;align-items:flex-start;gap:22px;}
+.a1-app.liquid-app .topbar-title h1 {font-size:clamp(28px,3.1vw,46px);letter-spacing:-1.7px;font-weight:750;line-height:1.3;}
+.a1-app.liquid-app .topbar-title p {font-size:12px;color:#606b58;margin-top:10px;}
+.lg-greeting {font-size:21px;color:#59624f;margin-top:12px;letter-spacing:.5px;}
+.lg-greeting span {color:#78845c;display:inline-block;margin-left:15px;}
+.liquid-app .topbar-actions {padding-top:5px;}
+.liquid-app .topbar {position:relative;z-index:30;}
+.a1-app.liquid-app .search-box {width:260px;border-radius:40px;}
+.a1-app.liquid-app .search-box input {background:#ffffff80;border:1px solid #fff;border-radius:40px;padding:13px 16px 13px 38px;box-shadow:0 5px 18px #4c593014,inset 0 1px 1px white;font-size:12px;backdrop-filter:blur(18px);}
+.liquid-app .lg-tasks {grid-column:1;grid-row:2;}
+.liquid-app .a1-focus {grid-column:2;grid-row:2 / span 2;background:linear-gradient(145deg,#fdfef6bf,#e0e7ca80);padding:24px;}
+.liquid-app .a1-mini-stats {grid-column:1;grid-row:3;margin:0;gap:14px;}
+.liquid-app .lg-courses {grid-column:1;grid-row:4;}
+.liquid-app .a1-agenda {grid-column:2;grid-row:4 / span 3;padding:23px;margin:0;border-radius:24px;border:1px solid white;}
+.liquid-app .a1-review-summary {grid-column:1;grid-row:5;margin:0;}
+.liquid-app .a1-summary {grid-column:1;grid-row:6;margin:0;padding-top:15px;}
+.liquid-app .a1-status {grid-column:1/-1;grid-row:7;margin:0;flex-wrap:wrap;gap:8px;}
+.liquid-app :is(.lg-tasks,.lg-courses,.a1-mini-stat,.a1-focus,.a1-agenda) {border-radius:24px;border:1px solid var(--glass-stroke);background-color:var(--glass-fill);box-shadow:var(--glass-shadow);backdrop-filter:blur(22px) saturate(115%);}
+.liquid-app :is(.lg-tasks,.lg-courses) {padding:22px;}
+.liquid-app .a1-head h2 {font-size:19px;font-weight:650;letter-spacing:-.3px;}
+.liquid-app .a1-head {margin-bottom:18px;}
+.liquid-app .a1-task-tabs {gap:22px;padding-bottom:12px;}
+.liquid-app .a1-task-tabs button {font-size:13px;color:#637158;}
+.liquid-app .a1-task-row {padding:19px 0;gap:13px;}
+.liquid-app .a1-task-title {font-size:16px;line-height:1.5;}
+.liquid-app .a1-task-copy small {font-size:12px;color:#65715d;line-height:1.6;}
+.liquid-app .a1-check {border-radius:50%;width:23px;height:23px;flex-basis:23px;background:#ffffff7a;}
+.liquid-app .a1-task-actions {gap:6px;}
+.liquid-app .a1-due {font-size:11px;border-radius:20px;padding:5px 9px;}
+.liquid-app .a1-round {background:#edf0e18c;border:1px solid #ffffffd0;width:29px;height:29px;}
+.liquid-app .a1-course-grid {gap:11px;}
+.liquid-app .a1-course {background:linear-gradient(150deg,#e4e9d5d0,#e9eddc88);color:#34452e;border:1px solid #ffffffc0;border-radius:18px;box-shadow:inset 0 1px 0 white,0 4px 12px #45533208;padding:17px 14px;transition:box-shadow .25s,border-color .25s;}
+.liquid-app .a1-course:nth-child(3n+2) {background:linear-gradient(145deg,#f2e8d6c9,#f4eedd80);color:#655437;}
+.liquid-app .a1-course:nth-child(3n) {background:linear-gradient(145deg,#e0e9edcf,#eaf0f180);color:#3f5965;}
+.liquid-app .a1-course:hover {transform:none;box-shadow:inset 0 1px 0 white,0 8px 20px #45533212;}
+.liquid-app .a1-course h3 {font-size:17px;margin-top:16px;}
+.liquid-app .a1-progress,.liquid-app .a1-course:nth-child(n) .a1-progress {background:#ffffffb8;height:6px;}
+.liquid-app .a1-mini-stat {padding:18px 20px;}
+.liquid-app .a1-mini-stat strong {font-family:Georgia,"Microsoft YaHei",serif;font-size:29px;line-height:1.5;color:#2f402a;}
+.liquid-app .a1-mini-stat small {color:#64715c;font-size:12px;}
+.liquid-app .a1-bars {height:26px;}
+.liquid-app .a1-focus-heading {font-size:14px;}
+.liquid-app .a1-timer {font-family:Georgia,"Times New Roman",serif;font-size:clamp(58px,6vw,88px);letter-spacing:-4px;line-height:1.2;margin:25px 0 10px;color:#24321e;}
+.liquid-app .a1-focus-task {color:#54634b;min-height:20px;}
+.liquid-app .a1-focus select {background:#ffffff8c;border-radius:12px;padding:9px;}
+.liquid-app .a1-focus-buttons {flex-wrap:wrap;}
+.liquid-app .a1-focus-buttons .btn-primary {flex:1;min-width:140px;font-size:15px;padding:13px 18px;}
+.liquid-app .a1-duration {font-size:12px;align-items:center;}
+.a1-app.liquid-app .btn-primary {background:linear-gradient(145deg,#718455e8,#435932ef) !important;border:1px solid #f8ffe3a6;border-radius:24px;box-shadow:inset 0 1px 2px #ffffffaa,inset 0 -1px 1px #e8f1c94d,0 5px 14px #42502c24 !important;transition:box-shadow .2s,background .2s;}
+.a1-app.liquid-app .btn-primary:hover {background:linear-gradient(145deg,#7c8e60,#4b633a) !important;}
+.liquid-app .a1-agenda .a1-head h2 {font-size:17px;}
+.liquid-app .a1-calendar-month {margin-top:18px;}
+.liquid-app .a1-agenda-head {margin-top:21px;}
+.liquid-app .a1-event {padding:15px 0;}
+.liquid-app .a1-event-content strong {font-size:13px;}
+.liquid-app .a1-event-content small {font-size:11px;line-height:1.6;color:#617055;}
+.liquid-app .a1-exam {background:#ffffff8c;border-color:white;border-radius:18px;}
+.liquid-app .a1-day.active {background:linear-gradient(145deg,#96a576,#687e4c);border:1px solid #eef7d7;box-shadow:inset 0 1px 1px white,0 4px 12px #4d632620;}
+.a1-app.liquid-app .card {background:#fffffff0 !important;border-color:#fff !important;box-shadow:var(--glass-shadow) !important;border-radius:22px;}
+.a1-app.liquid-app .modal {background:#fffffff5 !important;border:1px solid white;border-radius:25px;box-shadow:0 24px 80px #25301f30,inset 0 1px 1px white;backdrop-filter:blur(26px);}
+.liquid-app :is(.modal-overlay,.a1-dialog) {background:#28361e38;backdrop-filter:blur(10px);}
+.a1-app.liquid-app .welcome-screen {background:radial-gradient(ellipse at 80% 15%,#d9e2c1,transparent 55%),#f4f3eb !important;}
+.liquid-app .a1-review-summary button {background:#ffffffa8;border-color:white;}
+/* Local specular light + changing angle in the refractive rim. The central
+   area stays clear; no blur or displacement is applied to content. */
+.liquid-app :is(.nav-item,.btn-primary,.search-box,.a1-focus,.a1-course,.lg-tasks,.a1-mini-stat,.a1-agenda,.modal,.bottom-nav) {position:relative;isolation:isolate;--lg-x:50%;--lg-y:0%;--lg-angle:135deg;--lg-energy:0;}
+.liquid-app :is(.nav-item,.btn-primary,.search-box,.a1-focus,.a1-course,.lg-tasks,.a1-mini-stat,.a1-agenda,.modal,.bottom-nav)::after {
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse 220px 150px at var(--lg-x) var(--lg-y),#ffffff75,transparent 75%);
+  opacity:var(--lg-energy);transition:opacity .3s;mix-blend-mode:soft-light;
+}
+.liquid-app :is(.nav-item,.btn-primary,.search-box,.a1-focus,.a1-course,.lg-tasks,.a1-mini-stat,.a1-agenda,.modal,.bottom-nav)::before {
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;padding:2px;
+  background:linear-gradient(var(--lg-angle),#ffffffee,rgba(241,250,215,.12) 35%,#c2d3a059 52%,#ffffffdc 72%,#78885538);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.45;transition:opacity .3s;
+  backdrop-filter:blur(1px) brightness(1.12) saturate(130%);
+}
+.liquid-app .nav-item:not(.active)::before {opacity:0;}
+.liquid-app .nav-item:not(.active).lg-tracking::before {opacity:.8;}
+.liquid-app .lg-tracking::before {opacity:1;}
+.liquid-app .lg-tracking::after {transition:none;}
+.liquid-app :is(.btn-primary,.nav-item):active {box-shadow:inset 0 2px 6px #25321d25 !important;}
+@supports not (backdrop-filter:blur(1px)) {
+  .liquid-app :is(.lg-tasks,.lg-courses,.a1-focus,.a1-mini-stat,.a1-agenda) {background-color:#fdfdf7;}
+  .a1-app.liquid-app .bottom-nav {background:#fafbf6 !important;}
+}
+@media (min-width:769px) and (max-width:1200px) {
+  .a1-app.liquid-app .sidebar {width:182px;flex-basis:182px;}
+  .liquid-app .sidebar-logo-text {font-size:21px;}
+  .a1-app.liquid-app .main,.a1-app.liquid-app .main.a1-home {padding:24px;}
+  .liquid-app .a1-work {grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);gap:16px;}
+  .liquid-app .a1-course-grid {grid-template-columns:1fr;}
+  .liquid-app .a1-course h3 {margin:8px 0;}
+  .liquid-app .lg-tasks,.liquid-app .lg-courses {padding:18px;}
+  .liquid-app .a1-task-actions {flex-direction:column;}
+  .liquid-app .a1-due {white-space:normal;max-width:66px;}
+  .liquid-app .a1-mini-stats {grid-template-columns:1fr;}
+  .liquid-app .a1-timer {font-size:68px;}
+}
+@media (max-width:900px) {
+  .liquid-app .a1-work {grid-template-columns:minmax(0,1fr);}
+  .liquid-app .lg-left,.liquid-app .lg-right {display:contents;}
+  .liquid-app .a1-work>.topbar,.liquid-app .lg-tasks,.liquid-app .a1-focus,.liquid-app .a1-mini-stats,.liquid-app .lg-courses,.liquid-app .a1-agenda,.liquid-app .a1-review-summary,.liquid-app .a1-summary,.liquid-app .a1-status {grid-column:1;grid-row:auto;}
+  .liquid-app .a1-work>.topbar {order:0;}.liquid-app .lg-tasks {order:1;}.liquid-app .a1-focus {order:2;}.liquid-app .a1-mini-stats {order:3;}.liquid-app .lg-courses {order:4;}.liquid-app .a1-agenda {order:5;}.liquid-app .a1-review-summary {order:6;}.liquid-app .a1-summary {order:7;}.liquid-app .a1-status {order:8;}
+  .liquid-app .a1-course-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+  .liquid-app .a1-mini-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:768px) {
+  .a1-app.liquid-app .app {margin:0;padding:0;min-height:100vh;}
+  .a1-app.liquid-app .sidebar {position:fixed;width:250px;top:0;left:0;flex-basis:250px;border-radius:0 25px 25px 0;transform:translateX(-100%);}
+  .a1-app.liquid-app .sidebar.open {transform:translateX(0);}
+  .a1-app.liquid-app .main,.a1-app.liquid-app .main.a1-home {padding:24px 16px 110px;min-height:100vh;}
+  .liquid-app .a1-work {gap:16px;}
+  .a1-app.liquid-app .topbar-title h1 {font-size:30px;letter-spacing:-1px;}
+  .lg-greeting {font-size:17px;}
+  .liquid-app .lg-tasks,.liquid-app .lg-courses,.liquid-app .a1-agenda {padding:18px 16px;}
+  .liquid-app .a1-head h2 {font-size:18px;}
+  .liquid-app .a1-task-title {font-size:14px;}
+  .liquid-app .a1-task-row {gap:8px;padding:17px 0;}
+  .liquid-app .a1-task-actions {flex-direction:column;}
+  .liquid-app .a1-due {white-space:normal;max-width:60px;font-size:10px;}
+  .liquid-app .a1-timer {font-size:80px;}
+  .liquid-app .a1-focus {padding:23px 20px;}
+  .liquid-app .a1-focus-heading {font-size:14px;}
+  .liquid-app .a1-mini-stat {padding:16px;}
+  .liquid-app .a1-mini-stat strong {font-size:25px;}
+  .liquid-app .a1-course-grid {grid-template-columns:1fr;}
+  .liquid-app .a1-course h3 {font-size:17px;margin:8px 0;}
+  .liquid-app .a1-course-meta,.liquid-app .a1-course-foot {font-size:12px;}
+  .a1-app.liquid-app .bottom-nav {background:#f9fbf0c9;border:1px solid #fffffff0;backdrop-filter:blur(24px) saturate(140%);border-radius:26px;box-shadow:0 8px 28px #2f402b24,inset 0 1px 1px white;}
+  .liquid-app .bottom-nav-item.active {background:#dce4c67d;border-radius:15px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .liquid-app .lg-tracking::after {opacity:0;}
+  .liquid-app * {scroll-behavior:auto !important;}
+}
+@media (prefers-contrast:more) {
+  .liquid-app :is(.lg-tasks,.lg-courses,.a1-focus,.a1-mini-stat,.a1-agenda,.modal) {background:#fff !important;border-color:#667455;}
+  .liquid-app :is(.a1-task-copy small,.a1-event-content small,.a1-mini-stat small) {color:#35452c;}
+}
