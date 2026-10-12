@@ -8,6 +8,7 @@
 - `css/a1-workspace.css`：A1 基础视觉规范和响应式布局。
 - `css/liquid-glass.css`：最后加载的液态玻璃材质、布局和响应式覆盖。
 - `assets/liquid-glass.js`：呈现层布局及随鼠标移动的高光、速度明暗和边缘光学变化；不写入档案数据。
+- `assets/olive-wave-main.svg`、`assets/olive-wave-sidebar.svg`：对照效果图绘制的浅色丝绸波纹背景与深绿斜向光带，矢量曲线配渐变和柔化，缩放保持清晰。
 - `assets/a1-workspace.js`：课程工作区、复习清单、预计用时、任务专注与学习时段，使用现有档案保存接口。
 - `css/refined-skin.css`：已有模块仍使用的基础样式，并非闲置副本。
 - `assets/`：当前站点素材。

@@ -4,18 +4,21 @@ body.a1-app.liquid-app {
   --glass-fill:rgba(255,255,252,.76);--glass-stroke:rgba(255,255,255,.88);
   --glass-shadow:0 12px 35px #323d2410,0 2px 5px #323d2408,inset 0 1px 0 #fff;
   background:#f4f3eb !important;
-  background-image:radial-gradient(ellipse at 90% 5%,#bfcba36b,transparent 44%),radial-gradient(ellipse at 15% 80%,#ddcfaa50,transparent 45%) !important;
+  background-image:url('../assets/olive-wave-main.svg') !important;
+  background-size:cover !important;background-position:center top !important;background-repeat:no-repeat !important;background-attachment:fixed !important;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
 }
-.liquid-app::before {content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(125deg,transparent 50%,#fffffff0 56%,transparent 63%),radial-gradient(ellipse at 88% 35%,#8b9b6450,transparent 35%);}
+.liquid-app::before {content:none;}
 .a1-app.liquid-app .app {max-width:1740px;margin:0 auto;padding:0;background:transparent;border-radius:0;box-shadow:none;min-height:100vh;gap:0;}
-.a1-app.liquid-app .sidebar {width:220px;flex-basis:220px;top:0;height:100dvh;border-radius:0 0 26px 0;padding:30px 0 14px;background:linear-gradient(150deg,#2e392aef,#47543bf2) !important;border-right:1px solid #ffffff70;box-shadow:inset -1px 0 1px #ffffff80,8px 0 28px #2830210e;backdrop-filter:blur(24px) saturate(125%);}
+.a1-app.liquid-app .sidebar {width:220px;flex-basis:220px;top:0;height:100dvh;border-radius:0 0 26px 0;padding:30px 0 14px;background:#293722 url('../assets/olive-wave-sidebar.svg') center center / 100% 100% no-repeat !important;border-right:1px solid #ffffff70;box-shadow:inset -1px 0 1px #ffffff80,8px 0 28px #2830210e;backdrop-filter:blur(24px) saturate(125%);}
 .liquid-app .sidebar-logo {flex-wrap:wrap;padding:0 22px 25px;gap:6px;}
 .liquid-app .sidebar-logo-text {font-family:Georgia,serif;font-size:25px;letter-spacing:-.7px;}
 .liquid-app .sidebar-logo-icon {display:none;}
 .lg-brand-note {width:100%;font-size:9px;letter-spacing:2.8px;color:#e0e6d2;margin-top:2px;}
-.liquid-app .sidebar-user {padding:12px 22px 20px;}
-.liquid-app .sidebar-nav {padding:0 14px;}
+.liquid-app .sidebar-user {padding:18px 20px 10px;margin-top:8px;border-top:1px solid #ffffff26;text-align:left;}
+.liquid-app .sidebar-nav {padding:0 14px;flex:1;}
+.liquid-app .sidebar-footer {margin-top:0;}
+.liquid-app .sidebar-footer-btn {color:#f1f5e8;}
 .liquid-app .nav-section {color:#c4cdb8;letter-spacing:2px;padding-top:18px;}
 .a1-app.liquid-app .nav-item {border:1px solid transparent;padding:12px 14px;border-radius:17px;font-size:14px;margin:5px 0;color:#f3f5ed;}
 .a1-app.liquid-app .nav-item.active {background:linear-gradient(130deg,#ffffff30,#c5d0a817) !important;color:#fff !important;border-color:#ffffff65;box-shadow:inset 0 1px 2px #ffffffe0,inset 0 -1px 2px #ecf0d75c,0 3px 10px #0e180e24;backdrop-filter:blur(16px);}
@@ -138,6 +141,7 @@ body.a1-app.liquid-app {
   .liquid-app .a1-mini-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media (max-width:768px) {
+  body.a1-app.liquid-app {background-size:auto 100dvh !important;background-position:68% top !important;}
   .a1-app.liquid-app .app {margin:0;padding:0;min-height:100vh;}
   .a1-app.liquid-app .sidebar {position:fixed;width:250px;top:0;left:0;flex-basis:250px;border-radius:0 25px 25px 0;transform:translateX(-100%);}
   .a1-app.liquid-app .sidebar.open {transform:translateX(0);}

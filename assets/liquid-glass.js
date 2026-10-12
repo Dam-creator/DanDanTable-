@@ -19,6 +19,8 @@
   document.querySelector('.a1-mid').remove();
   work.append(left, right);
   document.querySelector('.sidebar-logo-text').insertAdjacentHTML('afterend', '<small class="lg-brand-note">YOUR STUDY SPACE</small>');
+  const sidebarUser = document.querySelector('.sidebar-user');
+  document.querySelector('.sidebar-footer').before(sidebarUser);
   const headline = document.querySelector('.topbar-title');
   headline.insertAdjacentHTML('beforeend', '<div class="lg-greeting">今天，稳步向前<span aria-hidden="true"> ⤴</span></div>');
 
